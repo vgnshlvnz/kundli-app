@@ -1,0 +1,15 @@
+{
+  "name": "kundli-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "node --test tests/",
+    "db:local": "wrangler d1 migrations apply kundli-locations --local",
+    "db:remote": "wrangler d1 migrations apply kundli-locations --remote",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
