@@ -11,7 +11,8 @@
     {
       "binding": "DB",
       "database_name": "kundli-locations",
-      "database_id": "TODO-REPLACE-WITH-DATABASE-ID"
+      "database_id": "TODO-REPLACE-WITH-DATABASE-ID",
+      "migrations_dir": "./migrations"
     }
   ]
 }

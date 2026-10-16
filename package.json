@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "test": "node --test tests/",
+    "test": "node --test 'tests/**/*.test.js'",
     "db:local": "wrangler d1 migrations apply kundli-locations --local",
     "db:remote": "wrangler d1 migrations apply kundli-locations --remote",
     "deploy": "wrangler deploy"

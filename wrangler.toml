@@ -1,0 +1,13 @@
+name = "kundli-app"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kundli-locations"
+database_id = "local"
+migrations_dir = "./migrations"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
