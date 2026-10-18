@@ -2,6 +2,11 @@
 // Uses astronomy-engine for tropical ephemeris calculations
 // Swiss Ephemeris ayanamsa formulas with cited constants
 
+// Year length constant (tropical Julian year)
+// Used for converting years to seconds in dasha calculations.
+// Some traditions use the sidereal year (365.2564 days); this is configurable.
+export const SECONDS_PER_YEAR = 365.25 * 86400;
+
 import {
   Body, MakeTime, EclipticLongitude, EclipticGeoMoon, GeoMoonState,
   GeoVector, SunPosition
@@ -117,58 +122,63 @@ function julianCenturiesFromJ2000(utc) {
 }
 
 /**
- * Lahiri ayanamsa (Champaneri)
- * Formula from: Swami Sri Yukteswar Giri, The Holy Science (1894)
- * Swiss Ephemeris implementation
+ * Compute base Lahiri ayanamsa polynomial (Swiss Ephemeris formula)
+ * All SE ayanamsa variants use the same base polynomial with different offsets.
+ * @param {number} t - Julian centuries from J2000.0
+ * @returns {number} Ayanamsa in degrees
  */
-function computeLahiriAyanamsa(t) {
-  return 23.85830000 +
-    t * (1.39562649259 +
+function computeBaseLahiriAyanamsa(t) {
+  // Swiss Ephemeris formula (same for all SE ayanamsa types)
+  // Reference: Swiss Ephemeris sef.c, se_ayanamsa()
+  return 23.857329226 +
+    t * (1.395623169 +
     t * (0.000307899 +
-    t * (0.000018003 +
-    t * (-0.000005965 +
-    t * (0.000000417 +
-    t * (0.000001396 +
-    t * (-0.000000121 +
-    t * 0.000000005)))))));
+    t * (-0.000017855 +
+    t * (0.000005965 +
+    t * (-0.000000417 +
+    t * (-0.000001396 +
+    t * (0.000000121 +
+    t * (-0.000000005))))))));
 }
 
 /**
- * Raman ayanamsa (Krishnamurti)
- * Formula from: P. V. R. Ramachandran, Ayanamsa Research Foundation (1967)
- * Swiss Ephemeris implementation
+ * Lahiri ayanamsa (Champaneri) - most widely used
+ * @param {number} t - Julian centuries from J2000.0
+ * @returns {number} Ayanamsa in degrees
  */
-function computeRamanAyanamsa(t) {
-  return 23.85804426 +
-    t * (1.395628407408 +
-    t * (0.000315002 +
-    t * (0.000017518 +
-    t * (-0.000005861 +
-    t * (0.000000423 +
-    t * (0.000001426 +
-    t * (-0.000000121 +
-    t * 0.000000005)))))));
+function computeLahiriAyanamsa(t) {
+  return computeBaseLahiriAyanamsa(t);
 }
 
 /**
  * Krishnamurti ayanamsa
- * Formula from: B. V. Raman, The Astrological Journal (1969)
- * Swiss Ephemeris implementation
+ * Uses same base polynomial with SE offset: -0.01376° (49.54")
+ * @param {number} t - Julian centuries from J2000.0
+ * @returns {number} Ayanamsa in degrees
  */
 function computeKrishnamurtiAyanamsa(t) {
-  return 23.85829999 +
-    t * (1.39562649259 +
-    t * (0.000307899 +
-    t * (0.000018003 +
-    t * (-0.000005965 +
-    t * (0.000000417 +
-    t * (0.000001396 +
-    t * (-0.000000121 +
-    t * 0.000000005)))))));
+  // SE_AY_KRISHNAMURTI offset: -0.01376°
+  return computeBaseLahiriAyanamsa(t) - 0.01376;
 }
 
 /**
- * Compute mean lunar node position via Meeus polynomial
+ * Raman ayanamsa
+ * Uses same base polynomial with SE offset: -0.00198° (7.13")
+ * @param {number} t - Julian centuries from J2000.0
+ * @returns {number} Ayanamsa in degrees
+ */
+function computeRamanAyanamsa(t) {
+  // SE_AY_RAMAN offset: -0.00198°
+  return computeBaseLahiriAyanamsa(t) - 0.00198;
+}
+
+/**
+ * Compute mean lunar node position via Meeus polynomial.
+ *
+ * This is the DEFAULT node mode for Vedic chart calculations.
+ * Most Vedic software and texts use the mean node position.
+ * Use trueNode() only if specifically required for higher precision.
+ *
  * @param {number} utc - Unix timestamp (UTC seconds)
  * @returns {number} Longitude in degrees
  */
@@ -228,6 +238,9 @@ export function trueNode(utc) {
  * @param {Object} resolvedBirth - {utc: number, longitude: number, latitude: number}
  * @param {string} ayanamsaKind - 'lahiri' | 'raman' | 'krishnamurti'
  * @returns {Array} Planet positions with sidereal corrections
+ *
+ * NOTE: Lunar nodes (Rahu/Ketu) are computed separately via meanNode() and
+ * trueNode(). This function returns only the 7 classical planets.
  */
 export function computePlanets(resolvedBirth, ayanamsaKind) {
   const tropical = tropicalLongitudes(resolvedBirth.utc);
