@@ -2,6 +2,8 @@
 // Based on Moon's sidereal longitude at birth
 // 120-year cycle divided among 9 planets in fixed sequence
 
+import { SECONDS_PER_YEAR } from '../ephemeris/index.js';
+
 // Vimshottari planet sequence and periods (in years)
 const VIMSHOTTARI_PLANETS = [
   { name: 'Ketu', period: 7 },
@@ -115,7 +117,7 @@ export function computeMahadashas(birth, moonLongitude) {
   let currentLordIndex = lordIndex;
 
   // First mahadasha (remaining portion)
-  const firstPeriod = remainingFirst * 365.25 * 86400; // Convert years to seconds
+  const firstPeriod = remainingFirst * SECONDS_PER_YEAR; // Convert years to seconds
   mahadashas.push({
     planet: nakshatra.lord,
     start: currentStart,
@@ -129,7 +131,7 @@ export function computeMahadashas(birth, moonLongitude) {
   for (let i = 1; i < 9; i++) {
     const planetInfo = VIMSHOTTARI_PLANETS[(currentLordIndex + i) % 9];
     const periodYears = planetInfo.period;
-    const periodSeconds = periodYears * 365.25 * 86400;
+    const periodSeconds = periodYears * SECONDS_PER_YEAR;
 
     mahadashas.push({
       planet: planetInfo.name,
@@ -180,7 +182,7 @@ export function computeBhuktis(mahadasha) {
     const planetInfo = VIMSHOTTARI_PLANETS[(mdIndex + i) % 9];
     // Bhukti duration = (md period / 120) * planet period
     const bhuktiYears = (mdPeriodYears / TOTAL_CYCLE) * planetInfo.period;
-    const bhuktiSeconds = bhuktiYears * 365.25 * 86400;
+    const bhuktiSeconds = bhuktiYears * SECONDS_PER_YEAR;
 
     bhuktis.push({
       planet: planetInfo.name,
