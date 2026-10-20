@@ -92,7 +92,11 @@ function init() {
 
   // Event listeners
   formEl.addEventListener('submit', handleSubmit);
-  locationInput.addEventListener('input', debouncedSearch);
+  locationInput.addEventListener('input', () => {
+    // Typing invalidates a previously chosen location
+    for (const key of ['locationId', 'latitude', 'longitude', 'timezone']) delete locationInput.dataset[key];
+    debouncedSearch();
+  });
   manualToggle.addEventListener('change', toggleManualCoords);
   settingsAyanamsa.addEventListener('change', e => {
     state.settings.ayanamsa = e.target.value;
@@ -218,10 +222,16 @@ async function handleSubmit(e) {
       localBirthTime: `${dateInput.value}T${timeInput.value}`,
     };
 
+    const picked = locationInput.dataset;
     if (manualToggle.checked) {
       input.latitude = parseFloat(manualLatInput.value);
       input.longitude = parseFloat(manualLonInput.value);
       input.timezone = manualTzInput.value;
+    } else if (picked.locationId) {
+      // Use the location chosen from the dropdown, not a re-search of its label
+      input.latitude = parseFloat(picked.latitude);
+      input.longitude = parseFloat(picked.longitude);
+      input.timezone = picked.timezone;
     } else {
       input.locationQuery = locationInput.value;
     }
@@ -255,7 +265,7 @@ async function handleSubmit(e) {
       utc: utcSeconds,
       longitude: state.resolvedBirth.longitude,
       latitude: state.resolvedBirth.latitude
-    });
+    }, state.settings.ayanamsa);
 
     // Update UTC offset display with actual conversion result
     utcOffsetEl.textContent = `Timezone: ${state.resolvedBirth.timezone} (resolved)`;
@@ -328,14 +338,14 @@ function updateAdvancedTabs() {
 function renderRasiTab() {
   if (!state.planets || !state.houses) return;
 
-  const asc = state.houses.cusps[0];
+  const asc = state.houses.siderealAscendant;
   const ascSign = Math.floor(asc / 30);
   const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
                     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 
   let html = `
     <h3>Rasi Chart (D1)</h3>
-    <p><strong>Ascendant (Lagna):</strong> ${signNames[ascSign]} ${asc.toFixed(2)}°</p>
+    <p><strong>Ascendant (Lagna):</strong> ${signNames[ascSign]} ${(asc - ascSign * 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
         <tr>
@@ -370,8 +380,9 @@ function renderRasiTab() {
 function renderNavamsaTab() {
   if (!state.planets || !state.houses) return;
 
-  const asc = state.houses.cusps[0];
-  const d9 = computeVarga(state.planets, asc, 9);
+  // Varga functions read `longitude`; pass the sidereal one
+  const d1 = state.planets.map(p => ({ ...p, longitude: p.siderealLongitude }));
+  const d9 = computeVarga(d1, state.houses.siderealAscendant, 9);
   const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
                     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 
@@ -379,7 +390,7 @@ function renderNavamsaTab() {
 
   let html = `
     <h3>Navamsa Chart (D9)</h3>
-    <p><strong>Navamsa Ascendant:</strong> ${signNames[d9AscSign]} ${d9.ascendant.toFixed(2)}°</p>
+    <p><strong>Navamsa Ascendant:</strong> ${signNames[d9AscSign]} ${(d9.ascendant % 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
         <tr>
@@ -399,7 +410,7 @@ function renderNavamsaTab() {
         <td>${p.name}</td>
         <td>${signName}</td>
         <td>${p.degree.toFixed(2)}°</td>
-        <td>${getHouseNumber(p.longitude)}</td>
+        <td>${((p.sign - d9AscSign + 12) % 12) + 1}</td>
       </tr>
     `;
   });
@@ -435,7 +446,8 @@ function renderPlanetsTab() {
     const signName = signNames[p.sign];
     const house = getHouseNumber(p.siderealLongitude);
     const nakshatra = getNakshatra(p.siderealLongitude);
-    const pada = Math.floor((p.degreeInSign * 3) / 13.3333) + 1; // Approximate pada calculation
+    // Each nakshatra (13°20') has four padas of 3°20'
+    const pada = Math.floor((p.siderealLongitude % (40 / 3)) / (10 / 3)) + 1;
     const speed = Math.abs(p.speed).toFixed(3);
     html += `
       <tr>
@@ -512,8 +524,8 @@ function renderPanchangaTab() {
       <tr><th>Yoga</th><td>${p.yoga.name}</td></tr>
       <tr><th>Karana</th><td>${p.karana.name}${p.karana.fixed ? ' (fixed)' : ''}</td></tr>
       <tr><th>Vara</th><td>${p.vara.name} (${p.vara.english})</td></tr>
-      ${p.sunriseSunset.sunriseUtc ? `<tr><th>Sunrise</th><td>${new Date(p.sunriseSunset.sunriseUtc * 1000).toTimeString()}</td></tr>` : ''}
-      ${p.sunriseSunset.sunsetUtc ? `<tr><th>Sunset</th><td>${new Date(p.sunriseSunset.sunsetUtc * 1000).toTimeString()}</td></tr>` : ''}
+      ${p.sunriseSunset.sunriseUtc ? `<tr><th>Sunrise</th><td>${birthPlaceTime(p.sunriseSunset.sunriseUtc)}</td></tr>` : ''}
+      ${p.sunriseSunset.sunsetUtc ? `<tr><th>Sunset</th><td>${birthPlaceTime(p.sunriseSunset.sunsetUtc)}</td></tr>` : ''}
     </table>
   `;
   tabs['panchanga'].innerHTML = html;
@@ -587,6 +599,13 @@ function renderKpTab() {
 
   html += '</tbody></table>';
   tabs['kp'].innerHTML = html;
+}
+
+// Helper: format a UTC timestamp (seconds) as local time at the birth place
+function birthPlaceTime(utcSeconds) {
+  const timeZone = state.resolvedBirth.timezone;
+  const time = new Date(utcSeconds * 1000).toLocaleTimeString('en-GB', { timeZone, hour12: false });
+  return `${time} (${timeZone})`;
 }
 
 // Helper: Determine house number from longitude
