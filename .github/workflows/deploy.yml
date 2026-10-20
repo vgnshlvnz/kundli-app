@@ -1,0 +1,108 @@
+# Cloudflare Workers CI/CD — the ONLY path to the Cloudflare account.
+#   PR to master       -> test, then deploy to the `staging` wrangler env
+#   push/merge master  -> test, then deploy to production (top-level wrangler config)
+#
+# Required GitHub setup (Settings -> Environments): create `staging` and `production`.
+#   Environment secrets (both):  CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+#   Optional: add "Required reviewers" on `production` for a manual approval gate.
+name: ci-deploy
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  NODE_VERSION: "22"
+  # Space-separated D1 *binding* names whose migrations run before deploy.
+  D1_BINDINGS: "DB"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Tests
+        run: npm test
+      - name: Bundle check (production + staging)
+        run: |
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/dist-prod"
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/dist-staging" --env staging
+
+  deploy-staging:
+    needs: test
+    # never deploy from forks (no secrets there anyway)
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_ENV_FLAG: "--env staging"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Apply D1 migrations (remote, staging)
+        if: env.D1_BINDINGS != ''
+        run: |
+          for db in $D1_BINDINGS; do
+            npx wrangler d1 migrations apply "$db" --remote $WRANGLER_ENV_FLAG
+          done
+      - name: Deploy
+        id: deploy
+        run: |
+          npx wrangler deploy $WRANGLER_ENV_FLAG 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+          url="$(grep -oE 'https://[^[:space:]]+\.workers\.dev' "$RUNNER_TEMP/deploy.log" | head -n1 || true)"
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+
+  deploy-production:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Apply D1 migrations (remote, production)
+        if: env.D1_BINDINGS != ''
+        run: |
+          for db in $D1_BINDINGS; do
+            npx wrangler d1 migrations apply "$db" --remote
+          done
+      - name: Deploy
+        id: deploy
+        run: |
+          npx wrangler deploy 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+          url="$(grep -oE 'https://[^[:space:]]+\.workers\.dev' "$RUNNER_TEMP/deploy.log" | head -n1 || true)"
+          echo "url=${url}" >> "$GITHUB_OUTPUT"

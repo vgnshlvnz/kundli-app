@@ -78,7 +78,17 @@ Rules for module work:
 
 ## Deployment
 
-Deploys are meant to run from CI only, never from a developer machine: a pull
-request deploys to staging and merging deploys to production. The CI workflow
-and the remote D1 database are not set up yet (`database_id` in
-`wrangler.jsonc` is still a placeholder).
+Deploys run from CI only ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)),
+never from a developer machine. Every PR and push runs `npm test` and a bundle
+check. A pull request into `master` then applies D1 migrations and deploys to
+staging; merging into `master` does the same for production.
+
+`wrangler.jsonc` is the only Wrangler config. Top level is production and
+`env.staging` is staging; each has its own D1 database.
+
+One-time setup before the first deploy:
+
+1. Create both D1 databases and paste each `database_id` into `wrangler.jsonc`
+   (production at the top level, staging under `env.staging`).
+2. In GitHub → Settings → Environments, create `staging` and `production`, each
+   with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
