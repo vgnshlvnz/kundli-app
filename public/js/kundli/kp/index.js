@@ -1,5 +1,5 @@
 // KP (Krishnamurti Paddhati) astrology calculations
-// Uses Vimshottari proportions to create sub-lords
+// Uses Vimshottari proportions within each nakshatra to create sub-lords
 // Fixed to KRISHNAMURTI ayanamsa and PLACIDUS house system
 
 // Vimshottari planet sequence and periods
@@ -34,60 +34,61 @@ export function signLord(signIndex) {
   return SIGN_LORDS[signIndex % 12];
 }
 
+const NAKSHATRA_SPAN = 360 / 27; // 13°20'
+
 /**
- * Generate the 249 sub-lords for one sign
- * Based on Vimshottari proportions scaled to 30°
- * Vimshottari cycle: 120 years → scaled to 30° (0.25°/year)
- * Each Vimshottari period is divided into sub-periods in the Vimshottari proportions
+ * Split `span` degrees into the 9 Vimshottari portions starting from `startLord`,
+ * and return the portion containing `offset` together with the offset inside it.
+ * @param {number} offset - Position inside the span (degrees)
+ * @param {number} span - Width being divided (degrees)
+ * @param {number} startLord - Index into VIMSHOTTARI of the first portion
+ * @returns {{index: number, offset: number, span: number}}
+ */
+function vimshottariPortion(offset, span, startLord) {
+  let start = 0;
+  for (let i = 0; i < 9; i++) {
+    const index = (startLord + i) % 9;
+    const width = span * VIMSHOTTARI[index].period / VIMSHOTTARI_TOTAL;
+    if (offset < start + width || i === 8) {
+      return { index, offset: Math.min(offset - start, width), span: width };
+    }
+    start += width;
+  }
+}
+
+/**
+ * Generate the standard KP table of 249 subs over the zodiac.
+ * Each nakshatra (13°20') is divided into 9 subs in Vimshottari proportion,
+ * starting from the nakshatra's own lord; subs that cross a sign boundary are
+ * split in two, giving 27 × 9 + 6 = 249 entries.
  *
- * @returns {Array} Array of 249 sub-lord objects
+ * @returns {Array} Array of 249 { sign, signLord, star, sub, start, end } objects (degrees)
  */
 export function subLordTable() {
   const subs = [];
-  let currentOffset = 0;
-
-  // Vimshottari proportions applied to 30° sign
-  // Each "year" = 0.25°
-  for (let periodIndex = 0; periodIndex < 9; periodIndex++) {
-    const period = VIMSHOTTARI[periodIndex];
-    const periodWidth = (period.period / VIMSHOTTARI_TOTAL) * 30;
-
-    // Each period is divided into sub-periods in the Vimshottari proportions
-    for (let subIndex = 0; subIndex < 9; subIndex++) {
-      const sub = VIMSHOTTARI[subIndex];
-      const subWidth = (periodWidth / VIMSHOTTARI_TOTAL) * sub.period;
-
-      // Each sub-period is divided into sub-sub-periods in the Vimshottari proportions
-      for (let subSubIndex = 0; subSubIndex < 9; subSubIndex++) {
-        const subSub = VIMSHOTTARI[subSubIndex];
-        const subSubWidth = (subWidth / VIMSHOTTARI_TOTAL) * subSub.period;
-
-        // Each sub-sub-period is divided into sub-sub-sub-periods in the Vimshottari proportions
-        for (let subSubSubIndex = 0; subSubSubIndex < 9; subSubSubIndex++) {
-          const subSubSub = VIMSHOTTARI[subSubSubIndex];
-          const subSubSubWidth = (subSubWidth / VIMSHOTTARI_TOTAL) * subSubSub.period;
-
-          subs.push({
-            lord: period.name,
-            sub: sub.name,
-            subSub: subSub.name,
-            subSubSub: subSubSub.name,
-            start: currentOffset,
-            end: currentOffset + subSubSubWidth,
-            width: subSubSubWidth
-          });
-
-          currentOffset += subSubSubWidth;
-        }
+  for (let n = 0; n < 27; n++) {
+    const starIndex = n % 9;
+    let start = n * NAKSHATRA_SPAN;
+    for (let i = 0; i < 9; i++) {
+      const subIndex = (starIndex + i) % 9;
+      const end = start + NAKSHATRA_SPAN * VIMSHOTTARI[subIndex].period / VIMSHOTTARI_TOTAL;
+      // Split at a sign boundary that falls strictly inside this sub
+      const boundary = (Math.floor(start / 30) + 1) * 30;
+      const pieces = boundary > start + 1e-9 && boundary < end - 1e-9 ? [[start, boundary], [boundary, end]] : [[start, end]];
+      for (const [s, e] of pieces) {
+        const sign = Math.floor((s + 1e-9) / 30);
+        subs.push({
+          sign: SIGNS[sign],
+          signLord: signLord(sign),
+          star: VIMSHOTTARI[starIndex].name,
+          sub: VIMSHOTTARI[subIndex].name,
+          start: s,
+          end: e
+        });
       }
+      start = end;
     }
   }
-
-  // Verify total is 30 degrees
-  if (Math.abs(currentOffset - 30) > 0.0001) {
-    throw new Error(`KP sub-lord table total is ${currentOffset}°, expected 30°`);
-  }
-
   return subs;
 }
 
@@ -97,35 +98,23 @@ export function subLordTable() {
  * @returns {Object} { sign, star, sub, subSub, subSubSub, signLord }
  */
 export function kpLords(longitude) {
-  // Normalize to 0-360
-  let lon = ((longitude % 360) + 360) % 360;
+  const lon = ((longitude % 360) + 360) % 360;
+  const signIdx = Math.floor(lon / 30);
 
-  // Determine sign (0-11) and position within sign
-  const signIndex = Math.floor(lon / 30);
-  const positionInSign = lon - signIndex * 30;
-
-  // Get sub-lord table and find which sub the position falls in
-  const subs = subLordTable();
-  let subEntry = null;
-  for (const sub of subs) {
-    if (positionInSign >= sub.start && positionInSign < sub.end) {
-      subEntry = sub;
-      break;
-    }
-  }
-
-  if (!subEntry) {
-    // Edge case: position at exactly 30° (sign boundary)
-    subEntry = subs[subs.length - 1];
-  }
+  // Star lord = lord of the nakshatra; each deeper level restarts from the level above
+  const nakshatra = Math.floor(lon / NAKSHATRA_SPAN);
+  const starIndex = nakshatra % 9;
+  const sub = vimshottariPortion(lon - nakshatra * NAKSHATRA_SPAN, NAKSHATRA_SPAN, starIndex);
+  const subSub = vimshottariPortion(sub.offset, sub.span, sub.index);
+  const subSubSub = vimshottariPortion(subSub.offset, subSub.span, subSub.index);
 
   return {
-    sign: SIGNS[signIndex],
-    star: subEntry.lord,
-    sub: subEntry.sub,
-    subSub: subEntry.subSub,
-    subSubSub: subEntry.subSubSub,
-    signLord: signLord(signIndex)
+    sign: SIGNS[signIdx],
+    star: VIMSHOTTARI[starIndex].name,
+    sub: VIMSHOTTARI[sub.index].name,
+    subSub: VIMSHOTTARI[subSub.index].name,
+    subSubSub: VIMSHOTTARI[subSubSub.index].name,
+    signLord: signLord(signIdx)
   };
 }
 
@@ -155,60 +144,35 @@ export function cuspSubLords(placidusCusps) {
 }
 
 /**
- * Calculate fourfold significators for each house
- * A planet is a fourfold significator for a house if it meets ANY of these:
- * 1. Planet rules the house sign (sign lord)
- * 2. Planet occupies the house (longitude falls within house bounds)
- * 3. Planet's star (from KP lords) rules the house sign
- * 4. Planet's sub-lord rules the house sign
- * 5. Planet's sub-sub-lord rules the house sign
- * 6. Planet's sub-sub-sub-lord rules the house sign
+ * Calculate KP significators for each house, in the four standard levels:
+ *   A. planets in the star of an occupant of the house
+ *   B. occupants of the house
+ *   C. planets in the star of the house owner (lord of the cusp's sign)
+ *   D. the house owner
+ * Each house lists planets in level order (A, B, C, D) without repeats.
  *
  * @param {Array<Object>} planets - Array of planet objects with {name, longitude}
  * @param {Array<number>} cusps - Array of 12 house cusp longitudes
- * @returns {Object} Map of house number → array of fourfold significator planet names
+ * @returns {Object} Map of house number → array of significator planet names
  */
 export function significators(planets, cusps) {
   if (cusps.length !== 12) {
     throw new Error(`Expected 12 house cusps, got ${cusps.length}`);
   }
 
+  const starOf = new Map(planets.map(p => [p.name, kpLords(p.longitude).star]));
   const result = {};
 
   for (let house = 1; house <= 12; house++) {
     const cuspIndex = house - 1;
-    const houseLord = signLord(cuspIndex);
+    const owner = signLord(signIndex(cusps[cuspIndex]));
+    const occupants = planets.filter(p => inHouse(p.longitude, cusps, cuspIndex)).map(p => p.name);
 
-    const significatorPlanets = [];
+    const levelA = planets.filter(p => occupants.includes(starOf.get(p.name))).map(p => p.name);
+    const levelC = planets.filter(p => starOf.get(p.name) === owner).map(p => p.name);
+    const levelD = planets.some(p => p.name === owner) ? [owner] : [];
 
-    for (const planet of planets) {
-      let isSignificator = false;
-
-      // 1. Planet rules the house sign (planet is the sign lord of the house)
-      if (planet.name === houseLord) {
-        isSignificator = true;
-      }
-
-      // 2. Planet occupies the house
-      if (inHouse(planet.longitude, cusps, cuspIndex)) {
-        isSignificator = true;
-      }
-
-      // 3-6. Sub-lord hierarchy checks
-      const planetLords = kpLords(planet.longitude);
-      if (planetLords.star === houseLord ||
-          planetLords.sub === houseLord ||
-          planetLords.subSub === houseLord ||
-          planetLords.subSubSub === houseLord) {
-        isSignificator = true;
-      }
-
-      if (isSignificator) {
-        significatorPlanets.push(planet.name);
-      }
-    }
-
-    result[house] = significatorPlanets;
+    result[house] = [...new Set([...levelA, ...occupants, ...levelC, ...levelD])];
   }
 
   return result;
