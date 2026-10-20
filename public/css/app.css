@@ -236,6 +236,27 @@ input:focus, select:focus {
   background-color: var(--primary-dark);
 }
 
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+}
+
+.results-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 16px 0 8px;
+}
+
+/* Only shown in the printed/PDF output */
+.print-summary {
+  display: none;
+}
+
 /* Tab Navigation */
 .tab-container {
   display: flex;
@@ -382,28 +403,95 @@ input:focus, select:focus {
 
 /* Print Styles */
 @media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  /* Always print the light theme, whatever the screen uses */
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f1f5f9;
+    --text: #000000;
+    --text-secondary: #475569;
+    --border: #cbd5e1;
+  }
+
   body {
     background: white;
     color: black;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   #settings,
   #form-section,
   .tab-container,
+  .results-actions,
   header p {
     display: none !important;
+  }
+
+  header {
+    margin-bottom: 8px;
   }
 
   #results {
     display: block !important;
   }
 
+  .print-summary {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .print-summary h2 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+
+  .print-summary dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 2px 16px;
+    font-size: 0.9rem;
+  }
+
+  .print-summary dt {
+    font-weight: 600;
+  }
+
+  .tab-content {
+    overflow: visible;
+  }
+
   .tab-content > div {
     display: block !important;
-    page-break-before: always;
-    border: 1px solid #ccc;
-    padding: 16px;
+    padding: 0;
     margin-bottom: 16px;
+  }
+
+  .tab-content > div + div {
+    break-before: page;
+  }
+
+  .si-chart,
+  .chart-table tr {
+    break-inside: avoid;
+  }
+
+  /* Compact enough that each section fits on one A4 page */
+  .si-chart {
+    max-width: 320px;
+  }
+
+  .chart-table {
+    font-size: 0.85rem;
+  }
+
+  .chart-table th,
+  .chart-table td {
+    padding: 4px 8px;
   }
 
   .chart-table th {

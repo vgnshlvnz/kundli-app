@@ -73,6 +73,7 @@ function init() {
   ['rasi', 'navamsa', 'planets', 'vimshottari', 'panchanga', 'kp'].forEach(id => {
     tabs[id] = document.getElementById(`tab-${id}`);
   });
+  document.getElementById('download-pdf').addEventListener('click', downloadPdf);
 
   // Populate timezone select
   try {
@@ -300,6 +301,7 @@ async function handleSubmit(e) {
     utcOffsetEl.textContent = `Timezone: ${state.resolvedBirth.timezone} (resolved)`;
 
     // Render all tabs
+    renderPrintSummary();
     renderRasiTab();
     renderNavamsaTab();
     renderPlanetsTab();
@@ -640,6 +642,39 @@ function renderKpTab() {
 
   html += '</tbody></table>';
   tabs['kp'].innerHTML = html;
+}
+
+// PDF export uses the browser's print dialog ("Save as PDF"); the print
+// stylesheet lays out every tab one after another. The page title becomes
+// the suggested file name.
+function downloadPdf() {
+  const originalTitle = document.title;
+  const name = nameInput.value.trim();
+  document.title = `Kundli - ${name || dateInput.value}`;
+  window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
+  window.print();
+}
+
+// Birth details and settings printed at the top of the PDF
+function renderPrintSummary() {
+  const { latitude, longitude, timezone } = state.resolvedBirth;
+  const place = manualToggle.checked ? 'Manual coordinates' : locationInput.value;
+  const rows = [
+    ['Name', nameInput.value.trim()],
+    ['Born', `${dateInput.value} ${timeInput.value} (${timezone})`],
+    ['Place', `${place} · ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°`],
+    ['Ayanamsa', settingsAyanamsa.selectedOptions[0].textContent],
+    ['Houses', settingsHouse.selectedOptions[0].textContent]
+  ].filter(([, value]) => value);
+  const summary = document.getElementById('print-summary');
+  summary.innerHTML = '<h2>Vedic Birth Chart</h2><dl></dl>';
+  rows.forEach(([label, value]) => {
+    const dt = document.createElement('dt');
+    const dd = document.createElement('dd');
+    dt.textContent = label;
+    dd.textContent = value;
+    summary.querySelector('dl').append(dt, dd);
+  });
 }
 
 // Helper: centre text of the chart — name (if given) and birth date/time
