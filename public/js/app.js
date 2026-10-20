@@ -302,6 +302,7 @@ async function handleSubmit(e) {
 
     // Render all tabs
     renderPrintSummary();
+    renderKeyFacts();
     renderRasiTab();
     renderNavamsaTab();
     renderPlanetsTab();
@@ -653,6 +654,32 @@ function downloadPdf() {
   document.title = `Kundli - ${name || dateInput.value}`;
   window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
   window.print();
+}
+
+// Headline facts shown above the tabs
+function renderKeyFacts() {
+  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  const moon = state.planets.find(p => p.name === 'Moon');
+  const { currentMahadasha, currentBhukti } = state.dasha;
+  const facts = [
+    ['Lagna', signNames[Math.floor(state.houses.siderealAscendant / 30)]],
+    ['Moon Sign', signNames[moon.sign]],
+    ['Birth Star', state.dasha.moonNakshatra],
+    ['Current Dasha', currentMahadasha
+      ? currentMahadasha.planet + (currentBhukti ? ` / ${currentBhukti.planet}` : '')
+      : 'N/A']
+  ];
+  const container = document.getElementById('key-facts');
+  container.innerHTML = '';
+  facts.forEach(([label, value]) => {
+    const fact = document.createElement('div');
+    fact.className = 'key-fact';
+    fact.innerHTML = '<span class="key-fact-label"></span><span class="key-fact-value"></span>';
+    fact.firstChild.textContent = label;
+    fact.lastChild.textContent = value;
+    container.appendChild(fact);
+  });
 }
 
 // Birth details and settings printed at the top of the PDF
