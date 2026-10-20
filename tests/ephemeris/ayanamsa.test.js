@@ -32,21 +32,15 @@ describe('Ayanamsa', () => {
     assert(ay2050 > ay2000, `Ayanamsa should increase: J2000=${ay2000} J2050=${ay2050}`);
   });
 
-  test('Krishnamurti ayanamsa is slightly different from Lahiri', () => {
-    const lahiri = ayanamsa(j2000, 'lahiri');
-    const krish = ayanamsa(j2000, 'krishnamurti');
-
-    // Difference should be small but non-zero
-    assert(lahiri !== krish, `Lahiri and Krishnamurti should differ`);
-    assert(Math.abs(lahiri - krish) < 0.1, `Difference should be < 0.1°`);
+  // Offsets from Swiss Ephemeris 2.10 (SE_SIDM_KRISHNAMURTI / SE_SIDM_RAMAN), constant over 1900-2100
+  test('Krishnamurti ayanamsa is Lahiri - 0.096852°', () => {
+    const diff = ayanamsa(j2000, 'lahiri') - ayanamsa(j2000, 'krishnamurti');
+    assert(Math.abs(diff - 0.096852) < 1e-6, `Lahiri - Krishnamurti should be 0.096852°, got ${diff}`);
   });
 
-  test('Raman ayanamsa is different from both', () => {
-    const lahiri = ayanamsa(j2000, 'lahiri');
-    const raman = ayanamsa(j2000, 'raman');
-
-    assert(lahiri !== raman, `Lahiri and Raman should differ`);
-    assert(Math.abs(lahiri - raman) < 0.1, `Difference should be < 0.1°`);
+  test('Raman ayanamsa is Lahiri - 1.446301°', () => {
+    const diff = ayanamsa(j2000, 'lahiri') - ayanamsa(j2000, 'raman');
+    assert(Math.abs(diff - 1.446301) < 1e-6, `Lahiri - Raman should be 1.446301°, got ${diff}`);
   });
 });
 
@@ -67,9 +61,12 @@ describe('Tropical positions', () => {
       `Moon longitude should be 0-360°, got ${pos.Moon.longitude}`);
   });
 
-  test('All 7 planets have positions', () => {
+  test('All 7 planets and both nodes have positions', () => {
     const pos = tropicalLongitudes(j2000);
-    assert(Object.keys(pos).length === 7, `Should have 7 planets, got ${Object.keys(pos).length}`);
+    assert.deepEqual(Object.keys(pos).sort(),
+      ['Jupiter', 'Ketu', 'Mars', 'Mercury', 'Moon', 'Rahu', 'Saturn', 'Sun', 'Venus']);
+    const ketuMinusRahu = (pos.Ketu.longitude - pos.Rahu.longitude + 360) % 360;
+    assert(Math.abs(ketuMinusRahu - 180) < 1e-9, 'Ketu should be opposite Rahu');
   });
 });
 
@@ -130,36 +127,31 @@ describe('Lunar nodes', () => {
   });
 });
 
-describe('Golden chart: Oct 15 1986 10:00 Chennai (Lahiri)', () => {
-  test('Sun in Virgo ~28°', () => {
-    const planets = computePlanets(GOLDEN_BIRTH, GOLDEN_AY);
-    const sun = planets.find(p => p.name === 'Sun');
-    // Expected: Virgo (sign 5), ~28°
-    assert(sun.sign === 5, `Sun should be in Virgo (sign 5), got sign ${sun.sign}`);
-    assert(sun.degreeInSign > 26 && sun.degreeInSign < 30,
-      `Sun should be ~28° in Virgo, got ${sun.degreeInSign}°`);
-  });
+// Reference: Swiss Ephemeris 2.10.03 (Moshier), Lahiri, mean node.
+// GOLDEN_BIRTH is 1986-10-15 11:30 UTC = 17:00 IST, Chennai.
+const GOLDEN_SIDEREAL = {
+  Sun: [178.1442, false], Moon: [330.4824, false], Mars: [279.9370, false],
+  Mercury: [201.6716, false], Jupiter: [320.2547, true], Venus: [206.7236, false],
+  Saturn: [222.9791, false], Rahu: [356.9261, true]
+};
 
-  test('Moon in Pisces ~0.5°', () => {
-    const planets = computePlanets(GOLDEN_BIRTH, GOLDEN_AY);
-    const moon = planets.find(p => p.name === 'Moon');
-    // Expected: Pisces (sign 11), ~0.5°
-    assert(moon.sign === 11, `Moon should be in Pisces (sign 11), got sign ${moon.sign}`);
-    assert(moon.degreeInSign > 0 && moon.degreeInSign < 2,
-      `Moon should be ~0.5° in Pisces, got ${moon.degreeInSign}°`);
-  });
+describe('Golden chart: Oct 15 1986 17:00 IST Chennai (Lahiri) vs Swiss Ephemeris', () => {
+  const planets = computePlanets(GOLDEN_BIRTH, GOLDEN_AY);
 
-  test('Mars in Aquarius ~25°', () => {
-    const planets = computePlanets(GOLDEN_BIRTH, GOLDEN_AY);
-    const mars = planets.find(p => p.name === 'Mars');
-    // Expected: Aquarius (sign 10), ~25°
-    assert(mars.sign === 10, `Mars should be in Aquarius (sign 10), got sign ${mars.sign}`);
-    assert(mars.degreeInSign > 23 && mars.degreeInSign < 27,
-      `Mars should be ~25° in Aquarius, got ${mars.degreeInSign}°`);
+  for (const [name, [expected, retro]] of Object.entries(GOLDEN_SIDEREAL)) {
+    test(`${name} within 1' of Swiss Ephemeris`, () => {
+      const p = planets.find(x => x.name === name);
+      const diff = Math.abs(((p.siderealLongitude - expected + 540) % 360) - 180) * 60;
+      assert(diff < 1, `${name}: expected ${expected}°, got ${p.siderealLongitude}° (${diff.toFixed(2)}' off)`);
+      assert.equal(p.retrograde, retro, `${name} retrograde should be ${retro}`);
+    });
+  }
+
+  test('Mars is in Capricorn, not the heliocentric Aquarius', () => {
+    assert.equal(planets.find(p => p.name === 'Mars').sign, 9);
   });
 
   test('All planets have valid sign/degree in range', () => {
-    const planets = computePlanets(GOLDEN_BIRTH, GOLDEN_AY);
     for (const p of planets) {
       assert(p.sign >= 0 && p.sign < 12,
         `${p.name} sign should be 0-11, got ${p.sign}`);

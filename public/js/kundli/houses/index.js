@@ -61,13 +61,10 @@ function tropicalAscendant(utc, longitude, latitude) {
   const epsRad = eps * DEG2RAD;
   const phiRad = latitude * DEG2RAD;
 
-  // Swiss Ephemeris formula
-  const x = Math.cos(lstRad);
-  const y = -Math.sin(lstRad) * Math.cos(epsRad);
-  const z = -Math.sin(lstRad) * Math.sin(epsRad);
-
-  const p = -z;
-  const q = y * Math.cos(phiRad) - x * Math.sin(phiRad);
+  // Ecliptic longitude rising on the eastern horizon:
+  // ASC = atan2(cos θ, -(sin θ·cos ε + tan φ·sin ε)), θ = local sidereal time
+  const p = Math.cos(lstRad);
+  const q = -(Math.sin(lstRad) * Math.cos(epsRad) + Math.tan(phiRad) * Math.sin(epsRad));
 
   let asc = Math.atan2(p, q) * RAD2DEG;
   asc = ((asc % 360) + 360) % 360;
@@ -87,90 +84,79 @@ function tropicalMidheaven(utc, longitude) {
   const lstRad = lstDeg * DEG2RAD;
   const epsRad = eps * DEG2RAD;
 
-  // MC formula
-  const x = Math.cos(lstRad);
-  const y = -Math.sin(lstRad) * Math.cos(epsRad);
-
-  let mc = Math.atan2(x, y) * RAD2DEG;
+  // Ecliptic longitude on the meridian: MC = atan2(sin θ, cos θ·cos ε)
+  let mc = Math.atan2(Math.sin(lstRad), Math.cos(lstRad) * Math.cos(epsRad)) * RAD2DEG;
   mc = ((mc % 360) + 360) % 360;
   return mc;
 }
 
 /**
- * Compute the ecliptic longitude on the eastern horizon at a given LST
- * @param {number} lstRad - Local Sidereal Time in radians
- * @param {number} latitude - Observer latitude (degrees)
- * @param {number} utc - Unix timestamp (UTC seconds)
+ * Ecliptic longitude of the point on the ecliptic with right ascension `ra`
+ * @param {number} ra - Right ascension (radians)
+ * @param {number} epsRad - Obliquity (radians)
  * @returns {number} Ecliptic longitude in degrees (0-360)
  */
-function easternHorizonLongitude(lstRad, latitude, utc) {
-  const eps = trueObliquity(utc);
-  const epsRad = eps * DEG2RAD;
-  const phiRad = latitude * DEG2RAD;
-
-  // Formula: tan(λ) = cos(LST) / (sin(LST) * cos(ε) - tan(φ) * sin(ε))
-  const cosLst = Math.cos(lstRad);
-  const sinLst = Math.sin(lstRad);
-  const tanPhi = Math.tan(phiRad);
-  const sinEps = Math.sin(epsRad);
-  const cosEps = Math.cos(epsRad);
-
-  const numerator = cosLst;
-  const denominator = sinLst * cosEps - tanPhi * sinEps;
-
-  let lambda = Math.atan2(numerator, denominator) * RAD2DEG;
-  lambda = ((lambda % 360) + 360) % 360;
-  return lambda;
+function eclipticFromRA(ra, epsRad) {
+  const lambda = Math.atan2(Math.sin(ra), Math.cos(ra) * Math.cos(epsRad)) * RAD2DEG;
+  return ((lambda % 360) + 360) % 360;
 }
 
 /**
- * Compute Placidus house cusps
- * Uses the oblique ascension method
+ * Placidus intermediate cusp: the ecliptic point that has covered `fraction`
+ * of its semi-arc. Above the horizon (cusps 11, 12) the hour angle is measured
+ * from the MC across the diurnal semi-arc; below it (cusps 2, 3) from the IC
+ * across the nocturnal semi-arc. Solved by fixed-point iteration.
+ * @param {number} ramc - Right ascension of the MC (radians)
+ * @param {number} epsRad - Obliquity (radians)
+ * @param {number} phiRad - Latitude (radians)
+ * @param {number} fraction - 1/3 or 2/3 of the semi-arc
+ * @param {boolean} aboveHorizon - true for cusps 11 and 12
+ * @returns {number} Ecliptic longitude in degrees (0-360)
+ */
+function placidusCusp(ramc, epsRad, phiRad, fraction, aboveHorizon) {
+  const HALF_PI = Math.PI / 2;
+  let ra = aboveHorizon ? ramc + fraction * HALF_PI : ramc + Math.PI - fraction * HALF_PI;
+  for (let i = 0; i < 50; i++) {
+    const lambda = eclipticFromRA(ra, epsRad) * DEG2RAD;
+    const dec = Math.asin(Math.sin(epsRad) * Math.sin(lambda));
+    // Ascensional difference; diurnal semi-arc = 90° + AD, nocturnal = 90° − AD
+    const ad = Math.asin(Math.max(-1, Math.min(1, Math.tan(phiRad) * Math.tan(dec))));
+    const next = aboveHorizon
+      ? ramc + fraction * (HALF_PI + ad)
+      : ramc + Math.PI - fraction * (HALF_PI - ad);
+    if (Math.abs(next - ra) < 1e-10) { ra = next; break; }
+    ra = next;
+  }
+  return eclipticFromRA(ra, epsRad);
+}
+
+/**
+ * Compute Placidus house cusps (tropical)
  * @param {number} utc - Unix timestamp (UTC seconds)
  * @param {number} longitude - Observer longitude (degrees, east positive)
- * @param {number} latitude - Observer latitude (degrees, north positive)
- * @param {number} ascendant - Sidereal ascendant longitude (degrees)
- * @returns {Array<number>} 12 house cusp longitudes (degrees)
+ * @param {number} latitude - Observer latitude (degrees)
+ * @param {number} ascendant - Tropical ascendant (degrees)
+ * @returns {Array<number>} 12 tropical cusp longitudes (degrees)
  * @throws {PlacidusUndefinedError} if |latitude| > 66°
  */
 function placidusCusps(utc, longitude, latitude, ascendant) {
   if (Math.abs(latitude) > 66) {
     throw new PlacidusUndefinedError(`Placidus undefined at latitude ${latitude}°`);
   }
+  const ramc = lst(utc, longitude) * DEG2RAD;
+  const epsRad = trueObliquity(utc) * DEG2RAD;
+  const phiRad = latitude * DEG2RAD;
+  const mc = tropicalMidheaven(utc, longitude);
 
-  // Compute LST when Ascendant is on eastern horizon
-  const lstDeg = lst(utc, longitude);
-  const lstRad = lstDeg * DEG2RAD;
-
-  // Compute cusps at each 30° interval in time
   const cusps = [];
-  cusps[0] = ascendant; // Cusp 1 = Ascendant
-
-  // Cusp 10 (MC) - use MC formula (independent of latitude)
-  cusps[9] = tropicalMidheaven(utc, longitude);
-
-  // Cusp 11 - another 30° in time
-  cusps[10] = easternHorizonLongitude(lstRad + 60 * DEG2RAD, latitude, utc);
-
-  // Cusp 12 - another 30° in time
-  cusps[11] = easternHorizonLongitude(lstRad + 90 * DEG2RAD, latitude, utc);
-
-  // Cusp 2 - 30° before ASC in time
-  cusps[1] = easternHorizonLongitude(lstRad - 30 * DEG2RAD, latitude, utc);
-
-  // Cusp 3 - another 30°
-  cusps[2] = easternHorizonLongitude(lstRad - 60 * DEG2RAD, latitude, utc);
-
-  // Cusp 4 (IC) = MC + 180
-  cusps[3] = (tropicalMidheaven(utc, longitude) + 180) % 360;
-
-  // Cusps 5-9 are opposite cusps 11-3
-  cusps[4] = (cusps[10] + 180) % 360; // Cusp 5 = opposite cusp 11
-  cusps[5] = (cusps[11] + 180) % 360; // Cusp 6 = opposite cusp 12
-  cusps[6] = (cusps[0] + 180) % 360;  // Cusp 7 = opposite cusp 1
-  cusps[7] = (cusps[1] + 180) % 360;  // Cusp 8 = opposite cusp 2
-  cusps[8] = (cusps[2] + 180) % 360;  // Cusp 9 = opposite cusp 3
-
+  cusps[0] = ascendant;
+  cusps[9] = mc;
+  cusps[10] = placidusCusp(ramc, epsRad, phiRad, 1 / 3, true);
+  cusps[11] = placidusCusp(ramc, epsRad, phiRad, 2 / 3, true);
+  cusps[1] = placidusCusp(ramc, epsRad, phiRad, 2 / 3, false);
+  cusps[2] = placidusCusp(ramc, epsRad, phiRad, 1 / 3, false);
+  // Opposite cusps
+  for (const i of [0, 1, 2, 9, 10, 11]) cusps[(i + 6) % 12] = (cusps[i] + 180) % 360;
   return cusps;
 }
 
@@ -225,7 +211,7 @@ export class PlacidusUndefinedError extends Error {
  * The ayanamsa must be specified by the caller. This function does not assume
  * a default ayanamsa; use 'lahiri' (Champaneri) for most Vedic chart calculations.
  *
- * Returns tropical ASC and MC; house cusps are in sidereal coordinates.
+ * Returns tropical ASC and MC, the sidereal ASC, and house cusps in sidereal coordinates.
  *
  * @param {ResolvedBirth} resolvedBirth - Birth data with UTC time and coordinates
  * @param {AyanamsaKind} ayanamsaKind - Ayanamsa type: 'lahiri' | 'raman' | 'krishnamurti'
@@ -265,7 +251,8 @@ export function calculateHouses(resolvedBirth, ayanamsaKind, houseSystem) {
   return {
     cusps: cusps,
     ascendant: tropicalAsc,
-    midheaven: tropicalMc
+    midheaven: tropicalMc,
+    siderealAscendant: siderealAsc
   };
 }
 

@@ -3,11 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kundli</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <title>Vedic Kundli Calculator</title>
+  <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="/js/kundli/main.js"></script>
+  <div id="app">
+    <header>
+      <h1>Vedic Kundli Calculator</h1>
+      <p>Calculate and view your Vedic birth chart</p>
+    </header>
+
+    <main>
+      <!-- Settings Panel -->
+      <section id="settings" class="settings-panel">
+        <h2>Settings</h2>
+        <div class="settings-row">
+          <div class="setting-item">
+            <label for="settings-ayanamsa">Ayanamsa</label>
+            <select id="settings-ayanamsa">
+              <option value="lahiri">Lahiri (Champaneri)</option>
+              <option value="raman">Raman</option>
+              <option value="krishnamurti">Krishnamurti</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="settings-house">House System</label>
+            <select id="settings-house">
+              <option value="wholesign">Whole Sign</option>
+              <option value="equal">Equal</option>
+              <option value="placidus">Placidus</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="settings-style">Chart Style</label>
+            <select id="settings-style">
+              <option value="basic">Basic</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Birth Form -->
+      <section id="form-section">
+        <form id="birth-form" class="birth-form">
+          <h2>Birth Details</h2>
+          <div class="form-group">
+            <label for="birth-name">Name</label>
+            <input type="text" id="birth-name" placeholder="Your name">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="birth-date">Date of Birth</label>
+              <input type="date" id="birth-date" required>
+            </div>
+            <div class="form-group">
+              <label for="birth-time">Time of Birth</label>
+              <input type="time" id="birth-time" step="1" required>
+              <div id="utc-offset" class="utc-offset"></div>
+            </div>
+          </div>
+          <div class="form-group" id="location-wrapper">
+            <label for="birth-location">Birth Location</label>
+            <input type="text" id="birth-location" placeholder="Search city..." autocomplete="off">
+            <div id="location-dropdown" class="location-dropdown hidden"></div>
+            <div id="location-error" class="form-error hidden"></div>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="manual-toggle">
+              Enter coordinates manually
+            </label>
+          </div>
+          <div id="manual-coords-section" class="hidden">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="manual-lat">Latitude</label>
+                <input type="number" id="manual-lat" step="0.0001" min="-90" max="90" placeholder="e.g. 13.0827">
+              </div>
+              <div class="form-group">
+                <label for="manual-lon">Longitude</label>
+                <input type="number" id="manual-lon" step="0.0001" min="-180" max="180" placeholder="e.g. 80.2707">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="manual-tz">Timezone</label>
+              <select id="manual-tz"></select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Calculate Kundli</button>
+        </form>
+      </section>
+
+      <!-- Results Section -->
+      <section id="results" class="hidden">
+        <div id="tab-container" class="tab-container">
+          <button class="tab-btn active" data-tab="rasi">Rasi (D1)</button>
+          <button class="tab-btn" data-tab="navamsa">Navamsa (D9)</button>
+          <button class="tab-btn" data-tab="planets">Planets</button>
+          <button class="tab-btn" data-tab="vimshottari">Vimshottari</button>
+          <button class="tab-btn" data-tab="panchanga">Panchanga</button>
+          <button class="tab-btn" data-tab="kp">KP</button>
+        </div>
+        <div class="tab-content">
+          <div id="tab-rasi"></div>
+          <div id="tab-navamsa" style="display:none"></div>
+          <div id="tab-planets" style="display:none"></div>
+          <div id="tab-vimshottari" style="display:none"></div>
+          <div id="tab-panchanga" style="display:none"></div>
+          <div id="tab-kp" style="display:none"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
 </body>
 </html>

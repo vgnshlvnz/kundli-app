@@ -4,7 +4,10 @@
 
 set -e
 
-WT_DIR="../kundli-wt"
+# Resolve from the main checkout so the script works from any folder or worktree
+ROOT="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+WT_DIR="$ROOT/kundli-wt"
+BASE="master"
 
 case "$1" in
   new)
@@ -12,7 +15,7 @@ case "$1" in
       echo "Usage: $0 new <name>"
       exit 1
     fi
-    git worktree add "$WT_DIR/$2" -b "feat/$2"
+    git -C "$ROOT" worktree add "$WT_DIR/$2" -b "feat/$2" "$BASE"
     echo "Created worktree: $WT_DIR/$2 (branch: feat/$2)"
     ;;
   list)
@@ -23,7 +26,7 @@ case "$1" in
       echo "Usage: $0 rm <name>"
       exit 1
     fi
-    git worktree remove "$WT_DIR/$2"
+    git -C "$ROOT" worktree remove "$WT_DIR/$2"
     echo "Removed worktree: $WT_DIR/$2"
     ;;
   sync)
@@ -36,8 +39,8 @@ case "$1" in
       echo "Worktree not found: $WT"
       exit 1
     fi
-    git -C "$WT" rebase main
-    echo "Synced worktree $2 with main"
+    git -C "$WT" rebase "$BASE"
+    echo "Synced worktree $2 with $BASE"
     ;;
   *)
     echo "Usage: $0 {new|list|rm|sync} [name]"

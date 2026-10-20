@@ -8,13 +8,13 @@
 export const SECONDS_PER_YEAR = 365.25 * 86400;
 
 import {
-  Body, MakeTime, EclipticLongitude, EclipticGeoMoon, GeoMoonState,
-  GeoVector, SunPosition
+  Body, MakeTime, Ecliptic, EclipticGeoMoon, GeoMoonState,
+  GeoVector, SunPosition, Vector
 } from '../../../vendor/astronomy.js';
 
-// Planet names
+// Planet names (Rahu/Ketu are the mean lunar nodes)
 const PLANETS = [
-  'Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'
+  'Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'
 ];
 
 const BODY_MAP = {
@@ -28,62 +28,49 @@ const BODY_MAP = {
 };
 
 /**
- * Compute tropical ecliptic longitudes for all 7 planets
+ * Geocentric ecliptic longitude/latitude (true equinox of date) of one body
+ * @param {string} name - Planet name from PLANETS
+ * @param {Date} date
+ * @returns {{longitude: number, latitude: number}}
+ */
+function geocentricEcliptic(name, date) {
+  if (name === 'Sun') {
+    const sun = SunPosition(date);
+    return { longitude: sun.elon, latitude: sun.elat };
+  }
+  if (name === 'Moon') {
+    const moon = EclipticGeoMoon(date);
+    return { longitude: moon.lon, latitude: moon.lat };
+  }
+  if (name === 'Rahu' || name === 'Ketu') {
+    const rahu = meanNode(date.getTime() / 1000);
+    return { longitude: name === 'Rahu' ? rahu : (rahu + 180) % 360, latitude: 0 };
+  }
+  // Seen from Earth (EclipticLongitude would be heliocentric)
+  const ecl = Ecliptic(GeoVector(BODY_MAP[name], date, true));
+  return { longitude: ecl.elon, latitude: ecl.elat };
+}
+
+/**
+ * Compute tropical geocentric ecliptic positions for all planets and nodes
  * @param {number} utc - Unix timestamp (UTC seconds)
  * @returns {Object} Map of planet name → {longitude, latitude, speed}
  */
 export function tropicalLongitudes(utc) {
   const results = {};
   const date = new Date(utc * 1000);
+  const datePlus = new Date(utc * 1000 + 43200000);
+  const dateMinus = new Date(utc * 1000 - 43200000);
 
   for (const name of PLANETS) {
-    const body = BODY_MAP[name];
-
-    // Ecliptic longitude (tropical)
-    let longitude;
-    if (name === 'Sun') {
-      const sunPos = SunPosition(date);
-      longitude = sunPos.elon;
-    } else if (name === 'Moon') {
-      const moonPos = EclipticGeoMoon(date);
-      longitude = moonPos.lon;
-    } else {
-      longitude = EclipticLongitude(body, date);
-    }
+    const { longitude, latitude } = geocentricEcliptic(name, date);
 
     // Speed via ±12h finite difference in longitude
-    const datePlus = new Date(utc * 1000 + 43200000);
-    const dateMinus = new Date(utc * 1000 - 43200000);
-
-    let lonPlus, lonMinus;
-    if (name === 'Sun') {
-      lonPlus = SunPosition(datePlus).elon;
-      lonMinus = SunPosition(dateMinus).elon;
-    } else if (name === 'Moon') {
-      lonPlus = EclipticGeoMoon(datePlus).lon;
-      lonMinus = EclipticGeoMoon(dateMinus).lon;
-    } else {
-      lonPlus = EclipticLongitude(body, datePlus);
-      lonMinus = EclipticLongitude(body, dateMinus);
-    }
-
-    // Handle wrap-around at 360°
-    let delta = lonPlus - lonMinus;
+    let delta = geocentricEcliptic(name, datePlus).longitude - geocentricEcliptic(name, dateMinus).longitude;
     if (delta > 180) delta -= 360;
     if (delta < -180) delta += 360;
-    const speed = delta / 24; // degrees per day (24h = 1 day)
 
-    // Latitude: compute from geocentric vector
-    const vec = GeoVector(body, date, true);
-    // Transform to ecliptic coordinates using mean obliquity
-    // For simplicity, use latitude = 0 for planets (planets are nearly in ecliptic)
-    // Moon has significant latitude
-
-    results[name] = {
-      longitude: longitude,
-      latitude: 0, // TODO: compute from vector
-      speed: speed
-    };
+    results[name] = { longitude, latitude, speed: delta }; // degrees per day
   }
 
   return results;
@@ -152,24 +139,22 @@ function computeLahiriAyanamsa(t) {
 
 /**
  * Krishnamurti ayanamsa
- * Uses same base polynomial with SE offset: -0.01376° (49.54")
+ * Lahiri minus a constant 0.096852° (5' 48.7"), matching Swiss Ephemeris SE_SIDM_KRISHNAMURTI
  * @param {number} t - Julian centuries from J2000.0
  * @returns {number} Ayanamsa in degrees
  */
 function computeKrishnamurtiAyanamsa(t) {
-  // SE_AY_KRISHNAMURTI offset: -0.01376°
-  return computeBaseLahiriAyanamsa(t) - 0.01376;
+  return computeBaseLahiriAyanamsa(t) - 0.096852;
 }
 
 /**
  * Raman ayanamsa
- * Uses same base polynomial with SE offset: -0.00198° (7.13")
+ * Lahiri minus a constant 1.446301° (1° 26' 46.7"), matching Swiss Ephemeris SE_SIDM_RAMAN
  * @param {number} t - Julian centuries from J2000.0
  * @returns {number} Ayanamsa in degrees
  */
 function computeRamanAyanamsa(t) {
-  // SE_AY_RAMAN offset: -0.00198°
-  return computeBaseLahiriAyanamsa(t) - 0.00198;
+  return computeBaseLahiriAyanamsa(t) - 1.446301;
 }
 
 /**
@@ -200,21 +185,11 @@ export function trueNode(utc) {
   const date = new Date(utc * 1000);
   const state = GeoMoonState(date);
 
-  // J2000 mean equatorial coordinates → ecliptic (rotate by -ε around x-axis)
-  // ε = J2000 mean obliquity ≈ 23.4392911111°
-  const eps = 23.4392911111 * Math.PI / 180.0;
-  const cosEps = Math.cos(eps);
-  const sinEps = Math.sin(eps);
-
-  // Transform position
-  const rxEcl = state.x;
-  const ryEcl = state.y * cosEps + state.z * sinEps;
-  const rzEcl = -state.y * sinEps + state.z * cosEps;
-
-  // Transform velocity
-  const vxEcl = state.vx;
-  const vyEcl = state.vy * cosEps + state.vz * sinEps;
-  const vzEcl = -state.vy * sinEps + state.vz * cosEps;
+  // J2000 equatorial → true ecliptic of date (same frame as the ayanamsa)
+  const r = Ecliptic(new Vector(state.x, state.y, state.z, state.t)).vec;
+  const v = Ecliptic(new Vector(state.vx, state.vy, state.vz, state.t)).vec;
+  const rxEcl = r.x, ryEcl = r.y, rzEcl = r.z;
+  const vxEcl = v.x, vyEcl = v.y, vzEcl = v.z;
 
   // Angular momentum in ecliptic coordinates: L = r × v
   const lx = ryEcl * vzEcl - rzEcl * vyEcl;
