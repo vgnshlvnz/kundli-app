@@ -97,6 +97,7 @@ function init() {
     for (const key of ['locationId', 'latitude', 'longitude', 'timezone']) delete locationInput.dataset[key];
     debouncedSearch();
   });
+  locationInput.addEventListener('keydown', handleLocationKeys);
   manualToggle.addEventListener('change', toggleManualCoords);
   settingsAyanamsa.addEventListener('change', e => {
     state.settings.ayanamsa = e.target.value;
@@ -110,8 +111,8 @@ function init() {
     state.settings.chartStyle = e.target.value;
     updateAdvancedTabs();
   });
-  Object.keys(tabs).forEach(id => {
-    tabs[id].addEventListener('click', () => switchTab(id));
+  tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
   // Close location dropdown on click outside
@@ -142,11 +143,37 @@ async function searchAndShowResults() {
     if (results.length > 0) {
       renderLocationDropdown(results);
       locationDropdown.classList.remove('hidden');
+      locationError.classList.add('hidden');
     } else {
       locationDropdown.classList.add('hidden');
+      showLocationError(`No places match "${query}". Try another spelling or enter coordinates manually.`);
     }
   } catch (e) {
     console.error('Location search failed:', e);
+    locationDropdown.classList.add('hidden');
+    showLocationError('Location search is unavailable right now. Enter coordinates manually instead.');
+  }
+}
+
+function showLocationError(message) {
+  locationError.textContent = message;
+  locationError.classList.remove('hidden');
+}
+
+// Arrow keys move through the dropdown, Enter picks, Escape closes
+function handleLocationKeys(e) {
+  const items = [...locationDropdown.querySelectorAll('.location-item')];
+  if (locationDropdown.classList.contains('hidden') || items.length === 0) return;
+  const current = items.findIndex(item => item.classList.contains('active'));
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const next = e.key === 'ArrowDown' ? (current + 1) % items.length : (current - 1 + items.length) % items.length;
+    items.forEach((item, i) => item.classList.toggle('active', i === next));
+    items[next].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && current >= 0) {
+    e.preventDefault();
+    items[current].click();
+  } else if (e.key === 'Escape') {
     locationDropdown.classList.add('hidden');
   }
 }
@@ -215,6 +242,7 @@ async function updateUtcOffset() {
 async function handleSubmit(e) {
   e.preventDefault();
   resultsEl.classList.add('hidden');
+  locationError.classList.add('hidden');
 
   try {
     // Resolve birth data

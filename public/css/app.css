@@ -182,7 +182,8 @@ input:focus, select:focus {
   border-bottom: 1px solid var(--border);
 }
 
-.location-item:hover {
+.location-item:hover,
+.location-item.active {
   background: var(--bg-secondary);
 }
 
@@ -289,7 +290,13 @@ input:focus, select:focus {
 
 .chart-table tr.current-period {
   background: var(--highlight);
+  color: #1e293b;
   font-weight: 600;
+}
+
+/* Wide tables scroll inside the panel instead of widening the page */
+.tab-content {
+  overflow-x: auto;
 }
 
 /* Print Styles */
