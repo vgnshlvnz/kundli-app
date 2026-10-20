@@ -6,6 +6,7 @@ import {
   Body, SunPosition, EclipticGeoMoon,
   SearchRiseSet, Observer
 } from '../../../vendor/astronomy.js';
+import { ayanamsa } from '../ephemeris/index.js';
 
 // Tithi names (1-30)
 const TITHI_NAMES = [
@@ -21,52 +22,50 @@ const TITHI_NAMES = [
 const NAKSHATRAS = [
   { name: 'Ashwini', lord: 'Ketu' },
   { name: 'Bharani', lord: 'Venus' },
-  { name: 'Krittika', lord: 'Venus' },
-  { name: 'Rohini', lord: 'Sun' },
-  { name: 'Mrigashira', lord: 'Moon' },
-  { name: 'Ardra', lord: 'Moon' },
-  { name: 'Punarvasu', lord: 'Moon' },
-  { name: 'Pushya', lord: 'Mars' },
-  { name: 'Ashlesha', lord: 'Rahu' },
-  { name: 'Magha', lord: 'Rahu' },
-  { name: 'Purva Phalguni', lord: 'Rahu' },
-  { name: 'Uttara Phalguni', lord: 'Jupiter' },
-  { name: 'Hasta', lord: 'Jupiter' },
-  { name: 'Chitra', lord: 'Saturn' },
-  { name: 'Swati', lord: 'Saturn' },
-  { name: 'Vishakha', lord: 'Saturn' },
-  { name: 'Anuradha', lord: 'Mercury' },
+  { name: 'Krittika', lord: 'Sun' },
+  { name: 'Rohini', lord: 'Moon' },
+  { name: 'Mrigashira', lord: 'Mars' },
+  { name: 'Ardra', lord: 'Rahu' },
+  { name: 'Punarvasu', lord: 'Jupiter' },
+  { name: 'Pushya', lord: 'Saturn' },
+  { name: 'Ashlesha', lord: 'Mercury' },
+  { name: 'Magha', lord: 'Ketu' },
+  { name: 'Purva Phalguni', lord: 'Venus' },
+  { name: 'Uttara Phalguni', lord: 'Sun' },
+  { name: 'Hasta', lord: 'Moon' },
+  { name: 'Chitra', lord: 'Mars' },
+  { name: 'Swati', lord: 'Rahu' },
+  { name: 'Vishakha', lord: 'Jupiter' },
+  { name: 'Anuradha', lord: 'Saturn' },
   { name: 'Jyeshtha', lord: 'Mercury' },
-  { name: 'Mula', lord: 'Mercury' },
-  { name: 'Purva Ashadha', lord: 'Ketu' },
-  { name: 'Uttara Ashadha', lord: 'Venus' },
-  { name: 'Shravana', lord: 'Venus' },
-  { name: 'Dhanishta', lord: 'Sun' },
-  { name: 'Shatabhisha', lord: 'Moon' },
-  { name: 'Purva Bhadrapada', lord: 'Moon' },
-  { name: 'Uttara Bhadrapada', lord: 'Moon' },
-  { name: 'Revati', lord: 'Mars' }
+  { name: 'Mula', lord: 'Ketu' },
+  { name: 'Purva Ashadha', lord: 'Venus' },
+  { name: 'Uttara Ashadha', lord: 'Sun' },
+  { name: 'Shravana', lord: 'Moon' },
+  { name: 'Dhanishta', lord: 'Mars' },
+  { name: 'Shatabhisha', lord: 'Rahu' },
+  { name: 'Purva Bhadrapada', lord: 'Jupiter' },
+  { name: 'Uttara Bhadrapada', lord: 'Saturn' },
+  { name: 'Revati', lord: 'Mercury' }
 ];
 
 const NAKSHATRA_WIDTH = 360 / 27;
 
 // Yoga names (27)
 const YOGA_NAMES = [
-  'Vishkambha', 'Prithivi', 'Aparajita', 'Sarpa', 'Siddhi',
-  'Sadhya', 'Shubha', 'Shukla', 'Brahma', 'Indra',
-  'Vaidhriti', 'Visham', 'Vishambhara', 'Priti', 'Ayushman',
-  'Saumya', 'Dhriti', 'Shula', 'Ganda', 'Vigraha',
-  'Harshana', 'Vajra', 'Siddha', 'Vyaghata', 'Harsha',
-  'Varjya', 'Shiva'
+  'Vishkambha', 'Priti', 'Ayushman', 'Saubhagya', 'Shobhana',
+  'Atiganda', 'Sukarma', 'Dhriti', 'Shula', 'Ganda',
+  'Vriddhi', 'Dhruva', 'Vyaghata', 'Harshana', 'Vajra',
+  'Siddhi', 'Vyatipata', 'Variyan', 'Parigha', 'Shiva',
+  'Siddha', 'Sadhya', 'Shubha', 'Shukla', 'Brahma',
+  'Indra', 'Vaidhriti'
 ];
 
-// Fixed karanas (associated with specific odd tithis)
-const FIXED_KARANA_NAMES = ['Bava', 'Taitila', 'Garga', 'Vanija'];
+// Movable karanas repeat 8 times from the 2nd to the 57th half-tithi
+const MOVABLE_KARANA_NAMES = ['Bava', 'Balava', 'Kaulava', 'Taitila', 'Gara', 'Vanija', 'Vishti'];
 
-// Moving karanas (7-cycle)
-const MOVING_KARANA_NAMES = [
-  'Shukla', 'Brahma', 'Ganda', 'Durvana', 'Shakuni', 'Shubha', 'Priti'
-];
+// Fixed karanas: 1st half-tithi (Kimstughna) and the last three (Shakuni, Chatushpada, Naga)
+const FIXED_KARANA_NAMES = ['Kimstughna', 'Shakuni', 'Chatushpada', 'Naga'];
 
 // Vara (weekday) names
 const VARA_NAMES = [
@@ -133,10 +132,10 @@ export function getPaksha(tithiNumber) {
  * @param {number} utc - Unix timestamp (UTC seconds)
  * @returns {Object} Nakshatra info { index, name, lord }
  */
-export function getNakshatra(utc) {
+export function getNakshatra(utc, ayanamsaKind = 'lahiri') {
   const date = new Date(utc * 1000);
-  const moonPos = EclipticGeoMoon(date);
-  const moonLon = moonPos.lon;
+  // Nakshatras are sidereal
+  const moonLon = EclipticGeoMoon(date).lon - ayanamsa(utc, ayanamsaKind);
 
   // Normalize to 0-360
   let lon = ((moonLon % 360) + 360) % 360;
@@ -154,11 +153,12 @@ export function getNakshatra(utc) {
  * @param {number} utc - Unix timestamp (UTC seconds)
  * @returns {Object} Yoga info { index, name }
  */
-export function getYoga(utc) {
+export function getYoga(utc, ayanamsaKind = 'lahiri') {
   const date = new Date(utc * 1000);
-  const sunLon = SunPosition(date).elon;
-  const moonPos = EclipticGeoMoon(date);
-  const moonLon = moonPos.lon;
+  // Yoga = sidereal Sun + sidereal Moon
+  const ay = ayanamsa(utc, ayanamsaKind);
+  const sunLon = SunPosition(date).elon - ay;
+  const moonLon = EclipticGeoMoon(date).lon - ay;
 
   // Yoga is based on sum of Sun and Moon longitudes
   let sum = sunLon + moonLon;
@@ -172,41 +172,19 @@ export function getYoga(utc) {
 }
 
 /**
- * Calculate current karana from elongation
- * Karana = half of a tithi. First half of odd tithis 1-7 use fixed karanas.
- * All other halves use rotating cycle of 7 moving karanas.
+ * Calculate current karana from elongation.
+ * A karana is half a tithi (6° of Moon−Sun elongation), so there are 60 per lunar month:
+ * the 1st is Kimstughna, the 2nd-57th cycle through the 7 movable karanas,
+ * and the 58th-60th are Shakuni, Chatushpada and Naga.
  * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {Object} Karana info { name, fixed }
+ * @returns {Object} Karana info { number, name, fixed }
  */
 export function getKarana(utc) {
-  const elongation = computeElongation(utc);
-  const tithiNumber = Math.floor(elongation / 12) + 1;
-  const half = Math.floor((elongation % 12) / 6); // 0 = first half, 1 = second half
+  const k = Math.floor(computeElongation(utc) / 6); // 0-59
 
-  // Fixed karanas on first half of odd tithis 1, 3, 5, 7
-  if (tithiNumber % 2 === 1 && tithiNumber <= 7 && half === 0) {
-    const fixedIndex = Math.floor((tithiNumber - 1) / 2); // 0, 1, 2, 3
-    return {
-      name: FIXED_KARANA_NAMES[fixedIndex],
-      fixed: true
-    };
-  }
-
-  // Moving karana: cycle through 7 karanas
-  let movingIndex;
-  if (tithiNumber % 2 === 1) {
-    // Odd tithi, second half
-    movingIndex = Math.floor(tithiNumber / 2);
-  } else {
-    // Even tithi
-    movingIndex = Math.floor((tithiNumber - 1) / 2) + half;
-  }
-
-  const karanaName = MOVING_KARANA_NAMES[movingIndex % 7];
-  return {
-    name: karanaName,
-    fixed: false
-  };
+  if (k === 0) return { number: 1, name: FIXED_KARANA_NAMES[0], fixed: true };
+  if (k >= 57) return { number: k + 1, name: FIXED_KARANA_NAMES[k - 56], fixed: true };
+  return { number: k + 1, name: MOVABLE_KARANA_NAMES[(k - 1) % 7], fixed: false };
 }
 
 /**
@@ -295,15 +273,16 @@ export function getVara(utc, longitude, latitude) {
 /**
  * Calculate complete panchanga for a birth
  * @param {Object} resolvedBirth - Birth data { utc, longitude, latitude }
+ * @param {string} [ayanamsaKind='lahiri'] - Ayanamsa for the sidereal nakshatra and yoga
  * @returns {Object} Complete panchanga { tithi, paksha, nakshatra, yoga, karana, vara, sunriseSunset }
  */
-export function calculatePanchanga(resolvedBirth) {
+export function calculatePanchanga(resolvedBirth, ayanamsaKind = 'lahiri') {
   const { utc, longitude, latitude } = resolvedBirth;
 
   const tithi = getTithi(utc);
   const paksha = getPaksha(tithi.number);
-  const nakshatra = getNakshatra(utc);
-  const yoga = getYoga(utc);
+  const nakshatra = getNakshatra(utc, ayanamsaKind);
+  const yoga = getYoga(utc, ayanamsaKind);
   const karana = getKarana(utc);
   const vara = getVara(utc, longitude, latitude);
 

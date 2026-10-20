@@ -30,13 +30,21 @@ describe('Nakshatra identification', () => {
   test('Longitude 300° falls in Dhanishta', () => {
     const result = getNakshatra(300);
     assert.ok(result.name === 'Dhanishta');
-    assert.ok(result.lord === 'Sun', 'Dhanishta lord is Sun');
+    assert.ok(result.lord === 'Mars', 'Dhanishta lord is Mars');
   });
 
   test('Longitude 359° falls in Revati', () => {
     const result = getNakshatra(359);
     assert.ok(result.name === 'Revati');
-    assert.ok(result.lord === 'Mars');
+    assert.ok(result.lord === 'Mercury');
+  });
+
+  test('Lords follow the Vimshottari cycle from Ashwini = Ketu', () => {
+    const cycle = ['Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury'];
+    for (let i = 0; i < 27; i++) {
+      const result = getNakshatra(i * 40 / 3 + 1);
+      assert.equal(result.lord, cycle[i % 9], `${result.name} lord`);
+    }
   });
 
   test('All 27 nakshatras are covered', () => {
@@ -68,10 +76,10 @@ describe('Mahadasha sequence', () => {
     assert.ok(mahadashas[0].planet === 'Venus', 'First mahadasha should be Venus');
   });
 
-  test('Moon in Pushya starts Mars mahadasha', () => {
+  test('Moon in Pushya starts Saturn mahadasha', () => {
     // Pushya = 93.3333°
     const mahadashas = computeMahadashas(birth, 95);
-    assert.ok(mahadashas[0].planet === 'Mars', 'First mahadasha should be Mars');
+    assert.ok(mahadashas[0].planet === 'Saturn', 'First mahadasha should be Saturn');
   });
 
   test('Full sequence is 9 mahadashas', () => {
@@ -234,16 +242,16 @@ describe('Complete dasha calculation', () => {
   test('Handles Moon in different nakshatras', () => {
     const birth = { utc: 946684800 };
 
-    // Moon at 110° = Ashlesha (lord: Rahu)
+    // Moon at 110° = Ashlesha (lord: Mercury)
     let result = computeVimshottariDasha(birth, 110);
-    assert.ok(result.moonNakshatraLord === 'Rahu');
+    assert.ok(result.moonNakshatraLord === 'Mercury');
 
-    // Moon at 200° = Vishakha (lord: Saturn)
+    // Moon at 200° = Vishakha (lord: Jupiter)
     result = computeVimshottariDasha(birth, 200);
-    assert.ok(result.moonNakshatraLord === 'Saturn');
+    assert.ok(result.moonNakshatraLord === 'Jupiter');
 
-    // Moon at 350° = Revati (lord: Mars)
+    // Moon at 350° = Revati (lord: Mercury)
     result = computeVimshottariDasha(birth, 350);
-    assert.ok(result.moonNakshatraLord === 'Mars');
+    assert.ok(result.moonNakshatraLord === 'Mercury');
   });
 });

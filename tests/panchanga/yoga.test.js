@@ -20,13 +20,14 @@ describe('Yoga calculation', () => {
   test('Yoga name matches index', () => {
     const utc = 946684800;
     const yoga = getYoga(utc);
+    // The 27 standard yogas
     const yogaNames = [
-      'Vishkambha', 'Prithivi', 'Aparajita', 'Sarpa', 'Siddhi',
-      'Sadhya', 'Shubha', 'Shukla', 'Brahma', 'Indra',
-      'Vaidhriti', 'Visham', 'Vishambhara', 'Priti', 'Ayushman',
-      'Saumya', 'Dhriti', 'Shula', 'Ganda', 'Vigraha',
-      'Harshana', 'Vajra', 'Siddha', 'Vyaghata', 'Harsha',
-      'Varjya', 'Shiva'
+      'Vishkambha', 'Priti', 'Ayushman', 'Saubhagya', 'Shobhana',
+      'Atiganda', 'Sukarma', 'Dhriti', 'Shula', 'Ganda',
+      'Vriddhi', 'Dhruva', 'Vyaghata', 'Harshana', 'Vajra',
+      'Siddhi', 'Vyatipata', 'Variyan', 'Parigha', 'Shiva',
+      'Siddha', 'Sadhya', 'Shubha', 'Shukla', 'Brahma',
+      'Indra', 'Vaidhriti'
     ];
     assert.ok(yoga.name === yogaNames[yoga.index],
       `Yoga at index ${yoga.index} should be ${yogaNames[yoga.index]}`);

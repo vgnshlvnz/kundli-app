@@ -4,7 +4,7 @@ import { computePlanets } from '../../public/js/kundli/ephemeris/index.js';
 import { computeVimshottariDasha, getNakshatra, computeBhuktis } from '../../public/js/kundli/dasha/index.js';
 
 describe('Dasha integration: birth data → Moon position → Vimshottari', () => {
-  // Golden chart: October 15, 1986, 10:00 AM, Chennai, India
+  // Golden chart: October 15, 1986, 17:00 IST (11:30 UTC), Chennai, India
   // From tests/ephemeris/ayanamsa.test.js
   const GOLDEN_BIRTH = { utc: 529759800, longitude: 80.2707, latitude: 13.0827 };
 
@@ -24,30 +24,25 @@ describe('Dasha integration: birth data → Moon position → Vimshottari', () =
     // 3. Determine nakshatra
     const nakshatra = getNakshatra(moonSiderealLon);
 
-    // Moon at ~0.5° in Pisces → sidereal longitude ~330.5°
-    // This should fall in Purva Bhadrapada (320°-333.33°) or Uttara Bhadrapada (333.33°-346.67°)
-    // Purva Bhadrapada lord is Moon, Uttara Bhadrapada lord is also Moon
-    assert(['Purva Bhadrapada', 'Uttara Bhadrapada'].includes(nakshatra.name),
-      `Moon at ${moonSiderealLon}° should be in Purva/Uttara Bhadrapada, got ${nakshatra.name}`);
-
-    // Both nakshatras have Moon as lord
-    assert(nakshatra.lord === 'Moon',
-      `Nakshatra lord should be Moon, got ${nakshatra.lord}`);
+    // Moon at 330.4824° (Swiss Ephemeris, Lahiri) → Purva Bhadrapada (320°-333.33°), lord Jupiter
+    assert(nakshatra.name === 'Purva Bhadrapada',
+      `Moon at ${moonSiderealLon}° should be in Purva Bhadrapada, got ${nakshatra.name}`);
+    assert(nakshatra.lord === 'Jupiter',
+      `Nakshatra lord should be Jupiter, got ${nakshatra.lord}`);
 
     // 4. Compute Vimshottari dasha
     const dasha = computeVimshottariDasha(GOLDEN_BIRTH, moonSiderealLon);
 
-    // First mahadasha should be Moon (lord of Purva/Uttara Bhadrapada)
-    assert(dasha.mahadashas[0].planet === 'Moon',
-      `First mahadasha should be Moon, got ${dasha.mahadashas[0].planet}`);
+    // First mahadasha is Jupiter (lord of Purva Bhadrapada)
+    assert(dasha.mahadashas[0].planet === 'Jupiter',
+      `First mahadasha should be Jupiter, got ${dasha.mahadashas[0].planet}`);
 
-    // Remaining first mahadasha should be less than full 10 years
-    assert(dasha.remainingFirstMahadashaYears > 0 && dasha.remainingFirstMahadashaYears < 10,
-      `Remaining first MD should be 0-10 years, got ${dasha.remainingFirstMahadashaYears}`);
+    // 10.4824° of 13.3333° traversed → (1 - 0.78618) × 16 = 3.42 years of Jupiter left
+    assert(Math.abs(dasha.remainingFirstMahadashaYears - 3.421) < 0.01,
+      `Remaining first MD should be ~3.42 years, got ${dasha.remainingFirstMahadashaYears}`);
 
-    // Subsequent mahadashas follow Vimshottari order after Moon:
-    // Moon → Mars → Rahu → Jupiter → Saturn → Mercury → Ketu → Venus → Sun
-    const expectedOrder = ['Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury', 'Ketu', 'Venus', 'Sun'];
+    // Subsequent mahadashas follow Vimshottari order after Jupiter
+    const expectedOrder = ['Jupiter', 'Saturn', 'Mercury', 'Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu'];
     for (let i = 0; i < 9; i++) {
       assert(dasha.mahadashas[i].planet === expectedOrder[i],
         `Mahadasha ${i} should be ${expectedOrder[i]}, got ${dasha.mahadashas[i].planet}`);
@@ -83,20 +78,19 @@ describe('Dasha integration: birth data → Moon position → Vimshottari', () =
 
     // Check bhuktis within first mahadasha (not currentBhuktis, which is only
     // populated when a current mahadasha is found at the query date)
-    const md1 = dasha.mahadashas[0]; // Moon (partial)
+    const md1 = dasha.mahadashas[0]; // Jupiter (partial)
     const bhuktis = computeBhuktis(md1);
 
     // Compute bhukti duration for validation
-    // In Moon mahadasha, first bhukti is Moon itself:
+    // In Jupiter mahadasha, first bhukti is Jupiter itself:
     // bhukti duration = (md_duration / 120) * planet_period
-    const moonBhuktiYears = (md1.durationYears / 120) * 10;
+    const jupiterBhuktiYears = (md1.durationYears / 120) * 16;
 
-    // First bhukti should be Moon
-    assert(bhuktis[0].planet === 'Moon',
-      `First bhukti in Moon MD should be Moon, got ${bhuktis[0].planet}`);
+    assert(bhuktis[0].planet === 'Jupiter',
+      `First bhukti in Jupiter MD should be Jupiter, got ${bhuktis[0].planet}`);
 
-    assert(Math.abs(bhuktis[0].durationYears - moonBhuktiYears) < 0.01,
-      `Moon bhukti should be ~${moonBhuktiYears} years, got ${bhuktis[0].durationYears}`);
+    assert(Math.abs(bhuktis[0].durationYears - jupiterBhuktiYears) < 0.01,
+      `Jupiter bhukti should be ~${jupiterBhuktiYears} years, got ${bhuktis[0].durationYears}`);
 
     // Bhukti total should equal mahadasha duration
     let totalBhuktiYears = 0;
