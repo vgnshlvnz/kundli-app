@@ -38,6 +38,19 @@ test('centroid flag matches state IS NULL, which the worker queries rely on', ()
   assert.deepEqual(all('SELECT id FROM locations WHERE centroid != (state IS NULL)'), []);
 });
 
+test('cities carry their parent region as state', () => {
+  const row = (country, name) => db.prepare('SELECT state FROM locations WHERE country = ? AND name = ?').get(country, name);
+  assert.equal(row('India', 'Pune').state, 'Maharashtra');
+  assert.equal(row('Germany', 'Munich').state, 'Bavaria');
+  assert.equal(row('Philippines', 'Manila').state, 'Luzon');
+  assert.equal(row('Germany', 'Bavaria').state, 'Bavaria');
+});
+
+test('United Kingdom is the only spelling of the UK', () => {
+  assert.deepEqual(all("SELECT name FROM locations WHERE country = 'UK'"), []);
+  assert.deepEqual(all("SELECT name FROM locations WHERE country = 'United Kingdom' ORDER BY name").map((r) => r.name), ['London', 'United Kingdom']);
+});
+
 test('timezones follow coordinates in multi-timezone countries', () => {
   const tz = (country, name) => db.prepare('SELECT tz FROM locations WHERE country = ? AND name = ?').get(country, name).tz;
   assert.equal(tz('USA', 'Hawaii'), 'Pacific/Honolulu');

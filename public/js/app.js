@@ -152,8 +152,15 @@ function renderLocationDropdown(results) {
   results.forEach(loc => {
     const item = document.createElement('div');
     item.className = 'location-item';
-    const centroidBadge = loc.centroid ? ' <span class="centroid-badge">centroid</span>' : '';
-    item.textContent = `${loc.name}${loc.state ? ', ' + loc.state : ''}, ${loc.country}${centroidBadge}`;
+    // Skip parts that repeat the previous one (e.g. "Bavaria, Bavaria" or "India, India")
+    const parts = [loc.name, loc.state, loc.country].filter((p, i, a) => p && p !== a[i - 1] && !(i === 2 && p === a[0]));
+    item.textContent = parts.join(', ');
+    if (loc.centroid) {
+      const badge = document.createElement('span');
+      badge.className = 'centroid-badge';
+      badge.textContent = 'centroid';
+      item.append(' ', badge);
+    }
     item.addEventListener('click', () => selectLocation(loc));
     locationDropdown.appendChild(item);
   });
