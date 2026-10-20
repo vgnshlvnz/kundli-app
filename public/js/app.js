@@ -8,6 +8,7 @@ import { computeVimshottariDasha, getNakshatra } from './kundli/dasha/index.js';
 import { calculatePanchanga } from './kundli/panchanga/index.js';
 import { kpLords, signLord, significators } from './kundli/kp/index.js';
 import { computeVarga } from './kundli/vargas/index.js';
+import { southIndianChart } from './kundli/render/index.js';
 
 // App state
 const state = {
@@ -72,6 +73,7 @@ function init() {
   ['rasi', 'navamsa', 'planets', 'vimshottari', 'panchanga', 'kp'].forEach(id => {
     tabs[id] = document.getElementById(`tab-${id}`);
   });
+  document.getElementById('download-pdf').addEventListener('click', downloadPdf);
 
   // Populate timezone select
   try {
@@ -97,6 +99,7 @@ function init() {
     for (const key of ['locationId', 'latitude', 'longitude', 'timezone']) delete locationInput.dataset[key];
     debouncedSearch();
   });
+  locationInput.addEventListener('keydown', handleLocationKeys);
   manualToggle.addEventListener('change', toggleManualCoords);
   settingsAyanamsa.addEventListener('change', e => {
     state.settings.ayanamsa = e.target.value;
@@ -110,8 +113,8 @@ function init() {
     state.settings.chartStyle = e.target.value;
     updateAdvancedTabs();
   });
-  Object.keys(tabs).forEach(id => {
-    tabs[id].addEventListener('click', () => switchTab(id));
+  tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
   // Close location dropdown on click outside
@@ -142,11 +145,37 @@ async function searchAndShowResults() {
     if (results.length > 0) {
       renderLocationDropdown(results);
       locationDropdown.classList.remove('hidden');
+      locationError.classList.add('hidden');
     } else {
       locationDropdown.classList.add('hidden');
+      showLocationError(`No places match "${query}". Try another spelling or enter coordinates manually.`);
     }
   } catch (e) {
     console.error('Location search failed:', e);
+    locationDropdown.classList.add('hidden');
+    showLocationError('Location search is unavailable right now. Enter coordinates manually instead.');
+  }
+}
+
+function showLocationError(message) {
+  locationError.textContent = message;
+  locationError.classList.remove('hidden');
+}
+
+// Arrow keys move through the dropdown, Enter picks, Escape closes
+function handleLocationKeys(e) {
+  const items = [...locationDropdown.querySelectorAll('.location-item')];
+  if (locationDropdown.classList.contains('hidden') || items.length === 0) return;
+  const current = items.findIndex(item => item.classList.contains('active'));
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const next = e.key === 'ArrowDown' ? (current + 1) % items.length : (current - 1 + items.length) % items.length;
+    items.forEach((item, i) => item.classList.toggle('active', i === next));
+    items[next].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && current >= 0) {
+    e.preventDefault();
+    items[current].click();
+  } else if (e.key === 'Escape') {
     locationDropdown.classList.add('hidden');
   }
 }
@@ -215,6 +244,7 @@ async function updateUtcOffset() {
 async function handleSubmit(e) {
   e.preventDefault();
   resultsEl.classList.add('hidden');
+  locationError.classList.add('hidden');
 
   try {
     // Resolve birth data
@@ -271,6 +301,8 @@ async function handleSubmit(e) {
     utcOffsetEl.textContent = `Timezone: ${state.resolvedBirth.timezone} (resolved)`;
 
     // Render all tabs
+    renderPrintSummary();
+    renderKeyFacts();
     renderRasiTab();
     renderNavamsaTab();
     renderPlanetsTab();
@@ -345,6 +377,12 @@ function renderRasiTab() {
 
   let html = `
     <h3>Rasi Chart (D1)</h3>
+    ${southIndianChart({
+      title: 'Rasi',
+      subtitle: chartSubtitle(),
+      ascendantSign: ascSign,
+      planets: state.planets.map(p => ({ name: p.name, sign: p.sign, degree: p.degreeInSign, retrograde: p.retrograde }))
+    })}
     <p><strong>Ascendant (Lagna):</strong> ${signNames[ascSign]} ${(asc - ascSign * 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
@@ -390,6 +428,12 @@ function renderNavamsaTab() {
 
   let html = `
     <h3>Navamsa Chart (D9)</h3>
+    ${southIndianChart({
+      title: 'Navamsa',
+      subtitle: chartSubtitle(),
+      ascendantSign: d9AscSign,
+      planets: d9.planets.map(p => ({ name: p.name, sign: p.sign, retrograde: p.retrograde }))
+    })}
     <p><strong>Navamsa Ascendant:</strong> ${signNames[d9AscSign]} ${(d9.ascendant % 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
@@ -599,6 +643,70 @@ function renderKpTab() {
 
   html += '</tbody></table>';
   tabs['kp'].innerHTML = html;
+}
+
+// PDF export uses the browser's print dialog ("Save as PDF"); the print
+// stylesheet lays out every tab one after another. The page title becomes
+// the suggested file name.
+function downloadPdf() {
+  const originalTitle = document.title;
+  const name = nameInput.value.trim();
+  document.title = `Kundli - ${name || dateInput.value}`;
+  window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
+  window.print();
+}
+
+// Headline facts shown above the tabs
+function renderKeyFacts() {
+  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  const moon = state.planets.find(p => p.name === 'Moon');
+  const { currentMahadasha, currentBhukti } = state.dasha;
+  const facts = [
+    ['Lagna', signNames[Math.floor(state.houses.siderealAscendant / 30)]],
+    ['Moon Sign', signNames[moon.sign]],
+    ['Birth Star', state.dasha.moonNakshatra],
+    ['Current Dasha', currentMahadasha
+      ? currentMahadasha.planet + (currentBhukti ? ` / ${currentBhukti.planet}` : '')
+      : 'N/A']
+  ];
+  const container = document.getElementById('key-facts');
+  container.innerHTML = '';
+  facts.forEach(([label, value]) => {
+    const fact = document.createElement('div');
+    fact.className = 'key-fact';
+    fact.innerHTML = '<span class="key-fact-label"></span><span class="key-fact-value"></span>';
+    fact.firstChild.textContent = label;
+    fact.lastChild.textContent = value;
+    container.appendChild(fact);
+  });
+}
+
+// Birth details and settings printed at the top of the PDF
+function renderPrintSummary() {
+  const { latitude, longitude, timezone } = state.resolvedBirth;
+  const place = manualToggle.checked ? 'Manual coordinates' : locationInput.value;
+  const rows = [
+    ['Name', nameInput.value.trim()],
+    ['Born', `${dateInput.value} ${timeInput.value} (${timezone})`],
+    ['Place', `${place} · ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°`],
+    ['Ayanamsa', settingsAyanamsa.selectedOptions[0].textContent],
+    ['Houses', settingsHouse.selectedOptions[0].textContent]
+  ].filter(([, value]) => value);
+  const summary = document.getElementById('print-summary');
+  summary.innerHTML = '<h2>Vedic Birth Chart</h2><dl></dl>';
+  rows.forEach(([label, value]) => {
+    const dt = document.createElement('dt');
+    const dd = document.createElement('dd');
+    dt.textContent = label;
+    dd.textContent = value;
+    summary.querySelector('dl').append(dt, dd);
+  });
+}
+
+// Helper: centre text of the chart — name (if given) and birth date/time
+function chartSubtitle() {
+  return [nameInput.value.trim(), `${dateInput.value} ${timeInput.value}`].filter(Boolean).join(' · ');
 }
 
 // Helper: format a UTC timestamp (seconds) as local time at the birth place
