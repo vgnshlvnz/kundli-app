@@ -8,6 +8,7 @@ import { computeVimshottariDasha, getNakshatra } from './kundli/dasha/index.js';
 import { calculatePanchanga } from './kundli/panchanga/index.js';
 import { kpLords, signLord, significators } from './kundli/kp/index.js';
 import { computeVarga } from './kundli/vargas/index.js';
+import { southIndianChart } from './kundli/render/index.js';
 
 // App state
 const state = {
@@ -373,6 +374,12 @@ function renderRasiTab() {
 
   let html = `
     <h3>Rasi Chart (D1)</h3>
+    ${southIndianChart({
+      title: 'Rasi',
+      subtitle: chartSubtitle(),
+      ascendantSign: ascSign,
+      planets: state.planets.map(p => ({ name: p.name, sign: p.sign, degree: p.degreeInSign, retrograde: p.retrograde }))
+    })}
     <p><strong>Ascendant (Lagna):</strong> ${signNames[ascSign]} ${(asc - ascSign * 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
@@ -418,6 +425,12 @@ function renderNavamsaTab() {
 
   let html = `
     <h3>Navamsa Chart (D9)</h3>
+    ${southIndianChart({
+      title: 'Navamsa',
+      subtitle: chartSubtitle(),
+      ascendantSign: d9AscSign,
+      planets: d9.planets.map(p => ({ name: p.name, sign: p.sign, retrograde: p.retrograde }))
+    })}
     <p><strong>Navamsa Ascendant:</strong> ${signNames[d9AscSign]} ${(d9.ascendant % 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
@@ -627,6 +640,11 @@ function renderKpTab() {
 
   html += '</tbody></table>';
   tabs['kp'].innerHTML = html;
+}
+
+// Helper: centre text of the chart — name (if given) and birth date/time
+function chartSubtitle() {
+  return [nameInput.value.trim(), `${dateInput.value} ${timeInput.value}`].filter(Boolean).join(' · ');
 }
 
 // Helper: format a UTC timestamp (seconds) as local time at the birth place
