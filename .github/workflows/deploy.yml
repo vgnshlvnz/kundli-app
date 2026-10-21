@@ -17,6 +17,12 @@ permissions:
   contents: read
   deployments: write
 
+# An explicit `bash` shell runs with `-eo pipefail`, so a failing
+# `wrangler deploy | tee ...` fails the step instead of passing silently.
+defaults:
+  run:
+    shell: bash
+
 env:
   NODE_VERSION: "22"
   # Space-separated D1 *binding* names whose migrations run before deploy.
