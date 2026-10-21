@@ -9,6 +9,16 @@ import { calculatePanchanga } from './kundli/panchanga/index.js';
 import { kpLords, signLord, significators } from './kundli/kp/index.js';
 import { computeVarga } from './kundli/vargas/index.js';
 import { southIndianChart } from './kundli/render/index.js';
+import { LANGUAGES, translate, term, planetAbbreviation, tamilMonth } from './kundli/i18n/index.js';
+
+const SIGN_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const LANGUAGE_KEY = 'kundli-language';
+
+// Current interface language; t() looks up UI text, tr() astrological names
+let lang = 'en';
+const t = (key, vars) => translate(lang, key, vars);
+const tr = name => term(lang, name);
 
 // App state
 const state = {
@@ -74,6 +84,9 @@ function init() {
     tabs[id] = document.getElementById(`tab-${id}`);
   });
   document.getElementById('download-pdf').addEventListener('click', downloadPdf);
+  document.querySelectorAll('.language-switch button').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
 
   // Populate timezone select
   try {
@@ -129,6 +142,36 @@ function init() {
   dateInput.value = today.toISOString().split('T')[0];
 
   renderForm();
+
+  let saved = null;
+  try { saved = localStorage.getItem(LANGUAGE_KEY); } catch (e) { /* storage unavailable */ }
+  if (LANGUAGES.includes(saved)) setLanguage(saved);
+}
+
+// Switch the interface language and redraw any results already on screen
+function setLanguage(newLang) {
+  lang = newLang;
+  document.documentElement.lang = lang;
+  try { localStorage.setItem(LANGUAGE_KEY, lang); } catch (e) { /* storage unavailable */ }
+  document.title = t('app.title');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder, { value: el.dataset.i18nValue });
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    el.setAttribute('aria-label', t(el.dataset.i18nAria));
+  });
+  document.querySelectorAll('.language-switch button').forEach(btn => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
+  });
+  if (state.planets) {
+    utcOffsetEl.textContent = t('timezone.resolved', { tz: state.resolvedBirth.timezone });
+    renderResults();
+  } else {
+    updateUtcOffset();
+  }
 }
 
 let debouncedSearch = debounce(searchAndShowResults, 250);
@@ -148,12 +191,12 @@ async function searchAndShowResults() {
       locationError.classList.add('hidden');
     } else {
       locationDropdown.classList.add('hidden');
-      showLocationError(`No places match "${query}". Try another spelling or enter coordinates manually.`);
+      showLocationError(t('location.noMatch', { query }));
     }
   } catch (e) {
     console.error('Location search failed:', e);
     locationDropdown.classList.add('hidden');
-    showLocationError('Location search is unavailable right now. Enter coordinates manually instead.');
+    showLocationError(t('location.unavailable'));
   }
 }
 
@@ -191,7 +234,7 @@ function renderLocationDropdown(results) {
     if (loc.centroid) {
       const badge = document.createElement('span');
       badge.className = 'centroid-badge';
-      badge.textContent = 'centroid';
+      badge.textContent = t('location.centroid');
       item.append(' ', badge);
     }
     item.addEventListener('click', () => selectLocation(loc));
@@ -230,12 +273,12 @@ async function updateUtcOffset() {
       const localTimeStr = `${testDate}T${testTime}`;
       const tz = locationInput.dataset.timezone;
       // Try conversion to get offset (we'll use the actual convert for calculation)
-      utcOffsetEl.textContent = `Timezone: ${tz}`;
+      utcOffsetEl.textContent = t('timezone.label', { tz });
     } catch (e) {
       utcOffsetEl.textContent = '';
     }
   } else if (manualToggle.checked && manualTzInput.value) {
-    utcOffsetEl.textContent = `Timezone: ${manualTzInput.value}`;
+    utcOffsetEl.textContent = t('timezone.label', { tz: manualTzInput.value });
   } else {
     utcOffsetEl.textContent = '';
   }
@@ -298,17 +341,9 @@ async function handleSubmit(e) {
     }, state.settings.ayanamsa);
 
     // Update UTC offset display with actual conversion result
-    utcOffsetEl.textContent = `Timezone: ${state.resolvedBirth.timezone} (resolved)`;
+    utcOffsetEl.textContent = t('timezone.resolved', { tz: state.resolvedBirth.timezone });
 
-    // Render all tabs
-    renderPrintSummary();
-    renderKeyFacts();
-    renderRasiTab();
-    renderNavamsaTab();
-    renderPlanetsTab();
-    renderVimshottariTab();
-    renderPanchangaTab();
-    renderKpTab();
+    renderResults();
 
     // Show results
     resultsEl.classList.remove('hidden');
@@ -319,6 +354,18 @@ async function handleSubmit(e) {
     locationError.textContent = e.message;
     locationError.classList.remove('hidden');
   }
+}
+
+// Render all tabs from the computed state
+function renderResults() {
+  renderPrintSummary();
+  renderKeyFacts();
+  renderRasiTab();
+  renderNavamsaTab();
+  renderPlanetsTab();
+  renderVimshottariTab();
+  renderPanchangaTab();
+  renderKpTab();
 }
 
 function recalculate() {
@@ -372,41 +419,40 @@ function renderRasiTab() {
 
   const asc = state.houses.siderealAscendant;
   const ascSign = Math.floor(asc / 30);
-  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 
   let html = `
-    <h3>Rasi Chart (D1)</h3>
+    <h3>${t('rasi.heading')}</h3>
     ${southIndianChart({
-      title: 'Rasi',
+      title: t('rasi.title'),
       subtitle: chartSubtitle(),
       ascendantSign: ascSign,
-      planets: state.planets.map(p => ({ name: p.name, sign: p.sign, degree: p.degreeInSign, retrograde: p.retrograde }))
+      planets: state.planets.map(p => ({ ...chartPlanet(p), degree: p.degreeInSign })),
+      labels: chartLabels(t('rasi.title'))
     })}
-    <p><strong>Ascendant (Lagna):</strong> ${signNames[ascSign]} ${(asc - ascSign * 30).toFixed(2)}°</p>
+    <p><strong>${t('rasi.ascendant')}:</strong> ${tr(SIGN_NAMES[ascSign])} ${(asc - ascSign * 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>Planet</th>
-          <th>Sign</th>
-          <th>Degree</th>
-          <th>House</th>
-          <th>Retrograde</th>
+          <th>${t('col.planet')}</th>
+          <th>${t('col.sign')}</th>
+          <th>${t('col.degree')}</th>
+          <th>${t('col.house')}</th>
+          <th>${t('col.retrograde')}</th>
         </tr>
       </thead>
       <tbody>
   `;
 
   state.planets.forEach(p => {
-    const signName = signNames[p.sign];
+    const signName = tr(SIGN_NAMES[p.sign]);
     const house = getHouseNumber(p.siderealLongitude);
     html += `
       <tr>
-        <td>${p.name}</td>
+        <td>${tr(p.name)}</td>
         <td>${signName}</td>
         <td>${p.degreeInSign.toFixed(2)}°</td>
         <td>${house}</td>
-        <td>${p.retrograde ? 'Yes' : 'No'}</td>
+        <td>${p.retrograde ? t('yes') : t('no')}</td>
       </tr>
     `;
   });
@@ -421,37 +467,36 @@ function renderNavamsaTab() {
   // Varga functions read `longitude`; pass the sidereal one
   const d1 = state.planets.map(p => ({ ...p, longitude: p.siderealLongitude }));
   const d9 = computeVarga(d1, state.houses.siderealAscendant, 9);
-  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 
   const d9AscSign = Math.floor(d9.ascendant / 30);
 
   let html = `
-    <h3>Navamsa Chart (D9)</h3>
+    <h3>${t('navamsa.heading')}</h3>
     ${southIndianChart({
-      title: 'Navamsa',
+      title: t('navamsa.title'),
       subtitle: chartSubtitle(),
       ascendantSign: d9AscSign,
-      planets: d9.planets.map(p => ({ name: p.name, sign: p.sign, retrograde: p.retrograde }))
+      planets: d9.planets.map(chartPlanet),
+      labels: chartLabels(t('navamsa.title'))
     })}
-    <p><strong>Navamsa Ascendant:</strong> ${signNames[d9AscSign]} ${(d9.ascendant % 30).toFixed(2)}°</p>
+    <p><strong>${t('navamsa.ascendant')}:</strong> ${tr(SIGN_NAMES[d9AscSign])} ${(d9.ascendant % 30).toFixed(2)}°</p>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>Planet</th>
-          <th>Sign</th>
-          <th>Degree</th>
-          <th>House</th>
+          <th>${t('col.planet')}</th>
+          <th>${t('col.sign')}</th>
+          <th>${t('col.degree')}</th>
+          <th>${t('col.house')}</th>
         </tr>
       </thead>
       <tbody>
   `;
 
   d9.planets.forEach(p => {
-    const signName = signNames[p.sign];
+    const signName = tr(SIGN_NAMES[p.sign]);
     html += `
       <tr>
-        <td>${p.name}</td>
+        <td>${tr(p.name)}</td>
         <td>${signName}</td>
         <td>${p.degree.toFixed(2)}°</td>
         <td>${((p.sign - d9AscSign + 12) % 12) + 1}</td>
@@ -466,28 +511,25 @@ function renderNavamsaTab() {
 function renderPlanetsTab() {
   if (!state.planets) return;
 
-  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
-
   let html = `
-    <h3>Planet Positions</h3>
+    <h3>${t('planets.heading')}</h3>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>Planet</th>
-          <th>Sign</th>
-          <th>Degree</th>
-          <th>House</th>
-          <th>Nakshatra</th>
-          <th>Pada</th>
-          <th>Speed</th>
+          <th>${t('col.planet')}</th>
+          <th>${t('col.sign')}</th>
+          <th>${t('col.degree')}</th>
+          <th>${t('col.house')}</th>
+          <th>${t('col.nakshatra')}</th>
+          <th>${t('col.pada')}</th>
+          <th>${t('col.speed')}</th>
         </tr>
       </thead>
       <tbody>
   `;
 
   state.planets.forEach(p => {
-    const signName = signNames[p.sign];
+    const signName = tr(SIGN_NAMES[p.sign]);
     const house = getHouseNumber(p.siderealLongitude);
     const nakshatra = getNakshatra(p.siderealLongitude);
     // Each nakshatra (13°20') has four padas of 3°20'
@@ -495,13 +537,13 @@ function renderPlanetsTab() {
     const speed = Math.abs(p.speed).toFixed(3);
     html += `
       <tr>
-        <td>${p.name}</td>
+        <td>${tr(p.name)}</td>
         <td>${signName}</td>
         <td>${p.degreeInSign.toFixed(4)}°</td>
         <td>${house}</td>
-        <td>${nakshatra.name}</td>
+        <td>${tr(nakshatra.name)}</td>
         <td>${pada}</td>
-        <td>${speed}°/day</td>
+        <td>${speed}${t('perDay')}</td>
       </tr>
     `;
   });
@@ -517,20 +559,20 @@ function renderVimshottariTab() {
   const currentYear = now.getFullYear();
 
   let html = `
-    <h3>Vimshottari Dasha</h3>
-    <p><strong>Born:</strong> ${state.dasha.birthYear}</p>
-    <p><strong>Moon Nakshatra:</strong> ${state.dasha.moonNakshatra} (Lord: ${state.dasha.moonNakshatraLord})</p>
-    <p><strong>Current Mahadasha:</strong> ${state.dasha.currentMahadasha ? state.dasha.currentMahadasha.planet : 'N/A'}</p>
-    ${state.dasha.currentBhukti ? `<p><strong>Current Bhukti:</strong> ${state.dasha.currentBhukti.planet}</p>` : ''}
-    <h4>Mahadasha Timeline</h4>
+    <h3>${t('dasha.heading')}</h3>
+    <p><strong>${t('dasha.born')}:</strong> ${state.dasha.birthYear}</p>
+    <p><strong>${t('dasha.moonNakshatra')}:</strong> ${tr(state.dasha.moonNakshatra)} (${t('dasha.lord')}: ${tr(state.dasha.moonNakshatraLord)})</p>
+    <p><strong>${t('dasha.currentMahadasha')}:</strong> ${state.dasha.currentMahadasha ? tr(state.dasha.currentMahadasha.planet) : t('na')}</p>
+    ${state.dasha.currentBhukti ? `<p><strong>${t('dasha.currentBhukti')}:</strong> ${tr(state.dasha.currentBhukti.planet)}</p>` : ''}
+    <h4>${t('dasha.timeline')}</h4>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>Planet</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Duration (years)</th>
-          <th>Current</th>
+          <th>${t('col.planet')}</th>
+          <th>${t('col.start')}</th>
+          <th>${t('col.end')}</th>
+          <th>${t('col.duration')}</th>
+          <th>${t('col.current')}</th>
         </tr>
       </thead>
       <tbody>
@@ -542,11 +584,11 @@ function renderVimshottariTab() {
     const isCurrent = state.dasha.currentMahadasha && state.dasha.currentMahadasha.planet === md.planet;
     html += `
       <tr${isCurrent ? ' class="current-period"' : ''}>
-        <td>${md.planet}</td>
+        <td>${tr(md.planet)}</td>
         <td>${startYear}</td>
         <td>${endYear}</td>
         <td>${md.durationYears.toFixed(2)}</td>
-        <td>${isCurrent ? 'Yes' : 'No'}</td>
+        <td>${isCurrent ? t('yes') : t('no')}</td>
       </tr>
     `;
   });
@@ -559,17 +601,20 @@ function renderPanchangaTab() {
   if (!state.panchanga) return;
 
   const p = state.panchanga;
+  const sun = state.planets.find(planet => planet.name === 'Sun');
+  const vara = lang === 'ta' ? tr(p.vara.english) : `${p.vara.name} (${p.vara.english})`;
   let html = `
-    <h3>Panchanga</h3>
+    <h3>${t('panchanga.heading')}</h3>
     <table class="chart-table">
-      <tr><th>Tithi</th><td>${p.tithi.name} (${p.tithi.number}) - ${p.tithi.percentage.toFixed(1)}% elapsed</td></tr>
-      <tr><th>Paksha</th><td>${p.paksha.english} (${p.paksha.name})</td></tr>
-      <tr><th>Nakshatra</th><td>${p.nakshatra.name} (Lord: ${p.nakshatra.lord})</td></tr>
-      <tr><th>Yoga</th><td>${p.yoga.name}</td></tr>
-      <tr><th>Karana</th><td>${p.karana.name}${p.karana.fixed ? ' (fixed)' : ''}</td></tr>
-      <tr><th>Vara</th><td>${p.vara.name} (${p.vara.english})</td></tr>
-      ${p.sunriseSunset.sunriseUtc ? `<tr><th>Sunrise</th><td>${birthPlaceTime(p.sunriseSunset.sunriseUtc)}</td></tr>` : ''}
-      ${p.sunriseSunset.sunsetUtc ? `<tr><th>Sunset</th><td>${birthPlaceTime(p.sunriseSunset.sunsetUtc)}</td></tr>` : ''}
+      <tr><th>${t('panchanga.tithi')}</th><td>${tr(p.tithi.name)} (${p.tithi.number}) - ${t('panchanga.elapsed', { percent: p.tithi.percentage.toFixed(1) })}</td></tr>
+      <tr><th>${t('panchanga.paksha')}</th><td>${tr(p.paksha.english)} (${tr(p.paksha.name)})</td></tr>
+      <tr><th>${t('panchanga.nakshatra')}</th><td>${tr(p.nakshatra.name)} (${t('dasha.lord')}: ${tr(p.nakshatra.lord)})</td></tr>
+      <tr><th>${t('panchanga.yoga')}</th><td>${tr(p.yoga.name)}</td></tr>
+      <tr><th>${t('panchanga.karana')}</th><td>${tr(p.karana.name)}${p.karana.fixed ? ` ${t('panchanga.fixed')}` : ''}</td></tr>
+      <tr><th>${t('panchanga.vara')}</th><td>${vara}</td></tr>
+      <tr><th>${t('panchanga.tamilMonth')}</th><td>${tamilMonth(lang, sun.sign)}</td></tr>
+      ${p.sunriseSunset.sunriseUtc ? `<tr><th>${t('panchanga.sunrise')}</th><td>${birthPlaceTime(p.sunriseSunset.sunriseUtc)}</td></tr>` : ''}
+      ${p.sunriseSunset.sunsetUtc ? `<tr><th>${t('panchanga.sunset')}</th><td>${birthPlaceTime(p.sunriseSunset.sunsetUtc)}</td></tr>` : ''}
     </table>
   `;
   tabs['panchanga'].innerHTML = html;
@@ -579,17 +624,17 @@ function renderKpTab() {
   if (!state.planets || !state.houses) return;
 
   let html = `
-    <h3>KP Astrology</h3>
-    <h4>Planet Sub-Lords</h4>
+    <h3>${t('kp.heading')}</h3>
+    <h4>${t('kp.planetSubLords')}</h4>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>Planet</th>
-          <th>Sign</th>
-          <th>Star Lord</th>
-          <th>Sub Lord</th>
-          <th>Sub-Sub Lord</th>
-          <th>Sign Lord</th>
+          <th>${t('col.planet')}</th>
+          <th>${t('col.sign')}</th>
+          <th>${t('col.starLord')}</th>
+          <th>${t('col.subLord')}</th>
+          <th>${t('col.subSubLord')}</th>
+          <th>${t('col.signLord')}</th>
         </tr>
       </thead>
       <tbody>
@@ -599,12 +644,12 @@ function renderKpTab() {
     const lords = kpLords(p.siderealLongitude);
     html += `
       <tr>
-        <td>${p.name}</td>
-        <td>${lords.sign}</td>
-        <td>${lords.star}</td>
-        <td>${lords.sub}</td>
-        <td>${lords.subSub}</td>
-        <td>${lords.signLord}</td>
+        <td>${tr(p.name)}</td>
+        <td>${tr(lords.sign)}</td>
+        <td>${tr(lords.star)}</td>
+        <td>${tr(lords.sub)}</td>
+        <td>${tr(lords.subSub)}</td>
+        <td>${tr(lords.signLord)}</td>
       </tr>
     `;
   });
@@ -612,16 +657,16 @@ function renderKpTab() {
   html += `
       </tbody>
     </table>
-    <h4>House Cusp Sub-Lords</h4>
+    <h4>${t('kp.cuspSubLords')}</h4>
     <table class="chart-table">
       <thead>
         <tr>
-          <th>House</th>
-          <th>Cusp</th>
-          <th>Sign</th>
-          <th>Sign Lord</th>
-          <th>Star Lord</th>
-          <th>Sub Lord</th>
+          <th>${t('col.house')}</th>
+          <th>${t('col.cusp')}</th>
+          <th>${t('col.sign')}</th>
+          <th>${t('col.signLord')}</th>
+          <th>${t('col.starLord')}</th>
+          <th>${t('col.subLord')}</th>
         </tr>
       </thead>
       <tbody>
@@ -633,10 +678,10 @@ function renderKpTab() {
       <tr>
         <td>${index + 1}</td>
         <td>${cusp.toFixed(2)}°</td>
-        <td>${lords.sign}</td>
-        <td>${lords.signLord}</td>
-        <td>${lords.star}</td>
-        <td>${lords.sub}</td>
+        <td>${tr(lords.sign)}</td>
+        <td>${tr(lords.signLord)}</td>
+        <td>${tr(lords.star)}</td>
+        <td>${tr(lords.sub)}</td>
       </tr>
     `;
   });
@@ -651,24 +696,22 @@ function renderKpTab() {
 function downloadPdf() {
   const originalTitle = document.title;
   const name = nameInput.value.trim();
-  document.title = `Kundli - ${name || dateInput.value}`;
+  document.title = t('pdf.fileName', { name: name || dateInput.value });
   window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
   window.print();
 }
 
 // Headline facts shown above the tabs
 function renderKeyFacts() {
-  const signNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-                    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
   const moon = state.planets.find(p => p.name === 'Moon');
   const { currentMahadasha, currentBhukti } = state.dasha;
   const facts = [
-    ['Lagna', signNames[Math.floor(state.houses.siderealAscendant / 30)]],
-    ['Moon Sign', signNames[moon.sign]],
-    ['Birth Star', state.dasha.moonNakshatra],
-    ['Current Dasha', currentMahadasha
-      ? currentMahadasha.planet + (currentBhukti ? ` / ${currentBhukti.planet}` : '')
-      : 'N/A']
+    [t('facts.lagna'), tr(SIGN_NAMES[Math.floor(state.houses.siderealAscendant / 30)])],
+    [t('facts.moonSign'), tr(SIGN_NAMES[moon.sign])],
+    [t('facts.birthStar'), tr(state.dasha.moonNakshatra)],
+    [t('facts.currentDasha'), currentMahadasha
+      ? tr(currentMahadasha.planet) + (currentBhukti ? ` / ${tr(currentBhukti.planet)}` : '')
+      : t('na')]
   ];
   const container = document.getElementById('key-facts');
   container.innerHTML = '';
@@ -685,16 +728,17 @@ function renderKeyFacts() {
 // Birth details and settings printed at the top of the PDF
 function renderPrintSummary() {
   const { latitude, longitude, timezone } = state.resolvedBirth;
-  const place = manualToggle.checked ? 'Manual coordinates' : locationInput.value;
+  const place = manualToggle.checked ? t('print.manual') : locationInput.value;
   const rows = [
-    ['Name', nameInput.value.trim()],
-    ['Born', `${dateInput.value} ${timeInput.value} (${timezone})`],
-    ['Place', `${place} · ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°`],
-    ['Ayanamsa', settingsAyanamsa.selectedOptions[0].textContent],
-    ['Houses', settingsHouse.selectedOptions[0].textContent]
+    [t('print.name'), nameInput.value.trim()],
+    [t('print.born'), `${dateInput.value} ${timeInput.value} (${timezone})`],
+    [t('print.place'), `${place} · ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°`],
+    [t('print.ayanamsa'), settingsAyanamsa.selectedOptions[0].textContent],
+    [t('print.houses'), settingsHouse.selectedOptions[0].textContent]
   ].filter(([, value]) => value);
   const summary = document.getElementById('print-summary');
-  summary.innerHTML = '<h2>Vedic Birth Chart</h2><dl></dl>';
+  summary.innerHTML = '<h2></h2><dl></dl>';
+  summary.firstChild.textContent = t('print.heading');
   rows.forEach(([label, value]) => {
     const dt = document.createElement('dt');
     const dd = document.createElement('dd');
@@ -702,6 +746,23 @@ function renderPrintSummary() {
     dd.textContent = value;
     summary.querySelector('dl').append(dt, dd);
   });
+}
+
+// Helper: a planet as the chart expects it, named in the current language
+function chartPlanet(p) {
+  return { name: tr(p.name), abbr: planetAbbreviation(lang, p.name), sign: p.sign, retrograde: p.retrograde };
+}
+
+// Helper: chart labels in the current language
+function chartLabels(title) {
+  return {
+    signs: SIGN_NAMES.map(tr),
+    asc: t('chart.asc'),
+    lagna: t('chart.lagna'),
+    retroMark: t('chart.retroMark'),
+    retrograde: t('chart.retrograde'),
+    aria: t('chart.aria', { title })
+  };
 }
 
 // Helper: centre text of the chart — name (if given) and birth date/time

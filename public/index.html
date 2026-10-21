@@ -22,9 +22,13 @@
           <line x1="17" y1="58" x2="22" y2="49" /><line x1="47" y1="58" x2="42" y2="49" />
         </g>
       </svg>
-      <div>
-        <h1>Vedic Kundli Calculator</h1>
-        <p>Birth chart, divisional charts, dashas and panchanga, computed in your browser</p>
+      <div class="hero-text">
+        <h1 data-i18n="app.title">Vedic Kundli Calculator</h1>
+        <p data-i18n="app.subtitle">Birth chart, divisional charts, dashas and panchanga, computed in your browser</p>
+      </div>
+      <div class="language-switch" role="group" aria-label="Language" data-i18n-aria="language.label">
+        <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="ta" lang="ta" aria-pressed="false">தமிழ்</button>
       </div>
     </div>
   </header>
@@ -35,101 +39,101 @@
         <!-- Birth Form -->
         <section id="form-section" class="card">
           <form id="birth-form" class="birth-form">
-            <h2>Birth Details</h2>
+            <h2 data-i18n="form.heading">Birth Details</h2>
             <div class="form-group">
-              <label for="birth-name">Name</label>
-              <input type="text" id="birth-name" placeholder="Your name">
+              <label for="birth-name" data-i18n="form.name">Name</label>
+              <input type="text" id="birth-name" placeholder="Your name" data-i18n-placeholder="form.namePlaceholder">
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="birth-date">Date of Birth</label>
+                <label for="birth-date" data-i18n="form.date">Date of Birth</label>
                 <input type="date" id="birth-date" required>
               </div>
               <div class="form-group">
-                <label for="birth-time">Time of Birth</label>
+                <label for="birth-time" data-i18n="form.time">Time of Birth</label>
                 <input type="time" id="birth-time" step="1" required>
                 <div id="utc-offset" class="utc-offset"></div>
               </div>
             </div>
             <div class="form-group" id="location-wrapper">
-              <label for="birth-location">Birth Location</label>
-              <input type="text" id="birth-location" placeholder="Search city..." autocomplete="off">
+              <label for="birth-location" data-i18n="form.location">Birth Location</label>
+              <input type="text" id="birth-location" placeholder="Search city..." data-i18n-placeholder="form.locationPlaceholder" autocomplete="off">
               <div id="location-dropdown" class="location-dropdown hidden"></div>
               <div id="location-error" class="form-error hidden"></div>
             </div>
             <div class="form-group">
               <label class="checkbox-label">
                 <input type="checkbox" id="manual-toggle">
-                Enter coordinates manually
+                <span data-i18n="form.manual">Enter coordinates manually</span>
               </label>
             </div>
             <div id="manual-coords-section" class="hidden">
               <div class="form-row">
                 <div class="form-group">
-                  <label for="manual-lat">Latitude</label>
-                  <input type="number" id="manual-lat" step="0.0001" min="-90" max="90" placeholder="e.g. 13.0827">
+                  <label for="manual-lat" data-i18n="form.latitude">Latitude</label>
+                  <input type="number" id="manual-lat" step="0.0001" min="-90" max="90" placeholder="e.g. 13.0827" data-i18n-placeholder="form.example" data-i18n-value="13.0827">
                 </div>
                 <div class="form-group">
-                  <label for="manual-lon">Longitude</label>
-                  <input type="number" id="manual-lon" step="0.0001" min="-180" max="180" placeholder="e.g. 80.2707">
+                  <label for="manual-lon" data-i18n="form.longitude">Longitude</label>
+                  <input type="number" id="manual-lon" step="0.0001" min="-180" max="180" placeholder="e.g. 80.2707" data-i18n-placeholder="form.example" data-i18n-value="80.2707">
                 </div>
               </div>
               <div class="form-group">
-                <label for="manual-tz">Timezone</label>
+                <label for="manual-tz" data-i18n="form.timezone">Timezone</label>
                 <select id="manual-tz"></select>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary">Calculate Kundli</button>
+            <button type="submit" class="btn btn-primary" data-i18n="form.submit">Calculate Kundli</button>
           </form>
         </section>
 
         <!-- Settings Panel -->
         <section id="settings" class="card settings-panel">
-          <h2>Chart Options</h2>
+          <h2 data-i18n="options.heading">Chart Options</h2>
           <div class="settings-row">
             <div class="setting-item">
-              <label for="settings-ayanamsa">Ayanamsa</label>
+              <label for="settings-ayanamsa" data-i18n="options.ayanamsa">Ayanamsa</label>
               <select id="settings-ayanamsa">
-                <option value="lahiri">Lahiri (Champaneri)</option>
-                <option value="raman">Raman</option>
-                <option value="krishnamurti">Krishnamurti</option>
+                <option value="lahiri" data-i18n="options.lahiri">Lahiri (Champaneri)</option>
+                <option value="raman" data-i18n="options.raman">Raman</option>
+                <option value="krishnamurti" data-i18n="options.krishnamurti">Krishnamurti</option>
               </select>
             </div>
             <div class="setting-item">
-              <label for="settings-house">House System</label>
+              <label for="settings-house" data-i18n="options.house">House System</label>
               <select id="settings-house">
-                <option value="wholesign">Whole Sign</option>
-                <option value="equal">Equal</option>
-                <option value="placidus">Placidus</option>
+                <option value="wholesign" data-i18n="options.wholesign">Whole Sign</option>
+                <option value="equal" data-i18n="options.equal">Equal</option>
+                <option value="placidus" data-i18n="options.placidus">Placidus</option>
               </select>
             </div>
             <div class="setting-item">
-              <label for="settings-style">Chart Style</label>
+              <label for="settings-style" data-i18n="options.style">Chart Style</label>
               <select id="settings-style">
-                <option value="basic">Basic</option>
-                <option value="advanced">Advanced</option>
+                <option value="basic" data-i18n="options.basic">Basic</option>
+                <option value="advanced" data-i18n="options.advanced">Advanced</option>
               </select>
             </div>
           </div>
-          <p class="settings-hint">Changes apply to the current chart straight away. Advanced adds Navamsa, Vimshottari, Panchanga and KP.</p>
+          <p class="settings-hint" data-i18n="options.hint">Changes apply to the current chart straight away. Advanced adds Navamsa, Vimshottari, Panchanga and KP.</p>
         </section>
       </div>
 
       <!-- Results Section -->
       <section id="results" class="card hidden">
         <div class="results-header">
-          <h2>Your Chart</h2>
-          <button type="button" id="download-pdf" class="btn btn-secondary">Download PDF</button>
+          <h2 data-i18n="results.heading">Your Chart</h2>
+          <button type="button" id="download-pdf" class="btn btn-secondary" data-i18n="results.pdf">Download PDF</button>
         </div>
         <div id="print-summary" class="print-summary"></div>
         <div id="key-facts" class="key-facts"></div>
         <div id="tab-container" class="tab-container">
-          <button class="tab-btn active" data-tab="rasi">Rasi (D1)</button>
-          <button class="tab-btn" data-tab="navamsa">Navamsa (D9)</button>
-          <button class="tab-btn" data-tab="planets">Planets</button>
-          <button class="tab-btn" data-tab="vimshottari">Vimshottari</button>
-          <button class="tab-btn" data-tab="panchanga">Panchanga</button>
-          <button class="tab-btn" data-tab="kp">KP</button>
+          <button class="tab-btn active" data-tab="rasi" data-i18n="tab.rasi">Rasi (D1)</button>
+          <button class="tab-btn" data-tab="navamsa" data-i18n="tab.navamsa">Navamsa (D9)</button>
+          <button class="tab-btn" data-tab="planets" data-i18n="tab.planets">Planets</button>
+          <button class="tab-btn" data-tab="vimshottari" data-i18n="tab.vimshottari">Vimshottari</button>
+          <button class="tab-btn" data-tab="panchanga" data-i18n="tab.panchanga">Panchanga</button>
+          <button class="tab-btn" data-tab="kp" data-i18n="tab.kp">KP</button>
         </div>
         <div class="tab-content">
           <div id="tab-rasi"></div>
