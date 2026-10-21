@@ -28,28 +28,39 @@ function escapeHtml(text) {
  * @param {string} chart.title - Shown in the centre (e.g. "Rasi")
  * @param {string} [chart.subtitle] - Second centre line (e.g. name and birth date)
  * @param {number} chart.ascendantSign - Sign index of the Lagna (0 = Aries)
- * @param {Array<{name: string, sign: number, degree?: number, retrograde?: boolean}>} chart.planets
+ * @param {Array<{name: string, sign: number, degree?: number, retrograde?: boolean, abbr?: string}>} chart.planets
+ * @param {Object} [chart.labels] - Display text; English by default
+ * @param {string[]} [chart.labels.signs] - 12 sign names, Aries first
+ * @param {string} [chart.labels.asc] - Lagna marker inside the cell
+ * @param {string} [chart.labels.lagna] - Lagna in accessible labels
+ * @param {string} [chart.labels.retroMark] - Suffix for retrograde planets
+ * @param {string} [chart.labels.retrograde] - Retrograde in accessible labels
+ * @param {string} [chart.labels.aria] - Accessible name of the whole chart
  * @returns {string} HTML
  */
-export function southIndianChart({ title, subtitle = '', ascendantSign, planets }) {
-  const cells = SIGN_NAMES.map((signName, sign) => {
+export function southIndianChart({ title, subtitle = '', ascendantSign, planets, labels = {} }) {
+  const {
+    signs = SIGN_NAMES, asc = 'Asc', lagna = 'Lagna', retroMark = '(R)',
+    retrograde = 'retrograde', aria = `${title} chart, South Indian style`
+  } = labels;
+  const cells = signs.map((signName, sign) => {
     const [row, col] = SIGN_CELLS[sign];
     const isLagna = sign === ascendantSign;
     const here = planets.filter(p => p.sign === sign);
     const items = here.map(p => {
-      const abbr = ABBREVIATIONS[p.name] ?? p.name.slice(0, 2);
+      const abbr = p.abbr ?? ABBREVIATIONS[p.name] ?? p.name.slice(0, 2);
       const degree = typeof p.degree === 'number' ? ` ${Math.floor(p.degree)}°` : '';
-      const retro = p.retrograde ? ' (R)' : '';
+      const retro = p.retrograde ? ` ${retroMark}` : '';
       return `<span class="si-planet" title="${escapeHtml(p.name)}">${escapeHtml(abbr)}${degree}${retro}</span>`;
     });
-    if (isLagna) items.unshift('<span class="si-planet si-lagna" title="Lagna">Asc</span>');
-    const label = [isLagna ? 'Lagna' : '', ...here.map(p => p.name + (p.retrograde ? ' retrograde' : ''))]
+    if (isLagna) items.unshift(`<span class="si-planet si-lagna" title="${escapeHtml(lagna)}">${escapeHtml(asc)}</span>`);
+    const label = [isLagna ? lagna : '', ...here.map(p => p.name + (p.retrograde ? ` ${retrograde}` : ''))]
       .filter(Boolean).join(', ');
     return `<div class="si-cell${isLagna ? ' si-cell-lagna' : ''}" style="grid-row:${row};grid-column:${col}" ` +
       `aria-label="${escapeHtml(signName + (label ? ': ' + label : ''))}">` +
-      `<span class="si-sign">${signName}</span>${items.join('')}</div>`;
+      `<span class="si-sign">${escapeHtml(signName)}</span>${items.join('')}</div>`;
   });
   const centre = `<div class="si-centre"><strong>${escapeHtml(title)}</strong>` +
     (subtitle ? `<span>${escapeHtml(subtitle)}</span>` : '') + '</div>';
-  return `<div class="si-chart" role="group" aria-label="${escapeHtml(title)} chart, South Indian style">${cells.join('')}${centre}</div>`;
+  return `<div class="si-chart" role="group" aria-label="${escapeHtml(aria)}">${cells.join('')}${centre}</div>`;
 }

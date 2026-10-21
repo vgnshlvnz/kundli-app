@@ -58,3 +58,22 @@ describe('South Indian chart', () => {
     assert.ok(!out.includes('<b>x</b>'));
   });
 });
+
+describe('South Indian chart in Tamil', () => {
+  const signs = ['மேஷம்', 'ரிஷபம்', 'மிதுனம்', 'கடகம்', 'சிம்மம்', 'கன்னி',
+    'துலாம்', 'விருச்சிகம்', 'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'];
+  const html = southIndianChart({
+    title: 'ராசி',
+    ascendantSign: 11,
+    planets: [{ name: 'புதன்', abbr: 'புத', sign: 8, degree: 17.84, retrograde: true }],
+    labels: { signs, asc: 'லக்', lagna: 'லக்னம்', retroMark: '(வ)', retrograde: 'வக்கிரம்', aria: 'ராசி சக்கரம்' }
+  });
+
+  test('Uses the given sign names, abbreviations and markers', () => {
+    assert.equal(cell(html, 'மீனம்').content, 'லக்');
+    assert.equal(cell(html, 'தனுசு').content, 'புத 17° (வ)');
+    assert.match(cell(html, 'தனுசு').raw, /aria-label="தனுசு: புதன் வக்கிரம்"/);
+    assert.ok(html.includes('aria-label="ராசி சக்கரம்"'));
+    assert.ok(!html.includes('Pisces'));
+  });
+});
