@@ -3,7 +3,7 @@ async function handler(request, env) {
 
   if (url.pathname.startsWith('/api/')) {
     try {
-      return handleApi(request, url, env);
+      return await handleApi(request, url, env);
     } catch (e) {
       console.error('API error:', e);
       return Response.json({ error: 'internal server error' }, { status: 500 });
@@ -35,13 +35,14 @@ async function handleApi(request, url, env) {
 
 async function handleLocationSearch(url, env) {
   const q = url.searchParams.get('q');
-  const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 100);
+  const rawLimit = parseInt(url.searchParams.get('limit'), 10);
+  const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 100) : 20;
 
   if (!q || q.trim() === '') {
     return Response.json([]);
   }
 
-  const pattern = `%${q.trim()}%`;
+  const pattern = `%${q.trim().replace(/[\\%_]/g, '\\$&')}%`;
 
   // State rows first, then country-only (centroid) rows
   // State rows: state or name matches AND state IS NOT NULL
@@ -50,12 +51,12 @@ async function handleLocationSearch(url, env) {
     SELECT id, name, state, country, latitude, longitude, tz,
       CASE WHEN state IS NULL THEN 1 ELSE 0 END as centroid
     FROM locations
-    WHERE (state IS NOT NULL AND (name LIKE ? OR state LIKE ? OR country LIKE ?))
+    WHERE (state IS NOT NULL AND (name LIKE ? ESCAPE '\\' OR state LIKE ? ESCAPE '\\' OR country LIKE ? ESCAPE '\\'))
     UNION ALL
     SELECT id, name, state, country, latitude, longitude, tz,
       CASE WHEN state IS NULL THEN 1 ELSE 0 END as centroid
     FROM locations
-    WHERE state IS NULL AND country LIKE ?
+    WHERE state IS NULL AND country LIKE ? ESCAPE '\\'
     ORDER BY centroid ASC, name ASC
     LIMIT ?
   `);
