@@ -269,23 +269,6 @@ input:focus, select:focus {
   box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--text);
-  cursor: pointer;
-}
-
-.checkbox-label input {
-  width: auto;
-  accent-color: var(--primary);
-}
-
 /* Location Autocomplete */
 #location-wrapper {
   position: relative;
