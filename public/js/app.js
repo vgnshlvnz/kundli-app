@@ -38,7 +38,6 @@ const state = {
 // DOM references (initialized on DOMContentLoaded)
 let appEl, formEl, resultsEl;
 let nameInput, dateInput, timeInput, locationInput, locationDropdown, locationError;
-let manualToggle, manualLatInput, manualLonInput, manualTzInput;
 let settingsAyanamsa, settingsHouse, settingsStyle;
 let tabContainer, tabs = {};
 let utcOffsetEl;
@@ -67,10 +66,6 @@ function init() {
   locationInput = document.getElementById('birth-location');
   locationDropdown = document.getElementById('location-dropdown');
   locationError = document.getElementById('location-error');
-  manualToggle = document.getElementById('manual-toggle');
-  manualLatInput = document.getElementById('manual-lat');
-  manualLonInput = document.getElementById('manual-lon');
-  manualTzInput = document.getElementById('manual-tz');
   utcOffsetEl = document.getElementById('utc-offset');
 
   // Settings
@@ -88,23 +83,6 @@ function init() {
     btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
   });
 
-  // Populate timezone select
-  try {
-    const zones = Intl.supportedValuesOf('timeZone');
-    zones.forEach(zone => {
-      const opt = document.createElement('option');
-      opt.value = zone;
-      opt.textContent = zone;
-      manualTzInput.appendChild(opt);
-    });
-    // Default to Asia/Kolkata if available
-    if (zones.includes('Asia/Kolkata')) {
-      manualTzInput.value = 'Asia/Kolkata';
-    }
-  } catch (e) {
-    console.warn('Intl.supportedValuesOf not available, timezone list incomplete');
-  }
-
   // Event listeners
   formEl.addEventListener('submit', handleSubmit);
   locationInput.addEventListener('input', () => {
@@ -113,7 +91,6 @@ function init() {
     debouncedSearch();
   });
   locationInput.addEventListener('keydown', handleLocationKeys);
-  manualToggle.addEventListener('change', toggleManualCoords);
   settingsAyanamsa.addEventListener('change', e => {
     state.settings.ayanamsa = e.target.value;
     recalculate();
@@ -252,20 +229,8 @@ function selectLocation(loc) {
   updateUtcOffset();
 }
 
-function toggleManualCoords(e) {
-  const isManual = e.target.checked;
-  const manualSection = document.getElementById('manual-coords-section');
-  if (isManual) {
-    manualSection.classList.remove('hidden');
-  } else {
-    manualSection.classList.add('hidden');
-    locationInput.value = '';
-    delete locationInput.dataset.locationId;
-  }
-}
-
 async function updateUtcOffset() {
-  if (!manualToggle.checked && locationInput.dataset.timezone) {
+  if (locationInput.dataset.timezone) {
     try {
       // Estimate offset by converting a test date
       const testDate = dateInput.value || '2000-01-01';
@@ -277,8 +242,6 @@ async function updateUtcOffset() {
     } catch (e) {
       utcOffsetEl.textContent = '';
     }
-  } else if (manualToggle.checked && manualTzInput.value) {
-    utcOffsetEl.textContent = t('timezone.label', { tz: manualTzInput.value });
   } else {
     utcOffsetEl.textContent = '';
   }
@@ -296,11 +259,7 @@ async function handleSubmit(e) {
     };
 
     const picked = locationInput.dataset;
-    if (manualToggle.checked) {
-      input.latitude = parseFloat(manualLatInput.value);
-      input.longitude = parseFloat(manualLonInput.value);
-      input.timezone = manualTzInput.value;
-    } else if (picked.locationId) {
+    if (picked.locationId) {
       // Use the location chosen from the dropdown, not a re-search of its label
       input.latitude = parseFloat(picked.latitude);
       input.longitude = parseFloat(picked.longitude);
@@ -727,12 +686,11 @@ function renderKeyFacts() {
 
 // Birth details and settings printed at the top of the PDF
 function renderPrintSummary() {
-  const { latitude, longitude, timezone } = state.resolvedBirth;
-  const place = manualToggle.checked ? t('print.manual') : locationInput.value;
+  const { timezone } = state.resolvedBirth;
   const rows = [
     [t('print.name'), nameInput.value.trim()],
     [t('print.born'), `${dateInput.value} ${timeInput.value} (${timezone})`],
-    [t('print.place'), `${place} · ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°`],
+    [t('print.place'), locationInput.value],
     [t('print.ayanamsa'), settingsAyanamsa.selectedOptions[0].textContent],
     [t('print.houses'), settingsHouse.selectedOptions[0].textContent]
   ].filter(([, value]) => value);

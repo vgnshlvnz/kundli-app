@@ -28,80 +28,73 @@
 - [ ] Select "Chennai, India" from dropdown
 - [ ] Timezone displayed under time field (e.g., "Timezone: Asia/Kolkata")
 
-### 3. Manual Coordinates Toggle
-- [ ] Check "Enter coordinates manually" checkbox
-- [ ] Latitude/longitude/timezone fields appear
-- [ ] Enter 13.0827 for latitude, 80.2707 for longitude
-- [ ] Select "Asia/Kolkata" from timezone dropdown
-- [ ] Uncheck toggle - manual fields hide
-
-### 4. Calculate Birth Chart
+### 3. Calculate Birth Chart
 - [ ] Enter birth data (1990-01-15, 10:30:00, Chennai, India)
 - [ ] Click "Calculate Kundli"
 - [ ] Results section appears below form
 - [ ] Rasi (D1) tab is active by default
 
-### 5. Rasi Tab Verification
+### 4. Rasi Tab Verification
 - [ ] Lagna (Ascendant) sign displayed
 - [ ] All 7 planets shown with sign, degree, house, retrograde status
 - [ ] Verify lagna sign matches expected result for fixture
 
-### 6. Navamsa Tab
+### 5. Navamsa Tab
 - [ ] Click "Navamsa (D9)" tab
 - [ ] Navamsa chart displayed
 - [ ] All 7 planets shown with varga positions
 
-### 7. Planets Tab
+### 6. Planets Tab
 - [ ] Click "Planets" tab
 - [ ] Detailed planet positions shown
 - [ ] Includes sign, degree, house, nakshatra, pada, speed
 - [ ] Verify Moon nakshatra matches expected result
 
-### 8. Vimshottari Tab
+### 7. Vimshottari Tab
 - [ ] Click "Vimshottari" tab
 - [ ] Birth year, Moon nakshatra, and current mahadasha displayed
 - [ ] Mahadasha timeline table shown
 - [ ] Current mahadasha row highlighted
 - [ ] Verify current mahadasha matches expected result
 
-### 9. Panchanga Tab
+### 8. Panchanga Tab
 - [ ] Click "Panchanga" tab
 - [ ] Tithi, paksha, nakshatra, yoga, karana, vara displayed
 - [ ] Sunrise/sunset times displayed (if calculated)
 
-### 10. KP Tab
+### 9. KP Tab
 - [ ] Click "KP" tab
 - [ ] Planet sub-lords table displayed
 - [ ] House cusp sub-lords table displayed
 
-### 11. Settings Changes
+### 10. Settings Changes
 - [ ] Change ayanamsa to "Raman (Krishnamurti)"
 - [ ] Chart recalculates automatically
 - [ ] Planet positions change
 - [ ] Change house system to "Equal"
 - [ ] Chart recalculates automatically
 
-### 12. Chart Style Toggle
+### 11. Chart Style Toggle
 - [ ] Set chart style to "Basic"
 - [ ] Advanced tabs (Navamsa, Vimshottari, Panchanga, KP) hidden
 - [ ] Set chart style to "Advanced"
 - [ ] All tabs visible again
 
-### 13. Print/PDF Output
+### 12. Print/PDF Output
 - [ ] Calculate a chart
 - [ ] Press Ctrl+P (or Cmd+P) to open print dialog
 - [ ] Preview shows all tabs' content
 - [ ] Form and settings are hidden in print preview
 - [ ] Clean layout suitable for PDF export
 
-### 14. Keyboard Accessibility
+### 13. Keyboard Accessibility
 - [ ] Tab through all form fields
 - [ ] Enter date/time using keyboard
 - [ ] Select location via keyboard navigation
 - [ ] Submit form with Enter key
 - [ ] Switch tabs with keyboard
 
-### 15. Mobile Responsive
+### 14. Mobile Responsive
 - [ ] Resize browser window to mobile width (< 480px)
 - [ ] Layout stacks vertically
 - [ ] All content still accessible
