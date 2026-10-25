@@ -7,18 +7,10 @@ import { resolveBirth } from '../../public/js/kundli/geo/birth.js';
 let mockLocations = [];
 let mockSearchCalls = [];
 
+// The client searches the bundled /data/locations.json itself, so serve the mock rows as that file.
 global.fetch = async (url) => {
   mockSearchCalls.push(url);
-  const absoluteUrl = new URL(url, 'http://localhost');
-  const q = absoluteUrl.searchParams.get('q');
-  return {
-    ok: true,
-    json: async () => mockLocations.filter(l =>
-      l.name.toLowerCase().includes(q.toLowerCase()) ||
-      l.state.toLowerCase().includes(q.toLowerCase()) ||
-      l.country.toLowerCase().includes(q.toLowerCase())
-    )
-  };
+  return { ok: true, json: async () => mockLocations };
 };
 
 test('Manual coordinates and timezone work', () => {
