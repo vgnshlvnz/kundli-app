@@ -1,11 +1,13 @@
-// Service worker: precaches the app shell so the calculator works offline.
-// Bump CACHE_VERSION when any precached file changes.
-const CACHE_VERSION = 'v2';
+// Service worker: offline-first. Everything the app needs is precached on install
+// and served from cache; each cached file is refreshed in the background when
+// online, so a deploy reaches users on their next visit after the one that fetched it.
+// Add new files to SHELL_FILES; bump CACHE_VERSION only to force a full re-download.
+const CACHE_VERSION = 'v3';
 const SHELL_CACHE = `kundli-shell-${CACHE_VERSION}`;
-const API_CACHE = 'kundli-api';
 
 const SHELL_FILES = [
   '/',
+  '/data/locations.json',
   '/manifest.webmanifest',
   '/css/app.css',
   '/js/app.js',
@@ -42,7 +44,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(
-        keys.filter((k) => k.startsWith('kundli-shell-') && k !== SHELL_CACHE).map((k) => caches.delete(k))
+        keys.filter((k) => k !== SHELL_CACHE).map((k) => caches.delete(k))
       ))
       .then(() => self.clients.claim())
   );
@@ -52,39 +54,22 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(networkFirstApi(request));
-  } else if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).catch(() => caches.match('/')));
-  } else {
-    event.respondWith(cacheFirst(request));
-  }
+  event.respondWith(cacheFirst(request, request.mode === 'navigate' ? '/' : request.url));
 });
 
-async function cacheFirst(request) {
-  const cached = await caches.match(request);
+// Serve from cache, refreshing the entry in the background. Navigations all map to
+// the cached '/' shell (a redirected response, e.g. /index.html, can't be cached).
+async function cacheFirst(request, key) {
+  const cache = await caches.open(SHELL_CACHE);
+  const cached = await cache.match(key);
+  const refresh = fetch(request)
+    .then((response) => {
+      if (response.ok && !response.redirected) cache.put(key, response.clone());
+      return response;
+    })
+    .catch(() => undefined);
   if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok) {
-    const cache = await caches.open(SHELL_CACHE);
-    cache.put(request, response.clone());
-  }
-  return response;
-}
-
-// Location lookups: use the network, remember successful answers, and fall back
-// to them when offline so previously searched places still resolve.
-async function networkFirstApi(request) {
-  const cache = await caches.open(API_CACHE);
-  try {
-    const response = await fetch(request);
-    if (response.ok) cache.put(request, response.clone());
-    return response;
-  } catch (e) {
-    const cached = await cache.match(request);
-    if (cached) return cached;
-    return Response.json({ error: 'offline' }, { status: 503 });
-  }
+  return (await refresh) || Response.error();
 }
