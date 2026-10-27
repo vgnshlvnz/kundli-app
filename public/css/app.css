@@ -520,6 +520,17 @@ input:focus, select:focus {
   font-weight: 600;
 }
 
+/* Bhukti tables, one collapsible group per mahadasha */
+.bhukti-group {
+  margin-bottom: 8px;
+}
+
+.bhukti-group summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
 /* Wide tables scroll inside the panel instead of widening the page */
 .tab-content {
   overflow-x: auto;

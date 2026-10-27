@@ -81,18 +81,20 @@ describe('Dasha integration: birth data → Moon position → Vimshottari', () =
     const md1 = dasha.mahadashas[0]; // Jupiter (partial)
     const bhuktis = computeBhuktis(md1);
 
-    // Compute bhukti duration for validation
-    // In Jupiter mahadasha, first bhukti is Jupiter itself:
-    // bhukti duration = (md_duration / 120) * planet_period
-    const jupiterBhuktiYears = (md1.durationYears / 120) * 16;
+    // Bhuktis divide the full 16-year Jupiter period; those that ended before
+    // birth are dropped and the one running at birth is cut at birth.
+    assert(bhuktis.length >= 1 && bhuktis.length <= 9, `Got ${bhuktis.length} bhuktis`);
+    assert.equal(bhuktis[0].start, md1.start, 'First bhukti starts at birth');
 
-    assert(bhuktis[0].planet === 'Jupiter',
-      `First bhukti in Jupiter MD should be Jupiter, got ${bhuktis[0].planet}`);
+    // Every bhukti after the first keeps its full length: (16 / 120) * planet period
+    const periods = { Ketu: 7, Venus: 20, Sun: 6, Moon: 10, Mars: 7, Rahu: 18, Jupiter: 16, Saturn: 19, Mercury: 17 };
+    for (const b of bhuktis.slice(1)) {
+      const expected = (16 / 120) * periods[b.planet];
+      assert(Math.abs(b.durationYears - expected) < 0.01,
+        `${b.planet} bhukti should be ~${expected} years, got ${b.durationYears}`);
+    }
 
-    assert(Math.abs(bhuktis[0].durationYears - jupiterBhuktiYears) < 0.01,
-      `Jupiter bhukti should be ~${jupiterBhuktiYears} years, got ${bhuktis[0].durationYears}`);
-
-    // Bhukti total should equal mahadasha duration
+    // Bhukti total should equal the remaining mahadasha duration
     let totalBhuktiYears = 0;
     for (const b of bhuktis) {
       totalBhuktiYears += b.durationYears;
