@@ -2,9 +2,9 @@
 // Single-page vanilla JS app for Vedic birth chart calculation
 
 import { resolveBirth, searchLocations, localToUtc } from './kundli/geo/index.js';
-import { computePlanets } from './kundli/ephemeris/index.js';
+import { computePlanets, SECONDS_PER_YEAR } from './kundli/ephemeris/index.js';
 import { calculateHouses } from './kundli/houses/index.js';
-import { computeVimshottariDasha, getNakshatra } from './kundli/dasha/index.js';
+import { computeVimshottariDasha, computeBhuktis, getNakshatra, splitYears } from './kundli/dasha/index.js';
 import { calculatePanchanga } from './kundli/panchanga/index.js';
 import { kpLords, signLord, significators } from './kundli/kp/index.js';
 import { computeVarga } from './kundli/vargas/index.js';
@@ -517,12 +517,18 @@ function renderVimshottariTab() {
   const now = new Date();
   const currentYear = now.getFullYear();
 
+  const { currentMahadasha, currentBhukti } = state.dasha;
+  const nowUtc = now.getTime() / 1000;
+  // "Saturn · 2017-03-01 – 2036-03-01 · 9y 4m 10d remaining"
+  const currentPeriod = p => `${tr(p.planet)} · ${dateRange(p)} · ${t('dasha.remaining', { time: formatYmd((p.end - nowUtc) / SECONDS_PER_YEAR) })}`;
+
   let html = `
     <h3>${t('dasha.heading')}</h3>
     <p><strong>${t('dasha.born')}:</strong> ${state.dasha.birthYear}</p>
     <p><strong>${t('dasha.moonNakshatra')}:</strong> ${tr(state.dasha.moonNakshatra)} (${t('dasha.lord')}: ${tr(state.dasha.moonNakshatraLord)})</p>
-    <p><strong>${t('dasha.currentMahadasha')}:</strong> ${state.dasha.currentMahadasha ? tr(state.dasha.currentMahadasha.planet) : t('na')}</p>
-    ${state.dasha.currentBhukti ? `<p><strong>${t('dasha.currentBhukti')}:</strong> ${tr(state.dasha.currentBhukti.planet)}</p>` : ''}
+    <p><strong>${t('dasha.balance')}:</strong> ${tr(state.dasha.moonNakshatraLord)} · ${formatYmd(state.dasha.remainingFirstMahadashaYears)}</p>
+    <p><strong>${t('dasha.currentMahadasha')}:</strong> ${currentMahadasha ? currentPeriod(currentMahadasha) : t('na')}</p>
+    ${currentBhukti ? `<p><strong>${t('dasha.currentBhukti')}:</strong> ${currentPeriod(currentBhukti)}</p>` : ''}
     <h4>${t('dasha.timeline')}</h4>
     <table class="chart-table">
       <thead>
@@ -538,21 +544,51 @@ function renderVimshottariTab() {
   `;
 
   state.dasha.mahadashas.forEach(md => {
-    const startYear = new Date(md.start * 1000).getFullYear();
-    const endYear = new Date(md.end * 1000).getFullYear();
-    const isCurrent = state.dasha.currentMahadasha && state.dasha.currentMahadasha.planet === md.planet;
+    const isCurrent = currentMahadasha && currentMahadasha.planet === md.planet;
     html += `
       <tr${isCurrent ? ' class="current-period"' : ''}>
         <td>${tr(md.planet)}</td>
-        <td>${startYear}</td>
-        <td>${endYear}</td>
+        <td>${birthPlaceDate(md.start)}</td>
+        <td>${birthPlaceDate(md.end)}</td>
         <td>${md.durationYears.toFixed(2)}</td>
         <td>${isCurrent ? t('yes') : t('no')}</td>
       </tr>
     `;
   });
 
-  html += '</tbody></table>';
+  html += `</tbody></table><h4>${t('dasha.bhuktis')}</h4>`;
+
+  // One collapsible bhukti table per mahadasha; the running one starts open
+  state.dasha.mahadashas.forEach(md => {
+    const isCurrentMd = currentMahadasha && currentMahadasha.planet === md.planet;
+    html += `
+      <details class="bhukti-group"${isCurrentMd ? ' open' : ''}>
+        <summary>${t('dasha.group', { planet: tr(md.planet) })} · ${dateRange(md)}</summary>
+        <table class="chart-table">
+          <thead>
+            <tr>
+              <th>${t('col.bhukti')}</th>
+              <th>${t('col.start')}</th>
+              <th>${t('col.end')}</th>
+              <th>${t('col.current')}</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    computeBhuktis(md).forEach(b => {
+      const isCurrent = isCurrentMd && currentBhukti && currentBhukti.start === b.start;
+      html += `
+        <tr${isCurrent ? ' class="current-period"' : ''}>
+          <td>${tr(md.planet)} / ${tr(b.planet)}</td>
+          <td>${birthPlaceDate(b.start)}</td>
+          <td>${birthPlaceDate(b.end)}</td>
+          <td>${isCurrent ? t('yes') : t('no')}</td>
+        </tr>
+      `;
+    });
+    html += '</tbody></table></details>';
+  });
+
   tabs['vimshottari'].innerHTML = html;
 }
 
@@ -733,6 +769,21 @@ function birthPlaceTime(utcSeconds) {
   const timeZone = state.resolvedBirth.timezone;
   const time = new Date(utcSeconds * 1000).toLocaleTimeString('en-GB', { timeZone, hour12: false });
   return `${time} (${timeZone})`;
+}
+
+// Helper: format a UTC timestamp (seconds) as a YYYY-MM-DD date at the birth place
+function birthPlaceDate(utcSeconds) {
+  return new Date(utcSeconds * 1000).toLocaleDateString('en-CA', { timeZone: state.resolvedBirth.timezone });
+}
+
+// Helper: "start – end" dates of a dasha period
+function dateRange(period) {
+  return `${birthPlaceDate(period.start)} – ${birthPlaceDate(period.end)}`;
+}
+
+// Helper: a length in years written as years, months and days
+function formatYmd(years) {
+  return t('dasha.ymd', splitYears(years));
 }
 
 // Helper: Determine house number from longitude

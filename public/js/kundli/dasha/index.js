@@ -167,15 +167,18 @@ export function getCurrentMahadasha(mahadashas, queryUtc = null) {
 
 /**
  * Calculate sub-periods (bhuktis) within a mahadasha
+ * Bhuktis divide the full mahadasha period. For the partial mahadasha running
+ * at birth, the full period is counted back from its end and only the part
+ * after birth is returned (the bhukti running at birth is cut at birth).
  * @param {MahadashaPeriod} mahadasha - The mahadasha period
  * @returns {Array<BhuktiPeriod>} Bhukti sequence within this mahadasha
  */
 export function computeBhuktis(mahadasha) {
   const mdIndex = getPlanetIndex(mahadasha.planet);
-  const mdPeriodYears = mahadasha.durationYears;
+  const mdPeriodYears = getPlanetPeriod(mahadasha.planet);
 
   const bhuktis = [];
-  let currentStart = mahadasha.start;
+  let currentStart = mahadasha.end - mdPeriodYears * SECONDS_PER_YEAR;
 
   // Bhukti periods are proportional to the main sequence
   for (let i = 0; i < 9; i++) {
@@ -183,18 +186,37 @@ export function computeBhuktis(mahadasha) {
     // Bhukti duration = (md period / 120) * planet period
     const bhuktiYears = (mdPeriodYears / TOTAL_CYCLE) * planetInfo.period;
     const bhuktiSeconds = bhuktiYears * SECONDS_PER_YEAR;
+    const end = currentStart + bhuktiSeconds;
 
-    bhuktis.push({
-      planet: planetInfo.name,
-      start: currentStart,
-      end: currentStart + bhuktiSeconds,
-      durationYears: bhuktiYears,
-      current: false
-    });
-    currentStart = currentStart + bhuktiSeconds;
+    if (end > mahadasha.start) {
+      const start = Math.max(currentStart, mahadasha.start);
+      bhuktis.push({
+        planet: planetInfo.name,
+        start: start,
+        end: end,
+        durationYears: (end - start) / SECONDS_PER_YEAR,
+        current: false
+      });
+    }
+    currentStart = end;
   }
 
   return bhuktis;
+}
+
+/**
+ * Split a length in years into years, months and days the way dasha balances
+ * are written in Vedic texts (12 months of 30 days to the year)
+ * @param {number} years - Length in years
+ * @returns {{years: number, months: number, days: number}}
+ */
+export function splitYears(years) {
+  const totalDays = Math.round(years * 360);
+  return {
+    years: Math.floor(totalDays / 360),
+    months: Math.floor((totalDays % 360) / 30),
+    days: totalDays % 30
+  };
 }
 
 /**

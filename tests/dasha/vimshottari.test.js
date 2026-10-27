@@ -6,7 +6,8 @@ import {
   computeBhuktis,
   getCurrentMahadasha,
   getCurrentBhukti,
-  computeVimshottariDasha
+  computeVimshottariDasha,
+  splitYears
 } from '../../public/js/kundli/dasha/index.js';
 
 describe('Nakshatra identification', () => {
@@ -164,7 +165,7 @@ describe('Bhukti calculations', () => {
   const birth = { utc: 946684800 };
 
   test('Bhukti sequence is 9 sub-periods', () => {
-    const mahadashas = computeMahadashas(birth, 5);
+    const mahadashas = computeMahadashas(birth, 0); // Ketu, full 7 years
     const bhuktis = computeBhuktis(mahadashas[0]);
     assert.ok(bhuktis.length === 9, 'Should have 9 bhuktis');
   });
@@ -197,10 +198,55 @@ describe('Bhukti calculations', () => {
 
   test('Bhukti sequence follows Vimshottari order from mahadasha planet', () => {
     // In Ketu mahadasha, bhuktis start with Ketu
-    const mahadashas = computeMahadashas(birth, 5);
+    const mahadashas = computeMahadashas(birth, 0); // Ketu, full 7 years
     const bhuktis = computeBhuktis(mahadashas[0]);
     assert.ok(bhuktis[0].planet === 'Ketu', 'First bhukti in Ketu MD should be Ketu');
     assert.ok(bhuktis[1].planet === 'Venus', 'Second bhukti should be Venus');
+  });
+
+  test('Partial mahadasha at birth keeps full-length bhuktis and drops elapsed ones', () => {
+    // Moon at 5° Ashwini: 2.625 of Ketu's 7 years elapsed before birth.
+    // Ketu MD bhuktis (years): Ketu 0.4083, Venus 1.1667, Sun 0.35, Moon 0.5833, Mars 0.4083...
+    // Cumulative 2.5083 after Moon, 2.9167 after Mars → birth falls in Mars bhukti.
+    const mahadashas = computeMahadashas(birth, 5);
+    const bhuktis = computeBhuktis(mahadashas[0]);
+    assert.deepEqual(bhuktis.map(b => b.planet), ['Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury']);
+
+    // Mars bhukti is cut at birth: 2.9167 - 2.625 = 0.2917 years left
+    assert.equal(bhuktis[0].start, birth.utc);
+    assert.ok(Math.abs(bhuktis[0].durationYears - 0.2917) < 0.001,
+      `Mars bhukti remainder should be ~0.2917 years, got ${bhuktis[0].durationYears}`);
+
+    // Later bhuktis keep their full length: Rahu = 7 * 18 / 120 = 1.05 years
+    assert.ok(Math.abs(bhuktis[1].durationYears - 1.05) < 0.001);
+
+    // Bhuktis still fill exactly the remaining 4.375 years, ending with the mahadasha
+    const total = bhuktis.reduce((sum, b) => sum + b.durationYears, 0);
+    assert.ok(Math.abs(total - 4.375) < 0.001, `Expected 4.375 years, got ${total}`);
+    assert.ok(Math.abs(bhuktis[4].end - mahadashas[0].end) < 1);
+  });
+
+  test('Full mahadasha bhuktis start at the mahadasha start', () => {
+    const mahadashas = computeMahadashas(birth, 5);
+    const bhuktis = computeBhuktis(mahadashas[1]);
+    assert.ok(Math.abs(bhuktis[0].start - mahadashas[1].start) < 1);
+    assert.ok(Math.abs(bhuktis[8].end - mahadashas[1].end) < 1);
+  });
+});
+
+describe('Years/months/days split', () => {
+  test('Whole and fractional years use 12 months of 30 days', () => {
+    // 4.375 years = 4 years + 0.375 * 360 = 135 days = 4 months 15 days
+    assert.deepEqual(splitYears(4.375), { years: 4, months: 4, days: 15 });
+    assert.deepEqual(splitYears(7), { years: 7, months: 0, days: 0 });
+    assert.deepEqual(splitYears(0), { years: 0, months: 0, days: 0 });
+  });
+
+  test('Rounds to the nearest day without producing 30 days or 12 months', () => {
+    // 0.99999 years rounds up to a whole year
+    assert.deepEqual(splitYears(0.99999), { years: 1, months: 0, days: 0 });
+    // 1 day = 1/360 year
+    assert.deepEqual(splitYears(1 / 360), { years: 0, months: 0, days: 1 });
   });
 });
 
