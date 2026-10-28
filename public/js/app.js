@@ -770,11 +770,12 @@ function chartSubtitle() {
   return [nameInput.value.trim(), `${dateInput.value} ${timeInput.value}`].filter(Boolean).join(' · ');
 }
 
-// Helper: format a UTC timestamp (seconds) as local time at the birth place
+// Helper: format a UTC timestamp (seconds) as local weekday, date and time at
+// the birth place, e.g. "Tuesday 1992-03-10 07:21:10 (Asia/Kuala_Lumpur)"
 function birthPlaceTime(utcSeconds) {
   const timeZone = state.resolvedBirth.timezone;
   const time = new Date(utcSeconds * 1000).toLocaleTimeString('en-GB', { timeZone, hour12: false });
-  return `${time} (${timeZone})`;
+  return `${tr(birthPlaceWeekday(utcSeconds))} ${birthPlaceDate(utcSeconds)} ${time} (${timeZone})`;
 }
 
 // Helper: format a UTC timestamp (seconds) as a YYYY-MM-DD date at the birth place
