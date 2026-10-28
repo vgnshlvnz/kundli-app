@@ -61,6 +61,7 @@
 - [ ] Click "Panchanga" tab
 - [ ] Tithi, paksha, nakshatra, yoga, karana, vara displayed
 - [ ] Sunrise/sunset times displayed (if calculated)
+- [ ] Birth before sunrise (e.g. 2020-06-17 04:00, Delhi): Vara shows Tuesday with "born before sunrise on Wednesday 2020-06-17"; a 10:00 birth shows Wednesday with no note
 
 ### 9. KP Tab
 - [ ] Click "KP" tab
