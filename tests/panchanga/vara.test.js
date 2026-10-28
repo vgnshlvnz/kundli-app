@@ -56,4 +56,20 @@ describe('Vara (weekday) calculation', () => {
     assert.ok(vara.index === 3,
       `Post-sunrise birth should get current day (Wednesday, index 3), got ${vara.index} (${vara.name})`);
   });
+
+  test('Weekday follows the local date when sunrise falls on the previous UTC day', () => {
+    // Delhi, 2020-06-17 (Wednesday) noon IST: sunrise 05:23 IST = 23:53 UTC on the 16th
+    const delhi = getVara(new Date('2020-06-17T12:00:00+05:30').getTime() / 1000, 77.209, 28.6139);
+    assert.equal(delhi.english, 'Wednesday');
+
+    // Tokyo, same date: sunrise 04:25 JST = 19:25 UTC on the 16th
+    const tokyo = getVara(new Date('2020-06-17T12:00:00+09:00').getTime() / 1000, 139.6917, 35.6895);
+    assert.equal(tokyo.english, 'Wednesday');
+  });
+
+  test('West of Greenwich uses the local date too', () => {
+    // New York, 2020-06-17 (Wednesday) 22:00 EDT = 02:00 UTC on Thursday
+    const vara = getVara(new Date('2020-06-17T22:00:00-04:00').getTime() / 1000, -74.006, 40.7128);
+    assert.equal(vara.english, 'Wednesday');
+  });
 });

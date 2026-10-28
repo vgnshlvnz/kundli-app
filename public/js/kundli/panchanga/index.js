@@ -188,8 +188,9 @@ export function getKarana(utc) {
 }
 
 /**
- * Get the Unix timestamp of sunrise on the given date at the given location
- * Uses SearchRiseSet to find the next sunrise after midnight UTC
+ * Get the Unix timestamp of the sunrise that began the Vedic day of birth
+ * The Vedic day runs from sunrise to sunrise, so this is the most recent
+ * sunrise at or before birth (the previous morning's for a pre-dawn birth)
  * @param {number} utc - Unix timestamp (UTC seconds) of birth
  * @param {number} longitude - Observer longitude (degrees)
  * @param {number} latitude - Observer latitude (degrees)
@@ -199,8 +200,8 @@ export function getSunrise(utc, longitude, latitude) {
   const date = new Date(utc * 1000);
   const observer = new Observer(latitude, longitude, 0);
 
-  // Find sunrise after midnight UTC on the birth day
-  const result = SearchRiseSet(Body.Sun, observer, 1, date, 1);
+  // Negative limit searches backwards from birth
+  const result = SearchRiseSet(Body.Sun, observer, 1, date, -1);
   if (result) {
     // Convert AstroTime to Unix timestamp
     return result.date.getTime() / 1000;
@@ -209,14 +210,16 @@ export function getSunrise(utc, longitude, latitude) {
 }
 
 /**
- * Get the Unix timestamp of sunset on the given date at the given location
+ * Get the Unix timestamp of the sunset in the Vedic day of birth
+ * (the first sunset after that day's sunrise)
  * @param {number} utc - Unix timestamp (UTC seconds) of birth
  * @param {number} longitude - Observer longitude (degrees)
  * @param {number} latitude - Observer latitude (degrees)
  * @returns {number|null} Sunset UTC timestamp, or null if not found
  */
 export function getSunset(utc, longitude, latitude) {
-  const date = new Date(utc * 1000);
+  const sunrise = getSunrise(utc, longitude, latitude);
+  const date = new Date((sunrise ?? utc) * 1000);
   const observer = new Observer(latitude, longitude, 0);
 
   const result = SearchRiseSet(Body.Sun, observer, -1, date, 1);
@@ -228,41 +231,23 @@ export function getSunset(utc, longitude, latitude) {
 
 /**
  * Calculate the Vedic day (vara) at birth time
- * Vedic day starts at local sunrise, not midnight
- * If birth is before sunrise, use the previous UTC day
+ * Vedic day starts at local sunrise, not midnight: the vara is the weekday
+ * of the sunrise that began the day of birth, so a pre-dawn birth belongs
+ * to the previous day
  * @param {number} utc - Unix timestamp (UTC seconds) of birth
  * @param {number} longitude - Observer longitude (degrees)
  * @param {number} latitude - Observer latitude (degrees)
  * @returns {Object} Vara info { index, name, english }
  */
 export function getVara(utc, longitude, latitude) {
-  const date = new Date(utc * 1000);
-  const observer = new Observer(latitude, longitude, 0);
+  // Sunrise not found (polar regions): fall back to the birth moment
+  const dayStart = getSunrise(utc, longitude, latitude) ?? utc;
 
-  // Find the sunrise on the birth date
-  const sunrise = SearchRiseSet(Body.Sun, observer, 1, date, 1);
-  if (!sunrise) {
-    // Sunrise not found (polar regions), fall back to UTC day
-    return {
-      index: date.getUTCDay(),
-      name: VARA_NAMES[date.getUTCDay()].name,
-      english: VARA_NAMES[date.getUTCDay()].english
-    };
-  }
-
-  const sunriseTime = sunrise.date.getTime() / 1000;
-
-  // If birth is after sunrise, use the birth date as the Vedic day
-  // If birth is before sunrise, the Vedic day is the previous day
-  let effectiveDate;
-  if (utc >= sunriseTime) {
-    effectiveDate = date;
-  } else {
-    // Vedic day starts at sunrise; before that it's still the previous day
-    effectiveDate = new Date((sunriseTime - 24 * 60 * 60) * 1000);
-  }
-
-  const dayIndex = effectiveDate.getUTCDay();
+  // Weekday in local mean solar time at the birth place. Sunrise is hours
+  // away from local midnight, so this matches the local calendar date,
+  // unlike the UTC date (e.g. a 05:23 IST sunrise is 23:53 UTC the day before)
+  const localMeanTime = dayStart + (longitude / 15) * 3600;
+  const dayIndex = new Date(localMeanTime * 1000).getUTCDay();
   return {
     index: dayIndex,
     name: VARA_NAMES[dayIndex].name,
