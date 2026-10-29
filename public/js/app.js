@@ -597,7 +597,13 @@ function renderPanchangaTab() {
 
   const p = state.panchanga;
   const sun = state.planets.find(planet => planet.name === 'Sun');
-  const vara = lang === 'ta' ? tr(p.vara.english) : `${p.vara.name} (${p.vara.english})`;
+  let vara = lang === 'ta' ? tr(p.vara.english) : `${p.vara.name} (${p.vara.english})`;
+  // The vara runs sunrise to sunrise, so a pre-dawn birth keeps the previous
+  // day's vara; name the calendar day too, as daily panchangas list by it
+  const sunriseUtc = p.sunriseSunset.sunriseUtc;
+  if (sunriseUtc && birthPlaceDate(p.birthUtc) !== birthPlaceDate(sunriseUtc)) {
+    vara += ` · ${t('panchanga.beforeSunrise', { day: tr(birthPlaceWeekday(p.birthUtc)), date: birthPlaceDate(p.birthUtc) })}`;
+  }
   let html = `
     <h3>${t('panchanga.heading')}</h3>
     <table class="chart-table">
@@ -764,16 +770,22 @@ function chartSubtitle() {
   return [nameInput.value.trim(), `${dateInput.value} ${timeInput.value}`].filter(Boolean).join(' · ');
 }
 
-// Helper: format a UTC timestamp (seconds) as local time at the birth place
+// Helper: format a UTC timestamp (seconds) as local weekday, date and time at
+// the birth place, e.g. "Tuesday 1992-03-10 07:21:10 (Asia/Kuala_Lumpur)"
 function birthPlaceTime(utcSeconds) {
   const timeZone = state.resolvedBirth.timezone;
   const time = new Date(utcSeconds * 1000).toLocaleTimeString('en-GB', { timeZone, hour12: false });
-  return `${time} (${timeZone})`;
+  return `${tr(birthPlaceWeekday(utcSeconds))} ${birthPlaceDate(utcSeconds)} ${time} (${timeZone})`;
 }
 
 // Helper: format a UTC timestamp (seconds) as a YYYY-MM-DD date at the birth place
 function birthPlaceDate(utcSeconds) {
   return new Date(utcSeconds * 1000).toLocaleDateString('en-CA', { timeZone: state.resolvedBirth.timezone });
+}
+
+// Helper: English weekday of a UTC timestamp (seconds) at the birth place
+function birthPlaceWeekday(utcSeconds) {
+  return new Date(utcSeconds * 1000).toLocaleDateString('en-US', { timeZone: state.resolvedBirth.timezone, weekday: 'long' });
 }
 
 // Helper: "start – end" dates of a dasha period
