@@ -5,12 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vedic Kundli Calculator</title>
   <meta name="theme-color" content="#0e0c1d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Kundli">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
+  <div id="install-hint" class="install-hint hidden" role="note">
+    <p data-i18n="install.ios">Install this app: tap the Share button, then "Add to Home Screen".</p>
+    <button type="button" id="install-hint-close" data-i18n-aria="install.close" aria-label="Dismiss">&times;</button>
+  </div>
   <header class="hero">
     <div class="hero-inner">
       <svg class="hero-emblem" viewBox="0 0 64 64" aria-hidden="true">
