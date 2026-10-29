@@ -14,6 +14,7 @@ import { LANGUAGES, translate, term, planetAbbreviation, tamilMonth } from './ku
 const SIGN_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
                     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 const LANGUAGE_KEY = 'kundli-language';
+const INSTALL_HINT_KEY = 'kundli-install-hint-dismissed';
 
 // Current interface language; t() looks up UI text, tr() astrological names
 let lang = 'en';
@@ -119,10 +120,29 @@ function init() {
   dateInput.value = today.toISOString().split('T')[0];
 
   renderForm();
+  initInstallHint();
 
   let saved = null;
   try { saved = localStorage.getItem(LANGUAGE_KEY); } catch (e) { /* storage unavailable */ }
   if (LANGUAGES.includes(saved)) setLanguage(saved);
+}
+
+// Safari has no install prompt, so on iPhone/iPad (outside the installed app) say how to add it
+function initInstallHint() {
+  const ua = navigator.userAgent;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const safari = !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  const installed = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  let dismissed = false;
+  try { dismissed = localStorage.getItem(INSTALL_HINT_KEY) === '1'; } catch (e) { /* storage unavailable */ }
+  if (!ios || !safari || installed || dismissed) return;
+
+  const hint = document.getElementById('install-hint');
+  hint.classList.remove('hidden');
+  document.getElementById('install-hint-close').addEventListener('click', () => {
+    hint.classList.add('hidden');
+    try { localStorage.setItem(INSTALL_HINT_KEY, '1'); } catch (e) { /* storage unavailable */ }
+  });
 }
 
 // Switch the interface language and redraw any results already on screen

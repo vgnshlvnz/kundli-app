@@ -112,6 +112,31 @@ h1, h2, h3, h4 {
   margin-top: 4px;
 }
 
+/* iOS Safari install hint */
+.install-hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--primary-dark);
+  color: var(--on-primary);
+  font-size: 0.9rem;
+}
+
+.install-hint p {
+  flex: 1;
+}
+
+.install-hint button {
+  flex: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 /* Language switch */
 .hero-text {
   flex: 1;
