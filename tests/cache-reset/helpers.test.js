@@ -31,7 +31,7 @@ test('summarize lists cleared steps and surfaces errors', () => {
   assert.equal(summarize([]).text, 'Nothing to clear.');
 });
 
-function mockEnv({ ls = {}, failCaches = false, status = 204, noDatabases = false } = {}) {
+function mockEnv({ ls = {}, failCaches = false, status = 204, noDatabases = false, offline = false } = {}) {
   const store = { ...ls };
   const deletedDbs = [];
   const calls = { cachesDeleted: [], unregistered: 0, fetch: [], sessionCleared: false };
@@ -43,7 +43,7 @@ function mockEnv({ ls = {}, failCaches = false, status = 204, noDatabases = fals
     navigator: { serviceWorker: { getRegistrations: async () => [{ unregister: async () => { calls.unregistered++; } }] } },
     sessionStorage: { clear: () => { calls.sessionCleared = true; } },
     localStorage: Object.assign(store, {}),
-    fetch: async (u, o) => { calls.fetch.push([u, o.method]); return { status }; },
+    fetch: async (u, o) => { if (offline) throw new TypeError('Failed to fetch'); calls.fetch.push([u, o.method]); return { status }; },
     indexedDB: {
       deleteDatabase: (name) => {
         deletedDbs.push(name);
@@ -61,14 +61,14 @@ function mockEnv({ ls = {}, failCaches = false, status = 204, noDatabases = fals
 }
 
 test('refresh level: clears caches/SW/session, keeps allowlisted localStorage', async () => {
-  const { env, calls, store } = mockEnv({ ls: { 'kundli.settings': '1', 'kundli.chart.1': 'x', junk: '1' } });
+  const { env, calls, store } = mockEnv({ ls: { 'kundli.settings': '1', 'kundli-language': 'ta', 'kundli.chart.1': 'x', junk: '1' } });
   const steps = await runReset('refresh', env);
   assert.ok(steps.every((s) => s.ok));
   assert.deepEqual(calls.cachesDeleted, ['a', 'b']);
   assert.equal(calls.unregistered, 1);
   assert.ok(calls.sessionCleared);
-  assert.deepEqual(Object.keys(store).sort(), ['kundli.chart.1', 'kundli.settings']);
-  assert.deepEqual(calls.fetch, [['/api/clear-site-data', 'POST']]);
+  assert.deepEqual(Object.keys(store).sort(), ['kundli-language', 'kundli.chart.1', 'kundli.settings']);
+  assert.deepEqual(calls.fetch.slice(-1), [['/api/clear-site-data', 'POST']]);
 });
 
 test('all level: clears localStorage + IndexedDB and uses ?level=all', async () => {
@@ -77,7 +77,7 @@ test('all level: clears localStorage + IndexedDB and uses ?level=all', async () 
   assert.ok(steps.every((s) => s.ok));
   assert.deepEqual(Object.keys(store), []);
   assert.deepEqual(deletedDbs, ['d1', 'd2']);
-  assert.deepEqual(calls.fetch, [['/api/clear-site-data?level=all', 'POST']]);
+  assert.deepEqual(calls.fetch.slice(-1), [['/api/clear-site-data?level=all', 'POST']]);
 });
 
 test('all level falls back to known DB names without indexedDB.databases', async () => {
@@ -101,4 +101,19 @@ test('non-204 from the server is a reported error', async () => {
   const last = steps[steps.length - 1];
   assert.equal(last.ok, false);
   assert.equal(last.error, 'HTTP 403');
+});
+
+test('offline: aborts before destroying anything', async () => {
+  const { env, calls } = mockEnv({ offline: true, ls: { 'kundli.chart.1': 'x' } });
+  const steps = await runReset('all', env);
+  assert.equal(steps.length, 1);
+  assert.equal(steps[0].step, 'Network check');
+  assert.equal(steps[0].ok, false);
+  assert.deepEqual(calls.cachesDeleted, []);
+  assert.equal(calls.unregistered, 0);
+  assert.equal(calls.sessionCleared, false);
+});
+
+test('language preference survives level 1', () => {
+  assert.ok(isAllowed('kundli-language'));
 });

@@ -33,3 +33,12 @@ test('cross-origin or missing Origin → 403, no header', async () => {
     assert.equal(res.headers.get('Clear-Site-Data'), null);
   }
 });
+
+test('other methods → 405, Origin: null → 403', async () => {
+  for (const method of ['HEAD', 'PUT', 'DELETE']) {
+    const res = await call('/api/clear-site-data', { method, headers: { Origin: 'https://kundli.test' } });
+    assert.equal(res.status, 405, method);
+  }
+  const res = await call('/api/clear-site-data', { method: 'POST', headers: { Origin: 'null' } });
+  assert.equal(res.status, 403);
+});

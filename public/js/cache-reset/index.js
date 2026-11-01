@@ -7,11 +7,12 @@
 // TODO(owner): placeholder keys. No saved-profile storage exists yet; replace
 // these with the real keys when the feature lands.
 export const LS_ALLOWLIST = {
-  exact: ['kundli.settings'],
+  exact: ['kundli.settings', 'kundli-language'],
   prefixes: ['kundli.profile.', 'kundli.chart.'],
 };
 export const CHART_PREFIX = 'kundli.chart.';
 export const KNOWN_DB_NAMES = ['kundli'];
+const BLOCKED_TIMEOUT_MS = 5000;
 const RESULT_KEY = 'cache-reset:result';
 
 /** @param {string[]} keys @param {{exact:string[],prefixes:string[]}} allow */
@@ -61,6 +62,11 @@ async function step(name, fn) {
  * @param {'refresh'|'all'} level
  */
 export async function runReset(level, env = globalThis) {
+  // Offline-first app: if we can't reach the server, wiping the caches would leave
+  // no working app until the user is back online. Check first, destroy nothing on failure.
+  const net = await step('Network check', async () => { await env.fetch('/version.json', { cache: 'no-store' }); });
+  if (!net.ok) return [net];
+
   const steps = [];
   steps.push(await step('Cache Storage', async () => {
     const names = await env.caches.keys();
@@ -85,7 +91,11 @@ export async function runReset(level, env = globalThis) {
         const req = idb.deleteDatabase(name);
         req.onsuccess = () => resolve();
         req.onerror = () => reject(req.error || new Error(`could not delete ${name}`));
-        req.onblocked = () => reject(new Error(`${name} is open in another tab`));
+        // Blocked means another tab holds it open; the delete still completes once that
+        // closes, so wait a while before reporting it.
+        req.onblocked = () => {
+          setTimeout(() => reject(new Error(`${name} is still open in another tab`)), BLOCKED_TIMEOUT_MS);
+        };
       })));
       return `${names.length} database${names.length === 1 ? '' : 's'}`;
     }));
@@ -98,7 +108,7 @@ export async function runReset(level, env = globalThis) {
     }));
   }
 
-  steps.push(await step('Server cache headers', async () => {
+  steps.push(await step('Clear-Site-Data request', async () => {
     const res = await env.fetch(`/api/clear-site-data${level === 'all' ? '?level=all' : ''}`, { method: 'POST' });
     if (res.status !== 204) throw new Error(`HTTP ${res.status}`);
   }));
@@ -180,7 +190,7 @@ export async function mount(root = document.getElementById('cache-reset-mount'))
     busy(false);
     if (!ok) { showToast(text, false); return; }
     try { sessionStorage.setItem(RESULT_KEY, JSON.stringify({ text, before })); } catch { /* ignore */ }
-    location.replace(location.pathname + '?v=' + Date.now());
+    location.replace(location.pathname);
   }
 
   refreshBtn.addEventListener('click', () => go('refresh'));

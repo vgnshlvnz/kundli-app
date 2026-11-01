@@ -14,7 +14,7 @@ indexedDB.open('kundli');   // any DB; names are listed via indexedDB.databases(
 Check: Settings card shows "App cache" and "Version 0.1.0".
 
 ## Level 1: Refresh app data
-- [ ] Click it. Button disables and spinner shows while running; page reloads with `?v=<timestamp>`.
+- [ ] Click it. Button disables and spinner shows while running; page reloads.
 - [ ] Toast shows what was cleared and "Version 0.1.0 → 0.1.0".
 - [ ] Cache Storage: no `kundli-shell-*` / `test-cache` entries (the SW re-precaches after reload; that is expected).
 - [ ] Local Storage: `kundli.settings` and `kundli.chart.*` kept; `junk` removed. Session Storage: `tmp` gone.
@@ -33,8 +33,11 @@ Check: Settings card shows "App cache" and "Version 0.1.0".
 - [ ] Run Refresh app data: toast shows `Version 0.1.1 → 0.1.1`. Change the file between click and reload to see `old → new`.
 - [ ] Go offline (Network > Offline) and reload: the card shows "Version unknown" and nothing breaks.
 
+## Offline safety
+- [ ] DevTools > Network > Offline, click either button: toast shows "Network check" failed and NOTHING is cleared (caches, SW and storage unchanged, no reload).
+
 ## Errors / a11y / theme
-- [ ] Block a step (e.g. keep a second tab open holding an IndexedDB connection): toast names the failing step and the page does NOT reload.
+- [ ] Block a step (e.g. keep a second tab open holding an IndexedDB connection; the step waits ~5s): toast names the failing step and the page does NOT reload.
 - [ ] Tab/Enter/Space operate everything; focus ring visible; confirm focuses Cancel.
 - [ ] 375px width: buttons full width. Dark mode (OS setting): colours follow tokens.
 
