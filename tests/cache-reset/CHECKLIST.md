@@ -26,6 +26,13 @@ Check: Settings card shows "App cache" and "Version 0.1.0".
 - [ ] Confirm. Local Storage empty, IndexedDB empty, caches gone, SW unregistered then re-registered by the reloaded page.
 - [ ] Network: POST `?level=all` returned 204 with `Clear-Site-Data: "cache", "storage"`.
 
+## version.json is never served stale
+- [ ] With the app loaded and the service worker active (DevTools > Application > Service Workers), edit `public/version.json` to a new version, e.g. `0.1.1`.
+- [ ] Reload (no reset). "Version" in the App cache card shows `0.1.1`, not the old value.
+- [ ] Network tab: `/version.json` is fetched from the network on each load (not "(ServiceWorker)" cache), and Cache Storage has no `/version.json` entry.
+- [ ] Run Refresh app data: toast shows `Version 0.1.1 → 0.1.1`. Change the file between click and reload to see `old → new`.
+- [ ] Go offline (Network > Offline) and reload: the card shows "Version unknown" and nothing breaks.
+
 ## Errors / a11y / theme
 - [ ] Block a step (e.g. keep a second tab open holding an IndexedDB connection): toast names the failing step and the page does NOT reload.
 - [ ] Tab/Enter/Space operate everything; focus ring visible; confirm focuses Cancel.
