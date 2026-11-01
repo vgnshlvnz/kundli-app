@@ -10,7 +10,9 @@ const SHELL_FILES = [
   '/data/locations.json',
   '/manifest.webmanifest',
   '/css/app.css',
+  '/css/cache-reset.css',
   '/js/app.js',
+  '/js/cache-reset/index.js',
   '/js/kundli/main.js',
   '/js/kundli/contracts/houses.js',
   '/js/kundli/dasha/contracts.js',
@@ -55,6 +57,8 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
+  // Always hit the network so the reset control shows the live version.
+  if (url.pathname === '/version.json') return;
 
   event.respondWith(cacheFirst(request, request.mode === 'navigate' ? '/' : request.url));
 });
