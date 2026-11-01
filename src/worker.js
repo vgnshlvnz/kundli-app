@@ -29,6 +29,22 @@ async function handleApi(request, url, env) {
     return handleLocationById(locMatch[1], env);
   }
 
+  // Clear the visitor's browser cache/storage via Clear-Site-Data.
+  // Browser only: the Cloudflare edge cache is NOT touched (needs an API token).
+  if (url.pathname === '/api/clear-site-data') {
+    if (request.method !== 'POST') {
+      return new Response(null, { status: 405, headers: { Allow: 'POST', 'Cache-Control': 'no-store' } });
+    }
+    if (request.headers.get('Origin') !== url.origin) {
+      return new Response(null, { status: 403, headers: { 'Cache-Control': 'no-store' } });
+    }
+    const value = url.searchParams.get('level') === 'all' ? '"cache", "storage"' : '"cache"';
+    return new Response(null, {
+      status: 204,
+      headers: { 'Clear-Site-Data': value, 'Cache-Control': 'no-store' }
+    });
+  }
+
   // Any other /api route → 404
   return Response.json({ error: 'not found' }, { status: 404 });
 }

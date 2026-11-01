@@ -98,6 +98,7 @@
             </div>
           </div>
           <p class="settings-hint" data-i18n="options.hint">Changes apply to the current chart straight away. Advanced adds Navamsa, Vimshottari, Panchanga and KP.</p>
+          <div id="cache-reset-mount"></div>
         </section>
       </div>
 
@@ -130,6 +131,7 @@
   </div>
 
   <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/cache-reset/index.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

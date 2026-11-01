@@ -1,0 +1,15 @@
+/* Uses the app's theme tokens (defined in app.css, dark mode via prefers-color-scheme). */
+.cache-reset { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.cache-reset h3 { margin: 0 0 .25rem; }
+.cache-reset__version, .cache-reset__hint { color: var(--text-secondary); font-size: .875rem; margin: .25rem 0 .5rem; }
+.cache-reset__btn { min-height: 44px; margin-right: .5rem; margin-bottom: .5rem; }
+.cache-reset__btn:disabled { opacity: .6; cursor: not-allowed; }
+.cache-reset__btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.cache-reset__danger { border-color: var(--error); color: var(--error); }
+.cache-reset__confirm { margin: .5rem 0; padding: .75rem; border: 1px solid var(--error); border-radius: 8px; background: var(--bg-secondary); }
+.cache-reset__toast { margin-top: .5rem; padding: .75rem; border-radius: 8px; border: 1px solid var(--success); background: var(--bg-secondary); color: var(--text); overflow-wrap: anywhere; }
+.cache-reset__toast--error { border-color: var(--error); }
+.cache-reset__spinner { display: inline-block; width: 1rem; height: 1rem; vertical-align: middle; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: cache-reset-spin .8s linear infinite; }
+@keyframes cache-reset-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .cache-reset__spinner { animation-duration: 3s; } }
+@media (max-width: 480px) { .cache-reset__btn { width: 100%; margin-right: 0; } }
