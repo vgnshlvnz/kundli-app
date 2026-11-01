@@ -57,6 +57,8 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
+  // Always hit the network so the reset control shows the live version.
+  if (url.pathname === '/version.json') return;
 
   event.respondWith(cacheFirst(request, request.mode === 'navigate' ? '/' : request.url));
 });
