@@ -1,0 +1,149 @@
+{
+  "id": "kl-2-1979",
+  "group": "kl",
+  "note": "pre-1982 = UTC+7:30, from 1982-01-01 = UTC+8",
+  "input": {
+    "utc": 310416300,
+    "latitude": 3.139003,
+    "longitude": 101.686855,
+    "place": "Kuala Lumpur",
+    "tz": "Asia/Kuala_Lumpur",
+    "localTime": "1979-11-03T02:15:00+07:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 13,
+        "name": "Chaturdashi",
+        "startUtc": 310389859,
+        "endUtc": 310465808
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 309320581,
+        "endUtc": 310542422
+      },
+      "nakshatra": {
+        "index": 26,
+        "name": "Revati",
+        "startUtc": 310359261,
+        "endUtc": 310437780
+      },
+      "pada": 3,
+      "yoga": {
+        "index": 14,
+        "name": "Vajra",
+        "startUtc": 310383992,
+        "endUtc": 310457559
+      },
+      "karana": {
+        "index": 26,
+        "name": "Gara",
+        "startUtc": 310389859,
+        "endUtc": 310427785
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 219.74742538744084,
+      "moonTropical": 19.931614221863747,
+      "ayanamsa": 23.57544331975231
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 5,
+        "name": "Shukravara",
+        "english": "Friday"
+      },
+      "sunriseUtc": 310345002,
+      "sunsetUtc": 310388220,
+      "nextSunriseUtc": 310431405,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1979-11-02T06:26:41+07:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 12,
+        "name": "Trayodashi",
+        "startUtc": 310314042,
+        "endUtc": 310389859
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 309320581,
+        "endUtc": 310542422
+      },
+      "nakshatra": {
+        "index": 25,
+        "name": "Uttara Bhadrapada",
+        "startUtc": 310280674,
+        "endUtc": 310359262
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 13,
+        "name": "Harshana",
+        "startUtc": 310310496,
+        "endUtc": 310383992
+      },
+      "karana": {
+        "index": 24,
+        "name": "Kaulava",
+        "startUtc": 310314042,
+        "endUtc": 310351965
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 310345069,
+        "sunsetUtc": 310388153
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 310345208,
+        "sunsetUtc": 310388014
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Kartika",
+        "adhika": false,
+        "startUtc": 309320581,
+        "endUtc": 311882617
+      },
+      "purnimanta": {
+        "name": "Kartika",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aippasi",
+      "date": 16,
+      "year60Name": "Siddharthi",
+      "ingressUtc": 309014640,
+      "day1": "1979-10-18"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 49,
+      "vighati": 30
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

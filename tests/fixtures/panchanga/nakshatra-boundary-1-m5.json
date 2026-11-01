@@ -1,0 +1,149 @@
+{
+  "id": "nakshatra-boundary-1-m5",
+  "group": "boundary",
+  "note": "nakshatra edge 1346546414 m5",
+  "input": {
+    "utc": 1346546114,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "2012-09-02T06:05:14+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 16,
+        "name": "Dwitiya",
+        "startUtc": 1346507140,
+        "endUtc": 1346594910
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1346421488,
+        "endUtc": 1347761439
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 1346457433,
+        "endUtc": 1346546414
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 8,
+        "name": "Shula",
+        "startUtc": 1346530170,
+        "endUtc": 1346614404
+      },
+      "karana": {
+        "index": 32,
+        "name": "Taitila",
+        "startUtc": 1346507140,
+        "endUtc": 1346550747
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 159.95695498911965,
+      "moonTropical": 357.3230085854009,
+      "ayanamsa": 24.034075603751376
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 0,
+        "name": "Ravivara",
+        "english": "Sunday"
+      },
+      "sunriseUtc": 1346545672,
+      "sunsetUtc": 1346590140,
+      "nextSunriseUtc": 1346632073,
+      "isPreviousCivilDay": false,
+      "sunriseLocal": "2012-09-02T05:57:51+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 16,
+        "name": "Dwitiya",
+        "startUtc": 1346507140,
+        "endUtc": 1346594910
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1346421488,
+        "endUtc": 1347761439
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 1346457434,
+        "endUtc": 1346546414
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 8,
+        "name": "Shula",
+        "startUtc": 1346530170,
+        "endUtc": 1346614404
+      },
+      "karana": {
+        "index": 32,
+        "name": "Taitila",
+        "startUtc": 1346507140,
+        "endUtc": 1346550747
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1346545738,
+        "sunsetUtc": 1346590074
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1346545877,
+        "sunsetUtc": 1346589935
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Bhadrapada",
+        "adhika": true,
+        "startUtc": 1345218867,
+        "endUtc": 1347761439
+      },
+      "purnimanta": {
+        "name": "Bhadrapada",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Avani",
+      "date": 18,
+      "year60Name": "Nandana",
+      "ingressUtc": 1345119758,
+      "day1": "2012-08-16"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 0,
+      "vighati": 18
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

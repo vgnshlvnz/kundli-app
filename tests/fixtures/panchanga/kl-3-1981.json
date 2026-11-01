@@ -1,0 +1,149 @@
+{
+  "id": "kl-3-1981",
+  "group": "kl",
+  "note": "pre-1982 = UTC+7:30, from 1982-01-01 = UTC+8",
+  "input": {
+    "utc": 378602400,
+    "latitude": 3.139003,
+    "longitude": 101.686855,
+    "place": "Kuala Lumpur",
+    "tz": "Asia/Kuala_Lumpur",
+    "localTime": "1981-12-31T06:50:00+07:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 4,
+        "name": "Panchami",
+        "startUtc": 378580237,
+        "endUtc": 378668904
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 378209401,
+        "endUtc": 379453969
+      },
+      "nakshatra": {
+        "index": 22,
+        "name": "Dhanishta",
+        "startUtc": 378511136,
+        "endUtc": 378603108
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 15,
+        "name": "Siddhi",
+        "startUtc": 378588778,
+        "endUtc": 378672560
+      },
+      "karana": {
+        "index": 8,
+        "name": "Bava",
+        "startUtc": 378580237,
+        "endUtc": 378624821
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 279.19413824806026,
+      "moonTropical": 330.16861892589407,
+      "ayanamsa": 23.60562316583946
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 4,
+        "name": "Guruvara",
+        "english": "Thursday"
+      },
+      "sunriseUtc": 378602269,
+      "sunsetUtc": 378645272,
+      "nextSunriseUtc": 378688696,
+      "isPreviousCivilDay": false,
+      "sunriseLocal": "1981-12-31T06:47:48+07:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 4,
+        "name": "Panchami",
+        "startUtc": 378580237,
+        "endUtc": 378668905
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 378209401,
+        "endUtc": 379453969
+      },
+      "nakshatra": {
+        "index": 22,
+        "name": "Dhanishta",
+        "startUtc": 378511136,
+        "endUtc": 378603108
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 15,
+        "name": "Siddhi",
+        "startUtc": 378588778,
+        "endUtc": 378672560
+      },
+      "karana": {
+        "index": 8,
+        "name": "Bava",
+        "startUtc": 378580237,
+        "endUtc": 378624821
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 378602339,
+        "sunsetUtc": 378645202
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 378602486,
+        "sunsetUtc": 378645055
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Pausha",
+        "adhika": false,
+        "startUtc": 378209401,
+        "endUtc": 380782557
+      },
+      "purnimanta": {
+        "name": "Pausha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Margazhi",
+      "date": 16,
+      "year60Name": "Dunmathi",
+      "ingressUtc": 377280284,
+      "day1": "1981-12-16"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 0,
+      "vighati": 5
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

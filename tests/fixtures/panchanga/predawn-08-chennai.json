@@ -1,0 +1,149 @@
+{
+  "id": "predawn-08-chennai",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": -41991300,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "1968-09-02T05:15:00+05:30",
+    "ayanamsa": "raman",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 9,
+        "name": "Dashami",
+        "startUtc": -42047296,
+        "endUtc": -41968889
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": -42768207,
+        "endUtc": -41565166
+      },
+      "nakshatra": {
+        "index": 19,
+        "name": "Purva Ashadha",
+        "startUtc": -41996403,
+        "endUtc": -41915020
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 2,
+        "name": "Ayushman",
+        "startUtc": -42020375,
+        "endUtc": -41944307
+      },
+      "karana": {
+        "index": 19,
+        "name": "Gara",
+        "startUtc": -42008122,
+        "endUtc": -41968889
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 159.5702505924898,
+      "moonTropical": 276.14426503520383,
+      "ayanamsa": 21.97316742599827
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 0,
+        "name": "Ravivara",
+        "english": "Sunday"
+      },
+      "sunriseUtc": -42075134,
+      "sunsetUtc": -42030609,
+      "nextSunriseUtc": -41988732,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1968-09-01T05:57:45+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 8,
+        "name": "Navami",
+        "startUtc": -42125578,
+        "endUtc": -42047296
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": -42768207,
+        "endUtc": -41565166
+      },
+      "nakshatra": {
+        "index": 18,
+        "name": "Mula",
+        "startUtc": -42077511,
+        "endUtc": -41996403
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 1,
+        "name": "Priti",
+        "startUtc": -42096280,
+        "endUtc": -42020375
+      },
+      "karana": {
+        "index": 17,
+        "name": "Kaulava",
+        "startUtc": -42086439,
+        "endUtc": -42047296
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": -42075068,
+        "sunsetUtc": -42030674
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": -42074929,
+        "sunsetUtc": -42030814
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Bhadrapada",
+        "adhika": false,
+        "startUtc": -42768207,
+        "endUtc": -40222315
+      },
+      "purnimanta": {
+        "name": "Bhadrapada",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Avani",
+      "date": 17,
+      "year60Name": "Keelaka",
+      "ingressUtc": -43437564,
+      "day1": "1968-08-16"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 58,
+      "vighati": 13
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

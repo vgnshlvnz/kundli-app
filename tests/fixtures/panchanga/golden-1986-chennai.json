@@ -1,0 +1,149 @@
+{
+  "id": "golden-1986-chennai",
+  "group": "golden",
+  "note": "1986-10-15 17:00 IST. tests/kp/golden_chart.test.js",
+  "input": {
+    "utc": 529759800,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "1986-10-15T17:00:00+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 12,
+        "name": "Trayodashi",
+        "startUtc": 529700878,
+        "endUtc": 529785914
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 528749685,
+        "endUtc": 529960898
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 529691343,
+        "endUtc": 529778580
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 11,
+        "name": "Dhruva",
+        "startUtc": 529747830,
+        "endUtc": 529829793
+      },
+      "karana": {
+        "index": 25,
+        "name": "Taitila",
+        "startUtc": 529743202,
+        "endUtc": 529785914
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 201.81673904215572,
+      "moonTropical": 354.1549607317736,
+      "ayanamsa": 23.672527956620968
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 3,
+        "name": "Budhavara",
+        "english": "Wednesday"
+      },
+      "sunriseUtc": 529720155,
+      "sunsetUtc": 529762813,
+      "nextSunriseUtc": 529806562,
+      "isPreviousCivilDay": false,
+      "sunriseLocal": "1986-10-15T05:59:14+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 12,
+        "name": "Trayodashi",
+        "startUtc": 529700879,
+        "endUtc": 529785914
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 528749685,
+        "endUtc": 529960899
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 529691342,
+        "endUtc": 529778580
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 10,
+        "name": "Vriddhi",
+        "startUtc": 529667086,
+        "endUtc": 529747830
+      },
+      "karana": {
+        "index": 24,
+        "name": "Kaulava",
+        "startUtc": 529700879,
+        "endUtc": 529743202
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 529720222,
+        "sunsetUtc": 529762746
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 529720361,
+        "sunsetUtc": 529762606
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Ashwina",
+        "adhika": false,
+        "startUtc": 528749685,
+        "endUtc": 531295328
+      },
+      "purnimanta": {
+        "name": "Ashwina",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Purattasi",
+      "date": 29,
+      "year60Name": "Akshaya",
+      "ingressUtc": 527286504,
+      "day1": "1986-09-17"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 27,
+      "vighati": 31
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

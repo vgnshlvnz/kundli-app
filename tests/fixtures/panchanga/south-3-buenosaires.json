@@ -1,0 +1,149 @@
+{
+  "id": "south-3-buenosaires",
+  "group": "south",
+  "note": "",
+  "input": {
+    "utc": 1229836500,
+    "latitude": -34.6037,
+    "longitude": -58.3816,
+    "place": "Buenos Aires",
+    "tz": "America/Argentina/Buenos_Aires",
+    "localTime": "2008-12-21T03:15:00-02:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "manual (not in locations.db)"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 24,
+        "name": "Dashami",
+        "startUtc": 1229815156,
+        "endUtc": 1229906352
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1229099831,
+        "endUtc": 1230380545
+      },
+      "nakshatra": {
+        "index": 13,
+        "name": "Chitra",
+        "startUtc": 1229814165,
+        "endUtc": 1229907159
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 4,
+        "name": "Shobhana",
+        "startUtc": 1229779428,
+        "endUtc": 1229864657
+      },
+      "karana": {
+        "index": 48,
+        "name": "Vanija",
+        "startUtc": 1229815156,
+        "endUtc": 1229860506
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 269.710881757,
+      "moonTropical": 200.5434104497867,
+      "ayanamsa": 23.982411976016067
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 6,
+        "name": "Shanivara",
+        "english": "Saturday"
+      },
+      "sunriseUtc": 1229762220,
+      "sunsetUtc": 1229814346,
+      "nextSunriseUtc": 1229848649,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2008-12-20T06:37:00-02:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 23,
+        "name": "Navami",
+        "startUtc": 1229726138,
+        "endUtc": 1229815156
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1229099831,
+        "endUtc": 1230380545
+      },
+      "nakshatra": {
+        "index": 12,
+        "name": "Hasta",
+        "startUtc": 1229723258,
+        "endUtc": 1229814165
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 3,
+        "name": "Saubhagya",
+        "startUtc": 1229695964,
+        "endUtc": 1229779428
+      },
+      "karana": {
+        "index": 46,
+        "name": "Taitila",
+        "startUtc": 1229726138,
+        "endUtc": 1229770351
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1229762311,
+        "sunsetUtc": 1229814255
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1229762498,
+        "sunsetUtc": 1229814068
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Margashirsha",
+        "adhika": false,
+        "startUtc": 1227804875,
+        "endUtc": 1230380545
+      },
+      "purnimanta": {
+        "name": "Pausha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Margazhi",
+      "date": 6,
+      "year60Name": "Sarvadhari",
+      "ingressUtc": 1229350230,
+      "day1": "2008-12-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 51,
+      "vighati": 35
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

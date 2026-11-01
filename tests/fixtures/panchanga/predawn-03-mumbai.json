@@ -1,0 +1,149 @@
+{
+  "id": "predawn-03-mumbai",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 983567700,
+    "latitude": 19.075984,
+    "longitude": 72.877656,
+    "place": "Mumbai",
+    "tz": "Asia/Kolkata",
+    "localTime": "2001-03-03T02:45:00+05:30",
+    "ayanamsa": "krishnamurti",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 7,
+        "name": "Ashtami",
+        "startUtc": 983543496,
+        "endUtc": 983625962
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 982916466,
+        "endUtc": 984158584
+      },
+      "nakshatra": {
+        "index": 3,
+        "name": "Rohini",
+        "startUtc": 983528660,
+        "endUtc": 983613841
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 0,
+        "name": "Vishkambha",
+        "startUtc": 983539902,
+        "endUtc": 983619035
+      },
+      "karana": {
+        "index": 14,
+        "name": "Vishti",
+        "startUtc": 983543496,
+        "endUtc": 983584988
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 342.3573445883739,
+      "moonTropical": 69.8482839017982,
+      "ayanamsa": 23.7765470692093
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 5,
+        "name": "Shukravara",
+        "english": "Friday"
+      },
+      "sunriseUtc": 983496435,
+      "sunsetUtc": 983538859,
+      "nextSunriseUtc": 983582790,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2001-03-02T06:57:14+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 6,
+        "name": "Saptami",
+        "startUtc": 983458988,
+        "endUtc": 983543496
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 982916466,
+        "endUtc": 984158584
+      },
+      "nakshatra": {
+        "index": 2,
+        "name": "Krittika",
+        "startUtc": 983441501,
+        "endUtc": 983528659
+      },
+      "pada": 3,
+      "yoga": {
+        "index": 26,
+        "name": "Vaidhriti",
+        "startUtc": 983459169,
+        "endUtc": 983539902
+      },
+      "karana": {
+        "index": 12,
+        "name": "Gara",
+        "startUtc": 983458988,
+        "endUtc": 983501492
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 983496504,
+        "sunsetUtc": 983538790
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 983496647,
+        "sunsetUtc": 983538647
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Phalguna",
+        "adhika": false,
+        "startUtc": 982916466,
+        "endUtc": 985483260
+      },
+      "purnimanta": {
+        "name": "Phalguna",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Maasi",
+      "date": 19,
+      "year60Name": "Vikrama",
+      "ingressUtc": 981982201,
+      "day1": "2001-02-12"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 49,
+      "vighati": 29
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

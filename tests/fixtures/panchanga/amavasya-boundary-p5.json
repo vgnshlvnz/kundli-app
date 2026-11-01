@@ -1,0 +1,149 @@
+{
+  "id": "amavasya-boundary-p5",
+  "group": "boundary",
+  "note": "new moon 1551888239",
+  "input": {
+    "utc": 1551888539,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "2019-03-06T21:38:59+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 0,
+        "name": "Pratipada",
+        "startUtc": 1551888239,
+        "endUtc": 1551982443
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1551888239,
+        "endUtc": 1553132569
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 1551876195,
+        "endUtc": 1551972256
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 21,
+        "name": "Sadhya",
+        "startUtc": 1551866006,
+        "endUtc": 1551954787
+      },
+      "karana": {
+        "index": 0,
+        "name": "Kimstughna",
+        "startUtc": 1551888239,
+        "endUtc": 1551935479
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 345.79260933555435,
+      "moonTropical": 345.8305770029188,
+      "ayanamsa": 24.124976192641384
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 3,
+        "name": "Budhavara",
+        "english": "Wednesday"
+      },
+      "sunriseUtc": 1551833544,
+      "sunsetUtc": 1551876502,
+      "nextSunriseUtc": 1551919908,
+      "isPreviousCivilDay": false,
+      "sunriseLocal": "2019-03-06T06:22:23+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 29,
+        "name": "Amavasya",
+        "startUtc": 1551793042,
+        "endUtc": 1551888239
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1550591612,
+        "endUtc": 1551888239
+      },
+      "nakshatra": {
+        "index": 23,
+        "name": "Shatabhisha",
+        "startUtc": 1551779224,
+        "endUtc": 1551876195
+      },
+      "pada": 3,
+      "yoga": {
+        "index": 20,
+        "name": "Siddha",
+        "startUtc": 1551776532,
+        "endUtc": 1551866006
+      },
+      "karana": {
+        "index": 58,
+        "name": "Chatushpada",
+        "startUtc": 1551793042,
+        "endUtc": 1551840750
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1551833610,
+        "sunsetUtc": 1551876436
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1551833749,
+        "sunsetUtc": 1551876297
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Phalguna",
+        "adhika": false,
+        "startUtc": 1551888239,
+        "endUtc": 1554454228
+      },
+      "purnimanta": {
+        "name": "Phalguna",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Maasi",
+      "date": 22,
+      "year60Name": "Vilambi",
+      "ingressUtc": 1550028268,
+      "day1": "2019-02-13"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 38,
+      "vighati": 11
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

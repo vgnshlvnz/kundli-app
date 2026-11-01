@@ -1,0 +1,149 @@
+{
+  "id": "kl-6-2005",
+  "group": "kl",
+  "note": "pre-1982 = UTC+7:30, from 1982-01-01 = UTC+8",
+  "input": {
+    "utc": 1109964600,
+    "latitude": 3.139003,
+    "longitude": 101.686855,
+    "place": "Kuala Lumpur",
+    "tz": "Asia/Kuala_Lumpur",
+    "localTime": "2005-03-05T03:30:00+08:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 23,
+        "name": "Navami",
+        "startUtc": 1109911387,
+        "endUtc": 1109990139
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1109220825,
+        "endUtc": 1110445822
+      },
+      "nakshatra": {
+        "index": 18,
+        "name": "Mula",
+        "startUtc": 1109937319,
+        "endUtc": 1110018117
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 15,
+        "name": "Siddhi",
+        "startUtc": 1109936886,
+        "endUtc": 1110012428
+      },
+      "karana": {
+        "index": 47,
+        "name": "Gara",
+        "startUtc": 1109950964,
+        "endUtc": 1109990139
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 344.3215007440382,
+      "moonTropical": 268.4032592518496,
+      "ayanamsa": 23.929349379546522
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 5,
+        "name": "Shukravara",
+        "english": "Friday"
+      },
+      "sunriseUtc": 1109892189,
+      "sunsetUtc": 1109935613,
+      "nextSunriseUtc": 1109978571,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2005-03-04T07:23:09+08:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 22,
+        "name": "Ashtami",
+        "startUtc": 1109830941,
+        "endUtc": 1109911387
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1109220825,
+        "endUtc": 1110445821
+      },
+      "nakshatra": {
+        "index": 17,
+        "name": "Jyeshtha",
+        "startUtc": 1109854904,
+        "endUtc": 1109937318
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 14,
+        "name": "Vajra",
+        "startUtc": 1109860028,
+        "endUtc": 1109936886
+      },
+      "karana": {
+        "index": 45,
+        "name": "Kaulava",
+        "startUtc": 1109871385,
+        "endUtc": 1109911387
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1109892254,
+        "sunsetUtc": 1109935548
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1109892390,
+        "sunsetUtc": 1109935413
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Magha",
+        "adhika": false,
+        "startUtc": 1107901682,
+        "endUtc": 1110445822
+      },
+      "purnimanta": {
+        "name": "Phalguna",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Maasi",
+      "date": 20,
+      "year60Name": "Dharana",
+      "ingressUtc": 1108214099,
+      "day1": "2005-02-13"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 50,
+      "vighati": 17
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

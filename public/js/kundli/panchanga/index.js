@@ -1,290 +1,205 @@
-// Panchanga calculations: tithi, paksha, nakshatra, yoga, karana, vara
-// Uses astronomy-engine for planetary positions and rise/set times
-// Vedic day begins at local sunrise, not midnight
+// Panchanga (contract v1.1): the five angas at birth and at sunrise, the Hindu day, lunar and
+// Tamil solar calendars. Vedic day = sunrise to next sunrise at the birth place.
+//
+// computePanchanga() is the v1.1 API. calculatePanchanga() and the get* functions are the
+// deprecated flat v1.0 shape, kept as thin adapters until app.js migrates.
 
+import { requireAyanamsa, elongation, moonSidereal, sunSidereal } from './sky.js';
+import { angasAt } from './angas.js';
+import { findHinduDay, SUNRISE_MODES, DEFAULT_SUNRISE_MODE } from './sunrise.js';
+import { civilDate, weekdayOf } from './civil.js';
+import { lunarMonthAt, tamilSolarOn } from './calendar.js';
 import {
-  Body, SunPosition, EclipticGeoMoon,
-  SearchRiseSet, Observer
-} from '../../../vendor/astronomy.js';
-import { ayanamsa } from '../ephemeris/index.js';
+  TITHI_NAMES, NAKSHATRAS, YOGA_NAMES, KARANA_NAMES, isFixedKarana, PAKSHA, VARA_NAMES,
+  VARA_LORDS, HORA_ORDER
+} from './tables.js';
 
-// Tithi names (1-30)
-const TITHI_NAMES = [
-  'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
-  'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
-  'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima',
-  'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
-  'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
-  'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Amavasya'
-];
-
-// Nakshatra data (same as dasha module)
-const NAKSHATRAS = [
-  { name: 'Ashwini', lord: 'Ketu' },
-  { name: 'Bharani', lord: 'Venus' },
-  { name: 'Krittika', lord: 'Sun' },
-  { name: 'Rohini', lord: 'Moon' },
-  { name: 'Mrigashira', lord: 'Mars' },
-  { name: 'Ardra', lord: 'Rahu' },
-  { name: 'Punarvasu', lord: 'Jupiter' },
-  { name: 'Pushya', lord: 'Saturn' },
-  { name: 'Ashlesha', lord: 'Mercury' },
-  { name: 'Magha', lord: 'Ketu' },
-  { name: 'Purva Phalguni', lord: 'Venus' },
-  { name: 'Uttara Phalguni', lord: 'Sun' },
-  { name: 'Hasta', lord: 'Moon' },
-  { name: 'Chitra', lord: 'Mars' },
-  { name: 'Swati', lord: 'Rahu' },
-  { name: 'Vishakha', lord: 'Jupiter' },
-  { name: 'Anuradha', lord: 'Saturn' },
-  { name: 'Jyeshtha', lord: 'Mercury' },
-  { name: 'Mula', lord: 'Ketu' },
-  { name: 'Purva Ashadha', lord: 'Venus' },
-  { name: 'Uttara Ashadha', lord: 'Sun' },
-  { name: 'Shravana', lord: 'Moon' },
-  { name: 'Dhanishta', lord: 'Mars' },
-  { name: 'Shatabhisha', lord: 'Rahu' },
-  { name: 'Purva Bhadrapada', lord: 'Jupiter' },
-  { name: 'Uttara Bhadrapada', lord: 'Saturn' },
-  { name: 'Revati', lord: 'Mercury' }
-];
+export { SUNRISE_MODES, DEFAULT_SUNRISE_MODE } from './sunrise.js';
+export { TAMIL_SANKRANTI_CUTOFF, TAMIL_SOLAR_AYANAMSA } from './calendar.js';
 
 const NAKSHATRA_WIDTH = 360 / 27;
-
-// Yoga names (27)
-const YOGA_NAMES = [
-  'Vishkambha', 'Priti', 'Ayushman', 'Saubhagya', 'Shobhana',
-  'Atiganda', 'Sukarma', 'Dhriti', 'Shula', 'Ganda',
-  'Vriddhi', 'Dhruva', 'Vyaghata', 'Harshana', 'Vajra',
-  'Siddhi', 'Vyatipata', 'Variyan', 'Parigha', 'Shiva',
-  'Siddha', 'Sadhya', 'Shubha', 'Shukla', 'Brahma',
-  'Indra', 'Vaidhriti'
-];
-
-// Movable karanas repeat 8 times from the 2nd to the 57th half-tithi
-const MOVABLE_KARANA_NAMES = ['Bava', 'Balava', 'Kaulava', 'Taitila', 'Gara', 'Vanija', 'Vishti'];
-
-// Fixed karanas: 1st half-tithi (Kimstughna) and the last three (Shakuni, Chatushpada, Naga)
-const FIXED_KARANA_NAMES = ['Kimstughna', 'Shakuni', 'Chatushpada', 'Naga'];
-
-// Vara (weekday) names
-const VARA_NAMES = [
-  { name: 'Ravivara', english: 'Sunday' },
-  { name: 'Somavara', english: 'Monday' },
-  { name: 'Mangalavara', english: 'Tuesday' },
-  { name: 'Budhavara', english: 'Wednesday' },
-  { name: 'Guruvara', english: 'Thursday' },
-  { name: 'Shukravara', english: 'Friday' },
-  { name: 'Shanivara', english: 'Saturday' }
-];
+const LUNAR_SYSTEMS = ['amanta', 'purnimanta'];
 
 /**
- * Compute Sun-Moon elongation for tithi calculation
- * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {number} Elongation in degrees (0-360)
+ * Sunrise, sunset and tithi boundaries are only meaningful for an exact place, so a birth that was
+ * resolved to a country centroid is refused.
+ * @param {import('./contracts.js').ResolvedBirth} birth
  */
-function computeElongation(utc) {
-  const date = new Date(utc * 1000);
-  const sunLon = SunPosition(date).elon;
-  const moonPos = EclipticGeoMoon(date);
-  const moonLon = moonPos.lon;
-
-  let elongation = moonLon - sunLon;
-  // Normalize to 0-360
-  elongation = ((elongation % 360) + 360) % 360;
-  return elongation;
+function assertExactLocation(birth) {
+  if (birth.centroid) {
+    throw Object.assign(
+      new Error('Panchanga needs an exact birth place; the location is a country centroid'),
+      { code: 'CENTROID_LOCATION' }
+    );
+  }
 }
 
+const varaOf = index => ({ index, name: VARA_NAMES[index].name, english: VARA_NAMES[index].english });
+
 /**
- * Calculate tithi number from Sun-Moon elongation
- * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {Object} Tithi info { number, name, percentage }
+ * Full panchanga for a birth.
+ *
+ * Never throws for polar births (no sunrise): it returns `flags.noSunrise`, a null `atSunrise`,
+ * `hinduDay.vara` and tamilSolar. It throws only for programmer errors (no ayanamsa, unknown
+ * setting) and for centroid locations (`error.code === 'CENTROID_LOCATION'`).
+ *
+ * @param {import('./contracts.js').ResolvedBirth} birth - utc, latitude, longitude, optional IANA
+ *   `timezone` (for the civil date; without it local mean solar time is used) and `centroid`
+ * @param {import('./contracts.js').PanchangaSettings} settings - `ayanamsa` is required and must be
+ *   the chart's ayanamsa
+ * @returns {import('./contracts.js').Panchanga}
+ */
+export function computePanchanga(birth, settings) {
+  assertExactLocation(birth);
+  const ayanamsa = requireAyanamsa(settings?.ayanamsa);
+  const sunriseMode = settings.sunriseMode ?? DEFAULT_SUNRISE_MODE;
+  if (!SUNRISE_MODES.includes(sunriseMode)) throw new RangeError(`unknown sunriseMode ${sunriseMode}`);
+  const lunarSystem = settings.lunarSystem ?? 'amanta';
+  if (!LUNAR_SYSTEMS.includes(lunarSystem)) throw new RangeError(`unknown lunarSystem ${lunarSystem}`);
+
+  const { utc, latitude, longitude, timezone } = birth;
+  const atBirth = angasAt(utc, ayanamsa);
+  const lunarMonth = lunarMonthAt(utc, ayanamsa, lunarSystem);
+  const resolved = { ayanamsa, sunriseMode, lunarSystem };
+
+  const day = findHinduDay(utc, latitude, longitude, sunriseMode);
+  if (!day) {
+    return {
+      atBirth,
+      atSunrise: null,
+      hinduDay: { vara: null, sunriseUtc: null, sunsetUtc: null, nextSunriseUtc: null, isPreviousCivilDay: false },
+      ghatiSinceSunrise: null,
+      horaLord: null,
+      lunarMonth,
+      tamilSolar: null,
+      flags: { noSunrise: true },
+      settings: resolved
+    };
+  }
+
+  const sunriseDate = civilDate(day.sunriseUtc, timezone, longitude);
+  const vara = varaOf(weekdayOf(sunriseDate));
+  const atSunrise = angasAt(day.sunriseUtc, ayanamsa);
+
+  // Tithi at the two bounding sunrises: unchanged = adhika (spans both), skipped one = kshaya.
+  const tithiNow = atSunrise.tithi.index;
+  const tithiNext = Math.floor(elongation(day.nextSunriseUtc) / 12);
+  const seconds = utc - day.sunriseUtc;
+  const hora = (HORA_ORDER.indexOf(VARA_LORDS[vara.index]) + Math.floor(seconds / 3600)) % HORA_ORDER.length;
+
+  return {
+    atBirth,
+    atSunrise,
+    hinduDay: {
+      vara,
+      sunriseUtc: day.sunriseUtc,
+      sunsetUtc: day.sunsetUtc,
+      nextSunriseUtc: day.nextSunriseUtc,
+      isPreviousCivilDay: sunriseDate < civilDate(utc, timezone, longitude)
+    },
+    ghatiSinceSunrise: { ghati: Math.floor(seconds / 1440), vighati: Math.floor((seconds % 1440) / 24) },
+    horaLord: HORA_ORDER[hora],
+    lunarMonth,
+    tamilSolar: tamilSolarOn(day.sunriseUtc, latitude, longitude, timezone),
+    flags: {
+      noSunrise: false,
+      adhikaTithi: tithiNext === tithiNow,
+      kshayaTithi: (tithiNext - tithiNow + 30) % 30 >= 2
+    },
+    settings: resolved
+  };
+}
+
+// ---- deprecated v1.0 flat shape ------------------------------------------------------------
+
+/**
+ * @deprecated v1.0. Tithi at an instant, with the angular percentage elapsed.
+ * @param {number} utc
  */
 export function getTithi(utc) {
-  const elongation = computeElongation(utc);
-  const tithiNumber = Math.floor(elongation / 12) + 1; // 1-30
-
-  // Percentage elapsed in current tithi
-  const positionInTithi = (elongation % 12) / 12;
-
-  return {
-    number: tithiNumber,
-    name: TITHI_NAMES[tithiNumber - 1],
-    percentage: positionInTithi * 100
-  };
+  const e = elongation(utc);
+  const number = Math.floor(e / 12) + 1;
+  return { number, name: TITHI_NAMES[number - 1], percentage: ((e % 12) / 12) * 100 };
 }
 
-/**
- * Determine paksha (waxing/waning fortnight) from tithi number
- * @param {number} tithiNumber - Tithi number (1-30)
- * @returns {Object} Paksha info { name, english }
- */
+/** @deprecated v1.0 */
 export function getPaksha(tithiNumber) {
-  if (tithiNumber <= 15) {
-    return { name: 'shukla', english: 'Waxing' };
-  } else {
-    return { name: 'krishna', english: 'Waning' };
-  }
+  return tithiNumber <= 15 ? { ...PAKSHA[0] } : { ...PAKSHA[1] };
 }
 
 /**
- * Calculate current nakshatra from Moon's sidereal longitude
- * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {Object} Nakshatra info { index, name, lord }
+ * @deprecated v1.0
+ * @param {number} utc
+ * @param {string} ayanamsaKind - required: the chart's ayanamsa
  */
-export function getNakshatra(utc, ayanamsaKind = 'lahiri') {
-  const date = new Date(utc * 1000);
-  // Nakshatras are sidereal
-  const moonLon = EclipticGeoMoon(date).lon - ayanamsa(utc, ayanamsaKind);
-
-  // Normalize to 0-360
-  let lon = ((moonLon % 360) + 360) % 360;
-  const index = Math.floor(lon / NAKSHATRA_WIDTH);
-
-  return {
-    index: index,
-    name: NAKSHATRAS[index].name,
-    lord: NAKSHATRAS[index].lord
-  };
+export function getNakshatra(utc, ayanamsaKind) {
+  requireAyanamsa(ayanamsaKind);
+  const index = Math.floor(moonSidereal(utc, ayanamsaKind) / NAKSHATRA_WIDTH);
+  return { index, name: NAKSHATRAS[index].name, lord: NAKSHATRAS[index].lord };
 }
 
 /**
- * Calculate current yoga from Sun+Moon longitude
- * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {Object} Yoga info { index, name }
+ * @deprecated v1.0
+ * @param {number} utc
+ * @param {string} ayanamsaKind - required: the chart's ayanamsa
  */
-export function getYoga(utc, ayanamsaKind = 'lahiri') {
-  const date = new Date(utc * 1000);
-  // Yoga = sidereal Sun + sidereal Moon
-  const ay = ayanamsa(utc, ayanamsaKind);
-  const sunLon = SunPosition(date).elon - ay;
-  const moonLon = EclipticGeoMoon(date).lon - ay;
-
-  // Yoga is based on sum of Sun and Moon longitudes
-  let sum = sunLon + moonLon;
-  sum = ((sum % 360) + 360) % 360;
+export function getYoga(utc, ayanamsaKind) {
+  requireAyanamsa(ayanamsaKind);
+  const sum = (sunSidereal(utc, ayanamsaKind) + moonSidereal(utc, ayanamsaKind)) % 360;
   const index = Math.floor(sum / NAKSHATRA_WIDTH);
-
-  return {
-    index: index,
-    name: YOGA_NAMES[index]
-  };
+  return { index, name: YOGA_NAMES[index] };
 }
 
-/**
- * Calculate current karana from elongation.
- * A karana is half a tithi (6° of Moon−Sun elongation), so there are 60 per lunar month:
- * the 1st is Kimstughna, the 2nd-57th cycle through the 7 movable karanas,
- * and the 58th-60th are Shakuni, Chatushpada and Naga.
- * @param {number} utc - Unix timestamp (UTC seconds)
- * @returns {Object} Karana info { number, name, fixed }
- */
+/** @deprecated v1.0 */
 export function getKarana(utc) {
-  const k = Math.floor(computeElongation(utc) / 6); // 0-59
-
-  if (k === 0) return { number: 1, name: FIXED_KARANA_NAMES[0], fixed: true };
-  if (k >= 57) return { number: k + 1, name: FIXED_KARANA_NAMES[k - 56], fixed: true };
-  return { number: k + 1, name: MOVABLE_KARANA_NAMES[(k - 1) % 7], fixed: false };
+  const index = Math.floor(elongation(utc) / 6);
+  return { number: index + 1, name: KARANA_NAMES[index], fixed: isFixedKarana(index) };
 }
 
 /**
- * Get the Unix timestamp of the sunrise that began the Vedic day of birth
- * The Vedic day runs from sunrise to sunrise, so this is the most recent
- * sunrise at or before birth (the previous morning's for a pre-dawn birth)
- * @param {number} utc - Unix timestamp (UTC seconds) of birth
- * @param {number} longitude - Observer longitude (degrees)
- * @param {number} latitude - Observer latitude (degrees)
- * @returns {number|null} Sunrise UTC timestamp, or null if not found
+ * @deprecated v1.0. Sunrise that began the Hindu day of birth (upper limb, refracted).
+ * @returns {number|null}
  */
 export function getSunrise(utc, longitude, latitude) {
-  const date = new Date(utc * 1000);
-  const observer = new Observer(latitude, longitude, 0);
-
-  // Negative limit searches backwards from birth
-  const result = SearchRiseSet(Body.Sun, observer, 1, date, -1);
-  if (result) {
-    // Convert AstroTime to Unix timestamp
-    return result.date.getTime() / 1000;
-  }
-  return null;
+  return findHinduDay(utc, latitude, longitude)?.sunriseUtc ?? null;
 }
 
 /**
- * Get the Unix timestamp of the sunset in the Vedic day of birth
- * (the first sunset after that day's sunrise)
- * @param {number} utc - Unix timestamp (UTC seconds) of birth
- * @param {number} longitude - Observer longitude (degrees)
- * @param {number} latitude - Observer latitude (degrees)
- * @returns {number|null} Sunset UTC timestamp, or null if not found
+ * @deprecated v1.0. Sunset of the Hindu day of birth.
+ * @returns {number|null}
  */
 export function getSunset(utc, longitude, latitude) {
-  const sunrise = getSunrise(utc, longitude, latitude);
-  const date = new Date((sunrise ?? utc) * 1000);
-  const observer = new Observer(latitude, longitude, 0);
-
-  const result = SearchRiseSet(Body.Sun, observer, -1, date, 1);
-  if (result) {
-    return result.date.getTime() / 1000;
-  }
-  return null;
+  return findHinduDay(utc, latitude, longitude)?.sunsetUtc ?? null;
 }
 
 /**
- * Calculate the Vedic day (vara) at birth time
- * Vedic day starts at local sunrise, not midnight: the vara is the weekday
- * of the sunrise that began the day of birth, so a pre-dawn birth belongs
- * to the previous day
- * @param {number} utc - Unix timestamp (UTC seconds) of birth
- * @param {number} longitude - Observer longitude (degrees)
- * @param {number} latitude - Observer latitude (degrees)
- * @returns {Object} Vara info { index, name, english }
+ * @deprecated v1.0. Weekday of the Hindu day, by local mean solar date. With no sunrise (polar) it
+ * falls back to the weekday of the birth moment so the old UI never breaks; the v1.1 API returns
+ * `null` there instead.
  */
 export function getVara(utc, longitude, latitude) {
-  // Sunrise not found (polar regions): fall back to the birth moment
   const dayStart = getSunrise(utc, longitude, latitude) ?? utc;
-
-  // Weekday in local mean solar time at the birth place. Sunrise is hours
-  // away from local midnight, so this matches the local calendar date,
-  // unlike the UTC date (e.g. a 05:23 IST sunrise is 23:53 UTC the day before)
-  const localMeanTime = dayStart + (longitude / 15) * 3600;
-  const dayIndex = new Date(localMeanTime * 1000).getUTCDay();
-  return {
-    index: dayIndex,
-    name: VARA_NAMES[dayIndex].name,
-    english: VARA_NAMES[dayIndex].english
-  };
+  return varaOf(weekdayOf(civilDate(dayStart, undefined, longitude)));
 }
 
 /**
- * Calculate complete panchanga for a birth
- * @param {Object} resolvedBirth - Birth data { utc, longitude, latitude }
- * @param {string} [ayanamsaKind='lahiri'] - Ayanamsa for the sidereal nakshatra and yoga
- * @returns {Object} Complete panchanga { tithi, paksha, nakshatra, yoga, karana, vara, sunriseSunset }
+ * @deprecated v1.0 flat shape; use computePanchanga().
+ * @param {import('./contracts.js').ResolvedBirth} resolvedBirth
+ * @param {string} ayanamsaKind - required: the chart's ayanamsa
  */
-export function calculatePanchanga(resolvedBirth, ayanamsaKind = 'lahiri') {
+export function calculatePanchanga(resolvedBirth, ayanamsaKind) {
+  assertExactLocation(resolvedBirth);
   const { utc, longitude, latitude } = resolvedBirth;
-
   const tithi = getTithi(utc);
-  const paksha = getPaksha(tithi.number);
-  const nakshatra = getNakshatra(utc, ayanamsaKind);
-  const yoga = getYoga(utc, ayanamsaKind);
-  const karana = getKarana(utc);
-  const vara = getVara(utc, longitude, latitude);
-
-  const sunrise = getSunrise(utc, longitude, latitude);
-  const sunset = getSunset(utc, longitude, latitude);
-
+  const day = findHinduDay(utc, latitude, longitude);
   return {
     birthUtc: utc,
     tithi,
-    paksha,
-    nakshatra,
-    yoga,
-    karana,
-    vara,
-    sunriseSunset: {
-      sunriseUtc: sunrise,
-      sunsetUtc: sunset
-    }
+    paksha: getPaksha(tithi.number),
+    nakshatra: getNakshatra(utc, ayanamsaKind),
+    yoga: getYoga(utc, ayanamsaKind),
+    karana: getKarana(utc),
+    vara: getVara(utc, longitude, latitude),
+    sunriseSunset: { sunriseUtc: day?.sunriseUtc ?? null, sunsetUtc: day?.sunsetUtc ?? null }
   };
 }

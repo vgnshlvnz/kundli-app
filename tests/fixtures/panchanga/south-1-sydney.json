@@ -1,0 +1,149 @@
+{
+  "id": "south-1-sydney",
+  "group": "south",
+  "note": "",
+  "input": {
+    "utc": 1444410000,
+    "latitude": -33.8688,
+    "longitude": 151.2093,
+    "place": "Sydney",
+    "tz": "Australia/Sydney",
+    "localTime": "2015-10-10T04:00:00+11:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "manual (not in locations.db)"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 27,
+        "name": "Trayodashi",
+        "startUtc": 1444406947,
+        "endUtc": 1444502830
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1443408632,
+        "endUtc": 1444694740
+      },
+      "nakshatra": {
+        "index": 10,
+        "name": "Purva Phalguni",
+        "startUtc": 1444387712,
+        "endUtc": 1444485235
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 23,
+        "name": "Shukla",
+        "startUtc": 1444398376,
+        "endUtc": 1444488404
+      },
+      "karana": {
+        "index": 54,
+        "name": "Gara",
+        "startUtc": 1444406947,
+        "endUtc": 1444454831
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 196.08174183573786,
+      "moonTropical": 160.4648765932186,
+      "ayanamsa": 24.077397475822693
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 5,
+        "name": "Shukravara",
+        "english": "Friday"
+      },
+      "sunriseUtc": 1444332154,
+      "sunsetUtc": 1444377794,
+      "nextSunriseUtc": 1444418475,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2015-10-09T06:22:33+11:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 26,
+        "name": "Dwadashi",
+        "startUtc": 1444311808,
+        "endUtc": 1444406947
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1443408632,
+        "endUtc": 1444694740
+      },
+      "nakshatra": {
+        "index": 9,
+        "name": "Magha",
+        "startUtc": 1444291001,
+        "endUtc": 1444387713
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 22,
+        "name": "Shubha",
+        "startUtc": 1444308933,
+        "endUtc": 1444398376
+      },
+      "karana": {
+        "index": 52,
+        "name": "Kaulava",
+        "startUtc": 1444311808,
+        "endUtc": 1444359248
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1444332231,
+        "sunsetUtc": 1444377716
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1444332394,
+        "sunsetUtc": 1444377553
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Bhadrapada",
+        "adhika": false,
+        "startUtc": 1442126477,
+        "endUtc": 1444694740
+      },
+      "purnimanta": {
+        "name": "Ashwina",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Purattasi",
+      "date": 23,
+      "year60Name": "Manmatha",
+      "ingressUtc": 1442472588,
+      "day1": "2015-09-17"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 54,
+      "vighati": 3
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

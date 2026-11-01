@@ -1,0 +1,149 @@
+{
+  "id": "predawn-07-delhi",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 1655768100,
+    "latitude": 28.613939,
+    "longitude": 77.209021,
+    "place": "Delhi",
+    "tz": "Asia/Kolkata",
+    "localTime": "2022-06-21T05:05:00+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 22,
+        "name": "Ashtami",
+        "startUtc": 1655739117,
+        "endUtc": 1655823673
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1655207506,
+        "endUtc": 1656471136
+      },
+      "nakshatra": {
+        "index": 25,
+        "name": "Uttara Bhadrapada",
+        "startUtc": 1655766343,
+        "endUtc": 1655854412
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 2,
+        "name": "Ayushman",
+        "startUtc": 1655693901,
+        "endUtc": 1655773879
+      },
+      "karana": {
+        "index": 44,
+        "name": "Balava",
+        "startUtc": 1655739117,
+        "endUtc": 1655781047
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 89.6164015265567,
+      "moonTropical": 357.7744095143825,
+      "ayanamsa": 24.17096238646451
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 1,
+        "name": "Somavara",
+        "english": "Monday"
+      },
+      "sunriseUtc": 1655682825,
+      "sunsetUtc": 1655733102,
+      "nextSunriseUtc": 1655769237,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2022-06-20T05:23:45+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 21,
+        "name": "Saptami",
+        "startUtc": 1655657340,
+        "endUtc": 1655739117
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1655207506,
+        "endUtc": 1656471136
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 1655681020,
+        "endUtc": 1655766343
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 1,
+        "name": "Priti",
+        "startUtc": 1655616135,
+        "endUtc": 1655693901
+      },
+      "karana": {
+        "index": 42,
+        "name": "Vishti",
+        "startUtc": 1655657340,
+        "endUtc": 1655697886
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1655682906,
+        "sunsetUtc": 1655733021
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1655683078,
+        "sunsetUtc": 1655732849
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Jyeshtha",
+        "adhika": false,
+        "startUtc": 1653910217,
+        "endUtc": 1656471136
+      },
+      "purnimanta": {
+        "name": "Ashadha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aani",
+      "date": 6,
+      "year60Name": "Subakrit",
+      "ingressUtc": 1655275175,
+      "day1": "2022-06-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 59,
+      "vighati": 13
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

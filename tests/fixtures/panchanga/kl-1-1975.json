@@ -1,0 +1,149 @@
+{
+  "id": "kl-1-1975",
+  "group": "kl",
+  "note": "pre-1982 = UTC+7:30, from 1982-01-01 = UTC+8",
+  "input": {
+    "utc": 171756600,
+    "latitude": 3.139003,
+    "longitude": 101.686855,
+    "place": "Kuala Lumpur",
+    "tz": "Asia/Kuala_Lumpur",
+    "localTime": "1975-06-12T05:40:00+07:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 2,
+        "name": "Tritiya",
+        "startUtc": 171733375,
+        "endUtc": 171812289
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 171571746,
+        "endUtc": 172774450
+      },
+      "nakshatra": {
+        "index": 6,
+        "name": "Punarvasu",
+        "startUtc": 171729738,
+        "endUtc": 171811499
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 10,
+        "name": "Vriddhi",
+        "startUtc": 171711134,
+        "endUtc": 171787926
+      },
+      "karana": {
+        "index": 4,
+        "name": "Taitila",
+        "startUtc": 171733375,
+        "endUtc": 171772951
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 80.36069209150534,
+      "moonTropical": 107.87693947905493,
+      "ayanamsa": 23.51407204136865
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 3,
+        "name": "Budhavara",
+        "english": "Wednesday"
+      },
+      "sunriseUtc": 171673422,
+      "sunsetUtc": 171717698,
+      "nextSunriseUtc": 171759833,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1975-06-11T06:33:41+07:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 1,
+        "name": "Dwitiya",
+        "startUtc": 171653318,
+        "endUtc": 171733375
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 171571746,
+        "endUtc": 172774450
+      },
+      "nakshatra": {
+        "index": 5,
+        "name": "Ardra",
+        "startUtc": 171646820,
+        "endUtc": 171729738
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 9,
+        "name": "Ganda",
+        "startUtc": 171633323,
+        "endUtc": 171711133
+      },
+      "karana": {
+        "index": 2,
+        "name": "Balava",
+        "startUtc": 171653318,
+        "endUtc": 171693513
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 171673490,
+        "sunsetUtc": 171717629
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 171673637,
+        "sunsetUtc": 171717483
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Jyeshtha",
+        "adhika": false,
+        "startUtc": 171571746,
+        "endUtc": 174111007
+      },
+      "purnimanta": {
+        "name": "Jyeshtha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Vaikasi",
+      "date": 28,
+      "year60Name": "Rakshasa",
+      "ingressUtc": 169339572,
+      "day1": "1975-05-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 57,
+      "vighati": 45
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

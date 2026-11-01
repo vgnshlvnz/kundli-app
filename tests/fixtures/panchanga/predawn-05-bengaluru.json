@@ -1,0 +1,149 @@
+{
+  "id": "predawn-05-bengaluru",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 1289255700,
+    "latitude": 12.971599,
+    "longitude": 77.594563,
+    "place": "Bengaluru",
+    "tz": "Asia/Kolkata",
+    "localTime": "2010-11-09T04:05:00+05:30",
+    "ayanamsa": "raman",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 2,
+        "name": "Tritiya",
+        "startUtc": 1289177724,
+        "endUtc": 1289260539
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1289019106,
+        "endUtc": 1290360437
+      },
+      "nakshatra": {
+        "index": 17,
+        "name": "Jyeshtha",
+        "startUtc": 1289175950,
+        "endUtc": 1289261115
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 6,
+        "name": "Sukarma",
+        "startUtc": 1289237576,
+        "endUtc": 1289318457
+      },
+      "karana": {
+        "index": 5,
+        "name": "Gara",
+        "startUtc": 1289218798,
+        "endUtc": 1289260539
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 226.41740882209461,
+      "moonTropical": 261.72684997365707,
+      "ayanamsa": 22.56241355703588
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 1,
+        "name": "Somavara",
+        "english": "Monday"
+      },
+      "sunriseUtc": 1289177126,
+      "sunsetUtc": 1289218869,
+      "nextSunriseUtc": 1289263547,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2010-11-08T06:15:25+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 1,
+        "name": "Dwitiya",
+        "startUtc": 1289097394,
+        "endUtc": 1289177724
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1289019106,
+        "endUtc": 1290360438
+      },
+      "nakshatra": {
+        "index": 17,
+        "name": "Jyeshtha",
+        "startUtc": 1289175949,
+        "endUtc": 1289261115
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 5,
+        "name": "Atiganda",
+        "startUtc": 1289158830,
+        "endUtc": 1289237577
+      },
+      "karana": {
+        "index": 3,
+        "name": "Kaulava",
+        "startUtc": 1289137273,
+        "endUtc": 1289177724
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1289177195,
+        "sunsetUtc": 1289218800
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1289177339,
+        "sunsetUtc": 1289218655
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Kartika",
+        "adhika": false,
+        "startUtc": 1289019106,
+        "endUtc": 1291570540
+      },
+      "purnimanta": {
+        "name": "Kartika",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aippasi",
+      "date": 23,
+      "year60Name": "Vikruti",
+      "ingressUtc": 1287316249,
+      "day1": "2010-10-17"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 54,
+      "vighati": 33
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": true
+    }
+  }
+}
