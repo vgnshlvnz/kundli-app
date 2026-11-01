@@ -1,0 +1,149 @@
+{
+  "id": "south-2-capetown",
+  "group": "south",
+  "note": "",
+  "input": {
+    "utc": 929935800,
+    "latitude": -33.9249,
+    "longitude": 18.4241,
+    "place": "Cape Town",
+    "tz": "Africa/Johannesburg",
+    "localTime": "1999-06-21T05:30:00+02:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "manual (not in locations.db)"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 7,
+        "name": "Ashtami",
+        "startUtc": 929857711,
+        "endUtc": 929947625
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 929300572,
+        "endUtc": 930605849
+      },
+      "nakshatra": {
+        "index": 11,
+        "name": "Uttara Phalguni",
+        "startUtc": 929844263,
+        "endUtc": 929936212
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 16,
+        "name": "Vyatipata",
+        "startUtc": 929858062,
+        "endUtc": 929943743
+      },
+      "karana": {
+        "index": 15,
+        "name": "Bava",
+        "startUtc": 929902368,
+        "endUtc": 929947625
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 89.3512029617711,
+      "moonTropical": 183.79066850821297,
+      "ayanamsa": 23.84965934408916
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 0,
+        "name": "Ravivara",
+        "english": "Sunday"
+      },
+      "sunriseUtc": 929857860,
+      "sunsetUtc": 929893469,
+      "nextSunriseUtc": 929944275,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1999-06-20T07:51:00+02:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 7,
+        "name": "Ashtami",
+        "startUtc": 929857711,
+        "endUtc": 929947626
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 929300573,
+        "endUtc": 930605849
+      },
+      "nakshatra": {
+        "index": 11,
+        "name": "Uttara Phalguni",
+        "startUtc": 929844264,
+        "endUtc": 929936212
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 15,
+        "name": "Siddhi",
+        "startUtc": 929774416,
+        "endUtc": 929858062
+      },
+      "karana": {
+        "index": 14,
+        "name": "Vishti",
+        "startUtc": 929857711,
+        "endUtc": 929902368
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 929857946,
+        "sunsetUtc": 929893383
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 929858130,
+        "sunsetUtc": 929893199
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Jyeshtha",
+        "adhika": false,
+        "startUtc": 929300572,
+        "endUtc": 931832637
+      },
+      "purnimanta": {
+        "name": "Jyeshtha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aani",
+      "date": 6,
+      "year60Name": "Pramathi",
+      "ingressUtc": 929438007,
+      "day1": "1999-06-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 54,
+      "vighati": 7
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": true,
+      "kshayaTithi": false
+    }
+  }
+}

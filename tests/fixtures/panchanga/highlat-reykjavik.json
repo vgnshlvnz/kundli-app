@@ -1,0 +1,149 @@
+{
+  "id": "highlat-reykjavik",
+  "group": "highlat",
+  "note": "",
+  "input": {
+    "utc": 1426822200,
+    "latitude": 64.1466,
+    "longitude": -21.9426,
+    "place": "Reykjavik",
+    "tz": "Atlantic/Reykjavik",
+    "localTime": "2015-03-20T03:30:00+00:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "manual (not in locations.db)"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 29,
+        "name": "Amavasya",
+        "startUtc": 1426771084,
+        "endUtc": 1426844172
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1425578725,
+        "endUtc": 1426844172
+      },
+      "nakshatra": {
+        "index": 24,
+        "name": "Purva Bhadrapada",
+        "startUtc": 1426756605,
+        "endUtc": 1426832475
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 22,
+        "name": "Shubha",
+        "startUtc": 1426751026,
+        "endUtc": 1426822225
+      },
+      "karana": {
+        "index": 59,
+        "name": "Naga",
+        "startUtc": 1426807606,
+        "endUtc": 1426844172
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 359.2024693327772,
+      "moonTropical": 355.5986796863963,
+      "ayanamsa": 24.069611757153268
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 4,
+        "name": "Guruvara",
+        "english": "Thursday"
+      },
+      "sunriseUtc": 1426750406,
+      "sunsetUtc": 1426793964,
+      "nextSunriseUtc": 1426836593,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2015-03-19T07:33:25+00:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 28,
+        "name": "Chaturdashi",
+        "startUtc": 1426697868,
+        "endUtc": 1426771084
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1425578725,
+        "endUtc": 1426844172
+      },
+      "nakshatra": {
+        "index": 23,
+        "name": "Shatabhisha",
+        "startUtc": 1426680490,
+        "endUtc": 1426756606
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 21,
+        "name": "Sadhya",
+        "startUtc": 1426679587,
+        "endUtc": 1426751026
+      },
+      "karana": {
+        "index": 57,
+        "name": "Shakuni",
+        "startUtc": 1426734529,
+        "endUtc": 1426771084
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1426750553,
+        "sunsetUtc": 1426793817
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1426750860,
+        "sunsetUtc": 1426793508
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Phalguna",
+        "adhika": false,
+        "startUtc": 1424303235,
+        "endUtc": 1426844172
+      },
+      "purnimanta": {
+        "name": "Chaitra",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Panguni",
+      "date": 5,
+      "year60Name": "Jaya",
+      "ingressUtc": 1426376821,
+      "day1": "2015-03-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 49,
+      "vighati": 51
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

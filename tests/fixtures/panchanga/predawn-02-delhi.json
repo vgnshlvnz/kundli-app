@@ -1,0 +1,149 @@
+{
+  "id": "predawn-02-delhi",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 504043200,
+    "latitude": 28.613939,
+    "longitude": 77.209021,
+    "place": "Delhi",
+    "tz": "Asia/Kolkata",
+    "localTime": "1985-12-22T01:30:00+05:30",
+    "ayanamsa": "raman",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 10,
+        "name": "Ekadashi",
+        "startUtc": 504041202,
+        "endUtc": 504137549
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 503196869,
+        "endUtc": 504516619
+      },
+      "nakshatra": {
+        "index": 0,
+        "name": "Ashwini",
+        "startUtc": 503985199,
+        "endUtc": 504082694
+      },
+      "pada": 3,
+      "yoga": {
+        "index": 19,
+        "name": "Shiva",
+        "startUtc": 504027670,
+        "endUtc": 504117637
+      },
+      "karana": {
+        "index": 20,
+        "name": "Vanija",
+        "startUtc": 504041202,
+        "endUtc": 504089335
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 269.90971401659635,
+      "moonTropical": 30.15918613492997,
+      "ayanamsa": 22.214843929489064
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 6,
+        "name": "Shanivara",
+        "english": "Saturday"
+      },
+      "sunriseUtc": 503977174,
+      "sunsetUtc": 504014327,
+      "nextSunriseUtc": 504063605,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1985-12-21T07:09:34+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 9,
+        "name": "Dashami",
+        "startUtc": 503945605,
+        "endUtc": 504041202
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 503196869,
+        "endUtc": 504516619
+      },
+      "nakshatra": {
+        "index": 26,
+        "name": "Revati",
+        "startUtc": 503888889,
+        "endUtc": 503985200
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 18,
+        "name": "Parigha",
+        "startUtc": 503938344,
+        "endUtc": 504027670
+      },
+      "karana": {
+        "index": 18,
+        "name": "Taitila",
+        "startUtc": 503945605,
+        "endUtc": 503993255
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 503977257,
+        "sunsetUtc": 504014244
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 503977429,
+        "sunsetUtc": 504014072
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Margashirsha",
+        "adhika": false,
+        "startUtc": 503196869,
+        "endUtc": 505743700
+      },
+      "purnimanta": {
+        "name": "Margashirsha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Margazhi",
+      "date": 6,
+      "year60Name": "Krodhana",
+      "ingressUtc": 503512863,
+      "day1": "1985-12-16"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 45,
+      "vighati": 51
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "id": "predawn-09-kolkata",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 1792434600,
+    "latitude": 22.572646,
+    "longitude": 88.363895,
+    "place": "Kolkata",
+    "tz": "Asia/Kolkata",
+    "localTime": "2026-10-20T00:00:00+05:30",
+    "ayanamsa": "krishnamurti",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 8,
+        "name": "Navami",
+        "startUtc": 1792387336,
+        "endUtc": 1792480857
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1791647407,
+        "endUtc": 1792987907
+      },
+      "nakshatra": {
+        "index": 21,
+        "name": "Shravana",
+        "startUtc": 1792403818,
+        "endUtc": 1792498842
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 7,
+        "name": "Dhriti",
+        "startUtc": 1792346641,
+        "endUtc": 1792435399
+      },
+      "karana": {
+        "index": 17,
+        "name": "Kaulava",
+        "startUtc": 1792434335,
+        "endUtc": 1792480857
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 206.3905089995428,
+      "moonTropical": 308.4245522631032,
+      "ayanamsa": 24.13461168168959
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 1,
+        "name": "Somavara",
+        "english": "Monday"
+      },
+      "sunriseUtc": 1792368278,
+      "sunsetUtc": 1792409892,
+      "nextSunriseUtc": 1792454704,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2026-10-19T05:34:37+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 7,
+        "name": "Ashtami",
+        "startUtc": 1792292319,
+        "endUtc": 1792387336
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1791647407,
+        "endUtc": 1792987907
+      },
+      "nakshatra": {
+        "index": 20,
+        "name": "Uttara Ashadha",
+        "startUtc": 1792307226,
+        "endUtc": 1792403818
+      },
+      "pada": 3,
+      "yoga": {
+        "index": 7,
+        "name": "Dhriti",
+        "startUtc": 1792346640,
+        "endUtc": 1792435399
+      },
+      "karana": {
+        "index": 15,
+        "name": "Bava",
+        "startUtc": 1792339962,
+        "endUtc": 1792387336
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1792368349,
+        "sunsetUtc": 1792409822
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1792368497,
+        "sunsetUtc": 1792409674
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Ashwina",
+        "adhika": false,
+        "startUtc": 1791647407,
+        "endUtc": 1794207727
+      },
+      "purnimanta": {
+        "name": "Ashwina",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aippasi",
+      "date": 2,
+      "year60Name": "Parabhava",
+      "ingressUtc": 1792246704,
+      "day1": "2026-10-18"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 46,
+      "vighati": 3
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "id": "tithi-boundary-1-m5",
+  "group": "boundary",
+  "note": "tithi edge 1051791288 m5",
+  "input": {
+    "utc": 1051790988,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "2003-05-01T17:39:48+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 29,
+        "name": "Amavasya",
+        "startUtc": 1051695541,
+        "endUtc": 1051791288
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1050521740,
+        "endUtc": 1051791288
+      },
+      "nakshatra": {
+        "index": 1,
+        "name": "Bharani",
+        "startUtc": 1051765776,
+        "endUtc": 1051863472
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 2,
+        "name": "Ayushman",
+        "startUtc": 1051744154,
+        "endUtc": 1051834418
+      },
+      "karana": {
+        "index": 59,
+        "name": "Naga",
+        "startUtc": 1051743385,
+        "endUtc": 1051791288
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 40.71521995682729,
+      "moonTropical": 40.67759285632677,
+      "ayanamsa": 23.90359851887723
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 4,
+        "name": "Guruvara",
+        "english": "Thursday"
+      },
+      "sunriseUtc": 1051748306,
+      "sunsetUtc": 1051793633,
+      "nextSunriseUtc": 1051834681,
+      "isPreviousCivilDay": false,
+      "sunriseLocal": "2003-05-01T05:48:26+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 29,
+        "name": "Amavasya",
+        "startUtc": 1051695541,
+        "endUtc": 1051791289
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 1050521740,
+        "endUtc": 1051791289
+      },
+      "nakshatra": {
+        "index": 0,
+        "name": "Ashwini",
+        "startUtc": 1051668223,
+        "endUtc": 1051765776
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 2,
+        "name": "Ayushman",
+        "startUtc": 1051744154,
+        "endUtc": 1051834417
+      },
+      "karana": {
+        "index": 59,
+        "name": "Naga",
+        "startUtc": 1051743385,
+        "endUtc": 1051791289
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1051748374,
+        "sunsetUtc": 1051793565
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1051748517,
+        "sunsetUtc": 1051793422
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Chaitra",
+        "adhika": false,
+        "startUtc": 1049224724,
+        "endUtc": 1051791288
+      },
+      "purnimanta": {
+        "name": "Vaishakha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Chithirai",
+      "date": 18,
+      "year60Name": "Subhanu",
+      "ingressUtc": 1050301389,
+      "day1": "2003-04-14"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 29,
+      "vighati": 38
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "id": "kl-5-1990",
+  "group": "kl",
+  "note": "pre-1982 = UTC+7:30, from 1982-01-01 = UTC+8",
+  "input": {
+    "utc": 650673900,
+    "latitude": 3.139003,
+    "longitude": 101.686855,
+    "place": "Kuala Lumpur",
+    "tz": "Asia/Kuala_Lumpur",
+    "localTime": "1990-08-15T06:45:00+08:00",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 23,
+        "name": "Navami",
+        "startUtc": 650601937,
+        "endUtc": 650679934
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 649952365,
+        "endUtc": 651155939
+      },
+      "nakshatra": {
+        "index": 3,
+        "name": "Rohini",
+        "startUtc": 650642271,
+        "endUtc": 650723051
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 12,
+        "name": "Vyaghata",
+        "startUtc": 650654778,
+        "endUtc": 650730457
+      },
+      "karana": {
+        "index": 47,
+        "name": "Gara",
+        "startUtc": 650640953,
+        "endUtc": 650679934
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 141.8748648811209,
+      "moonTropical": 68.94589564505053,
+      "ayanamsa": 23.726047571794595
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 2,
+        "name": "Mangalavara",
+        "english": "Tuesday"
+      },
+      "sunriseUtc": 650589084,
+      "sunsetUtc": 650633074,
+      "nextSunriseUtc": 650675477,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1990-08-14T07:11:23+08:00"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 22,
+        "name": "Ashtami",
+        "startUtc": 650523704,
+        "endUtc": 650601937
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 649952365,
+        "endUtc": 651155939
+      },
+      "nakshatra": {
+        "index": 2,
+        "name": "Krittika",
+        "startUtc": 650561356,
+        "endUtc": 650642271
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 11,
+        "name": "Dhruva",
+        "startUtc": 650579014,
+        "endUtc": 650654779
+      },
+      "karana": {
+        "index": 45,
+        "name": "Kaulava",
+        "startUtc": 650562862,
+        "endUtc": 650601937
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 650589149,
+        "sunsetUtc": 650633009
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 650589288,
+        "sunsetUtc": 650632870
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Shravana",
+        "adhika": false,
+        "startUtc": 648615254,
+        "endUtc": 651155939
+      },
+      "purnimanta": {
+        "name": "Bhadrapada",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aadi",
+      "date": 29,
+      "year60Name": "Pramodoota",
+      "ingressUtc": 648131839,
+      "day1": "1990-07-17"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 58,
+      "vighati": 54
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

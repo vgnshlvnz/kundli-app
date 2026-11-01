@@ -1,0 +1,149 @@
+{
+  "id": "tithi-boundary-2-m5",
+  "group": "boundary",
+  "note": "tithi edge 1052262143 m5",
+  "input": {
+    "utc": 1052261843,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "2003-05-07T04:27:23+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 4,
+        "name": "Panchami",
+        "startUtc": 1052170506,
+        "endUtc": 1052262143
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1051791289,
+        "endUtc": 1053056158
+      },
+      "nakshatra": {
+        "index": 6,
+        "name": "Punarvasu",
+        "startUtc": 1052247498,
+        "endUtc": 1052339587
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 7,
+        "name": "Dhriti",
+        "startUtc": 1052191438,
+        "endUtc": 1052278050
+      },
+      "karana": {
+        "index": 9,
+        "name": "Balava",
+        "startUtc": 1052216569,
+        "endUtc": 1052262143
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 46.0001762752759,
+      "moonTropical": 105.96038824693268,
+      "ayanamsa": 23.903806944524945
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 2,
+        "name": "Mangalavara",
+        "english": "Tuesday"
+      },
+      "sunriseUtc": 1052180185,
+      "sunsetUtc": 1052225693,
+      "nextSunriseUtc": 1052266563,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "2003-05-06T05:46:25+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 4,
+        "name": "Panchami",
+        "startUtc": 1052170506,
+        "endUtc": 1052262144
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 1051791289,
+        "endUtc": 1053056158
+      },
+      "nakshatra": {
+        "index": 5,
+        "name": "Ardra",
+        "startUtc": 1052153397,
+        "endUtc": 1052247498
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 6,
+        "name": "Sukarma",
+        "startUtc": 1052103429,
+        "endUtc": 1052191438
+      },
+      "karana": {
+        "index": 8,
+        "name": "Bava",
+        "startUtc": 1052170506,
+        "endUtc": 1052216569
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 1052180253,
+        "sunsetUtc": 1052225625
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 1052180397,
+        "sunsetUtc": 1052225481
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Vaishakha",
+        "adhika": false,
+        "startUtc": 1051791289,
+        "endUtc": 1054354791
+      },
+      "purnimanta": {
+        "name": "Vaishakha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Chithirai",
+      "date": 23,
+      "year60Name": "Subhanu",
+      "ingressUtc": 1050301389,
+      "day1": "2003-04-14"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 56,
+      "vighati": 42
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

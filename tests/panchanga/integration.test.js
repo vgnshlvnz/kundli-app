@@ -10,7 +10,7 @@ describe('Complete panchanga calculation', () => {
   };
 
   test('calculatePanchanga returns all components', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
 
     // All components present
     assert.ok(panchanga.tithi, 'Tithi should be present');
@@ -23,13 +23,13 @@ describe('Complete panchanga calculation', () => {
   });
 
   test('Tithi is within valid range', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     assert.ok(panchanga.tithi.number >= 1 && panchanga.tithi.number <= 30,
       'Tithi should be 1-30');
   });
 
   test('Paksha matches tithi number', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     if (panchanga.tithi.number <= 15) {
       assert.ok(panchanga.paksha.name === 'shukla',
         'Tithi 1-15 should be shukla paksha');
@@ -40,25 +40,25 @@ describe('Complete panchanga calculation', () => {
   });
 
   test('Nakshatra index is 0-26', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     assert.ok(panchanga.nakshatra.index >= 0 && panchanga.nakshatra.index < 27,
       'Nakshatra index should be 0-26');
   });
 
   test('Yoga index is 0-26', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     assert.ok(panchanga.yoga.index >= 0 && panchanga.yoga.index < 27,
       'Yoga index should be 0-26');
   });
 
   test('Vara index is 0-6', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     assert.ok(panchanga.vara.index >= 0 && panchanga.vara.index <= 6,
       'Vara index should be 0-6');
   });
 
   test('Birth UTC is preserved', () => {
-    const panchanga = calculatePanchanga(birth);
+    const panchanga = calculatePanchanga(birth, 'lahiri');
     assert.ok(panchanga.birthUtc === birth.utc,
       'Birth UTC should be preserved');
   });
@@ -70,7 +70,7 @@ describe('Complete panchanga calculation', () => {
       utc: birthUtc,
       longitude: 72.88,
       latitude: 19.07
-    });
+    }, 'lahiri');
 
     // Paksha should be consistent with tithi number
     if (panchanga.tithi.number <= 15) {
@@ -98,7 +98,7 @@ describe('Complete panchanga calculation', () => {
       utc: birthUtc,
       longitude: 72.88,
       latitude: 19.07
-    });
+    }, 'lahiri');
     // Friday = index 5
     assert.equal(panchanga.vara.index, 5,
       `Pre-sunrise birth on 1950-01-01 should be Friday (Dec 31, 1949), got ${panchanga.vara.index}`);

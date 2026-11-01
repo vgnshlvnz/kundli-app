@@ -1,0 +1,149 @@
+{
+  "id": "predawn-01-chennai",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 645907200,
+    "latitude": 13.08268,
+    "longitude": 80.270718,
+    "place": "Chennai",
+    "tz": "Asia/Kolkata",
+    "localTime": "1990-06-21T00:10:00+05:30",
+    "ayanamsa": "lahiri",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 27,
+        "name": "Trayodashi",
+        "startUtc": 645859699,
+        "endUtc": 645933420
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 644842868,
+        "endUtc": 646080874
+      },
+      "nakshatra": {
+        "index": 2,
+        "name": "Krittika",
+        "startUtc": 645846673,
+        "endUtc": 645923460
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 7,
+        "name": "Dhriti",
+        "startUtc": 645856942,
+        "endUtc": 645929082
+      },
+      "karana": {
+        "index": 55,
+        "name": "Vanija",
+        "startUtc": 645896621,
+        "endUtc": 645933420
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 89.16940096295816,
+      "moonTropical": 60.892811345222505,
+      "ayanamsa": 23.723937693662663
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 3,
+        "name": "Budhavara",
+        "english": "Wednesday"
+      },
+      "sunriseUtc": 645840808,
+      "sunsetUtc": 645887233,
+      "nextSunriseUtc": 645927220,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1990-06-20T05:43:27+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 26,
+        "name": "Dwadashi",
+        "startUtc": 645785208,
+        "endUtc": 645859699
+      },
+      "paksha": {
+        "index": 1,
+        "name": "krishna",
+        "startUtc": 644842868,
+        "endUtc": 646080874
+      },
+      "nakshatra": {
+        "index": 1,
+        "name": "Bharani",
+        "startUtc": 645769008,
+        "endUtc": 645846673
+      },
+      "pada": 4,
+      "yoga": {
+        "index": 6,
+        "name": "Sukarma",
+        "startUtc": 645784137,
+        "endUtc": 645856942
+      },
+      "karana": {
+        "index": 53,
+        "name": "Taitila",
+        "startUtc": 645822584,
+        "endUtc": 645859699
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 645840878,
+        "sunsetUtc": 645887162
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 645841030,
+        "sunsetUtc": 645887010
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Jyeshtha",
+        "adhika": false,
+        "startUtc": 643549627,
+        "endUtc": 646080874
+      },
+      "purnimanta": {
+        "name": "Ashadha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Aani",
+      "date": 6,
+      "year60Name": "Pramodoota",
+      "ingressUtc": 645414487,
+      "day1": "1990-06-15"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 46,
+      "vighati": 6
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}

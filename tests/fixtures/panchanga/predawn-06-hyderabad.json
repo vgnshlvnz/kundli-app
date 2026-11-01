@@ -1,0 +1,149 @@
+{
+  "id": "predawn-06-hyderabad",
+  "group": "predawn",
+  "note": "",
+  "input": {
+    "utc": 790125600,
+    "latitude": 17.385044,
+    "longitude": 78.486671,
+    "place": "Hyderabad",
+    "tz": "Asia/Kolkata",
+    "localTime": "1995-01-15T04:50:00+05:30",
+    "ayanamsa": "krishnamurti",
+    "locationSource": "locations.db"
+  },
+  "oracle": {
+    "ephemeris": "swisseph 2.10.03 Moshier",
+    "sunrise": "upperLimbRefracted",
+    "ayanamsaKind": "mean (matches app ephemeris module)",
+    "tamilDayOneRule": "ingress before sunset on its civil date -> day 1, else next date",
+    "lunarNaming": "Sun's sidereal sign at opening new moon + 1; adhika = same sign at both bounding new moons",
+    "tolerance": {
+      "sunriseSunsetSec": 60,
+      "boundarySec": 120
+    }
+  },
+  "expected": {
+    "atBirth": {
+      "tithi": {
+        "index": 13,
+        "name": "Chaturdashi",
+        "startUtc": 790104590,
+        "endUtc": 790197167
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 788957736,
+        "endUtc": 790287982
+      },
+      "nakshatra": {
+        "index": 5,
+        "name": "Ardra",
+        "startUtc": 790106549,
+        "endUtc": 790200790
+      },
+      "pada": 1,
+      "yoga": {
+        "index": 25,
+        "name": "Indra",
+        "startUtc": 790081847,
+        "endUtc": 790169259
+      },
+      "karana": {
+        "index": 26,
+        "name": "Gara",
+        "startUtc": 790104590,
+        "endUtc": 790151096
+      }
+    },
+    "atBirthLongitudes": {
+      "sunTropical": 294.33046082230044,
+      "moonTropical": 93.0342401905288,
+      "ayanamsa": 23.690921194689565
+    },
+    "hinduDay": {
+      "vara": {
+        "index": 6,
+        "name": "Shanivara",
+        "english": "Saturday"
+      },
+      "sunriseUtc": 790046359,
+      "sunsetUtc": 790086641,
+      "nextSunriseUtc": 790132765,
+      "isPreviousCivilDay": true,
+      "sunriseLocal": "1995-01-14T06:49:18+05:30"
+    },
+    "atSunrise": {
+      "tithi": {
+        "index": 12,
+        "name": "Trayodashi",
+        "startUtc": 790010357,
+        "endUtc": 790104589
+      },
+      "paksha": {
+        "index": 0,
+        "name": "shukla",
+        "startUtc": 788957735,
+        "endUtc": 790287982
+      },
+      "nakshatra": {
+        "index": 4,
+        "name": "Mrigashira",
+        "startUtc": 790010735,
+        "endUtc": 790106549
+      },
+      "pada": 2,
+      "yoga": {
+        "index": 24,
+        "name": "Brahma",
+        "startUtc": 789993248,
+        "endUtc": 790081847
+      },
+      "karana": {
+        "index": 24,
+        "name": "Kaulava",
+        "startUtc": 790010357,
+        "endUtc": 790057665
+      }
+    },
+    "sunriseModes": {
+      "centreRefracted": {
+        "sunriseUtc": 790046432,
+        "sunsetUtc": 790086568
+      },
+      "centreNoRefraction": {
+        "sunriseUtc": 790046585,
+        "sunsetUtc": 790086416
+      }
+    },
+    "lunarMonth": {
+      "amanta": {
+        "name": "Pausha",
+        "adhika": false,
+        "startUtc": 788957736,
+        "endUtc": 791506061
+      },
+      "purnimanta": {
+        "name": "Pausha",
+        "adhika": false
+      }
+    },
+    "tamilSolar": {
+      "month": "Thai",
+      "date": 1,
+      "year60Name": "Bhava",
+      "ingressUtc": 790079556,
+      "day1": "1995-01-14"
+    },
+    "ghatiSinceSunrise": {
+      "ghati": 55,
+      "vighati": 1
+    },
+    "flags": {
+      "noSunrise": false,
+      "adhikaTithi": false,
+      "kshayaTithi": false
+    }
+  }
+}
