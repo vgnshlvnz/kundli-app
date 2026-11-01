@@ -59,8 +59,15 @@
 
 ### 8. Panchanga Tab
 - [ ] Click "Panchanga" tab
-- [ ] Tithi, paksha, nakshatra, yoga, karana, vara displayed
-- [ ] Sunrise/sunset times displayed (if calculated)
+- [ ] "At birth" table: tithi, nakshatra (with pada and lord), yoga and karana, each with start → end date and time at the birth place
+- [ ] "Hindu day" table: vara, sunrise, sunset, next sunrise, time since sunrise in ghati/vighati, hora lord
+- [ ] A pre-sunrise birth (e.g. 03:00) shows the previous day's vara marked "(previous civil day)"
+- [ ] "At sunrise" table lists the angas prevailing at that day's sunrise
+- [ ] "Calendar" table: lunar month (adhika marked), Tamil month, Tamil date, Tamil year
+- [ ] Kshaya/adhika tithi notes appear only when they apply
+- [ ] A polar birth (e.g. Tromsø 69.65°N, 18.96°E, 2023-06-21) shows the "does not rise or set" notice and no sunrise rows, with no console errors
+- [ ] Switch language to Tamil: every row, including Tamil month and year names, is in Tamil
+- [ ] Change ayanamsa: nakshatra/pada/yoga change, tithi/karana and the Tamil date do not
 
 ### 9. KP Tab
 - [ ] Click "KP" tab

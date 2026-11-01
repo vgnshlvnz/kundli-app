@@ -102,6 +102,25 @@ const STRINGS = {
     'panchanga.tamilMonth': 'Tamil Month',
     'panchanga.sunrise': 'Sunrise',
     'panchanga.sunset': 'Sunset',
+    'panchanga.atBirth': 'At birth',
+    'panchanga.atSunrise': 'At sunrise',
+    'panchanga.hinduDay': 'Hindu day (sunrise to sunrise)',
+    'panchanga.calendar': 'Calendar',
+    'panchanga.span': '{start} → {end}',
+    'panchanga.until': 'until {end}',
+    'panchanga.pada': 'Pada',
+    'panchanga.varaPrev': '(previous civil day)',
+    'panchanga.nextSunrise': 'Next sunrise',
+    'panchanga.sinceSunrise': 'Since sunrise',
+    'panchanga.ghatiValue': '{ghati} ghati {vighati} vighati',
+    'panchanga.hora': 'Hora lord',
+    'panchanga.lunarMonth': 'Lunar month (amanta)',
+    'panchanga.adhika': '(adhika)',
+    'panchanga.tamilDate': 'Tamil date',
+    'panchanga.tamilYear': 'Tamil year',
+    'panchanga.kshayaTithi': 'Kshaya tithi: a tithi is skipped between this sunrise and the next',
+    'panchanga.adhikaTithi': 'Adhika tithi: the same tithi spans both sunrises',
+    'panchanga.noSunrise': 'The Sun does not rise or set on this date at this latitude, so values that depend on sunrise are not shown.',
     'kp.heading': 'KP Astrology',
     'kp.planetSubLords': 'Planet Sub-Lords',
     'kp.cuspSubLords': 'House Cusp Sub-Lords',
@@ -213,6 +232,25 @@ const STRINGS = {
     'panchanga.tamilMonth': 'தமிழ் மாதம்',
     'panchanga.sunrise': 'சூரிய உதயம்',
     'panchanga.sunset': 'சூரிய அஸ்தமனம்',
+    'panchanga.atBirth': 'பிறப்பின் போது',
+    'panchanga.atSunrise': 'சூரிய உதயத்தில்',
+    'panchanga.hinduDay': 'இந்து நாள் (உதயம் முதல் உதயம் வரை)',
+    'panchanga.calendar': 'நாள்காட்டி',
+    'panchanga.span': '{start} முதல் {end} வரை',
+    'panchanga.until': '{end} வரை',
+    'panchanga.pada': 'பாதம்',
+    'panchanga.varaPrev': '(முந்தைய நாள்)',
+    'panchanga.nextSunrise': 'அடுத்த சூரிய உதயம்',
+    'panchanga.sinceSunrise': 'உதயம் முதல்',
+    'panchanga.ghatiValue': '{ghati} நாழிகை {vighati} விநாழிகை',
+    'panchanga.hora': 'ஹோரை அதிபதி',
+    'panchanga.lunarMonth': 'சாந்திரமான மாதம் (அமாந்தம்)',
+    'panchanga.adhika': '(அதிக)',
+    'panchanga.tamilDate': 'தமிழ் தேதி',
+    'panchanga.tamilYear': 'தமிழ் ஆண்டு',
+    'panchanga.kshayaTithi': 'க்ஷய திதி: இந்த உதயத்திற்கும் அடுத்த உதயத்திற்கும் இடையே ஒரு திதி இல்லை',
+    'panchanga.adhikaTithi': 'அதிக திதி: ஒரே திதி இரண்டு உதயங்களிலும் நீடிக்கிறது',
+    'panchanga.noSunrise': 'இந்த அட்சரேகையில் இந்த நாளில் சூரியன் உதிப்பதோ மறைவதோ இல்லை; எனவே சூரிய உதயத்தைச் சார்ந்த மதிப்புகள் காட்டப்படவில்லை.',
     'kp.heading': 'கே.பி. ஜோதிடம்',
     'kp.planetSubLords': 'கிரக உப அதிபதிகள்',
     'kp.cuspSubLords': 'பாவ முனை உப அதிபதிகள்',
@@ -326,4 +364,44 @@ export function planetAbbreviation(lang, planetName) {
 export function tamilMonth(lang, sunSign) {
   const [english, tamil] = TAMIL_MONTHS[sunSign];
   return lang === 'ta' ? tamil : `${english} (${tamil})`;
+}
+
+// Calendar names live in their own maps because some English names repeat across kinds
+// (Jyeshtha, Shravana and Magha are both nakshatras and lunar months).
+const CALENDAR_TA = {
+  lunar: {
+    Chaitra: 'சைத்ரம்', Vaishakha: 'வைசாகம்', Jyeshtha: 'ஜ்யேஷ்டம்', Ashadha: 'ஆஷாடம்',
+    Shravana: 'ஸ்ராவணம்', Bhadrapada: 'பாத்ரபதம்', Ashwina: 'ஆஸ்வயுஜம்', Kartika: 'கார்த்திகம்',
+    Margashirsha: 'மார்கசீர்ஷம்', Pausha: 'பௌஷம்', Magha: 'மாகம்', Phalguna: 'பால்குணம்'
+  },
+  tamilMonth: Object.fromEntries(TAMIL_MONTHS.map(([english, tamil]) => [english, tamil])),
+  // The 60-year (samvatsara) cycle. Tamil spellings entered from memory: have a Tamil reader review them.
+  year60: {
+    Prabhava: 'பிரபவ', Vibhava: 'விபவ', Shukla: 'சுக்ல', Pramodoota: 'பிரமோதூத', Prajotpatti: 'பிரசோற்பத்தி',
+    Angirasa: 'ஆங்கீரச', Srimukha: 'ஸ்ரீமுக', Bhava: 'பவ', Yuva: 'யுவ', Dhatu: 'தாது',
+    Isvara: 'ஈஸ்வர', Vegudhanya: 'வெகுதான்ய', Pramathi: 'பிரமாதி', Vikrama: 'விக்கிரம', Vishu: 'விஷு',
+    Chitrabhanu: 'சித்திரபானு', Subhanu: 'சுபானு', Dharana: 'தாரண', Parthiva: 'பார்த்திப', Viya: 'விய',
+    Sarvajit: 'சர்வசித்து', Sarvadhari: 'சர்வதாரி', Virodhi: 'விரோதி', Vikruti: 'விக்ருதி', Kara: 'கர',
+    Nandana: 'நந்தன', Vijaya: 'விஜய', Jaya: 'ஜய', Manmatha: 'மன்மத', Durmukhi: 'துன்முகி',
+    Hevilambi: 'ஹேவிளம்பி', Vilambi: 'விளம்பி', Vikari: 'விகாரி', Sarvari: 'சார்வரி', Plava: 'பிலவ',
+    Subakrit: 'சுபகிருது', Sobhakrit: 'சோபகிருது', Krodhi: 'குரோதி', Visuvasu: 'விசுவாசுவ', Parabhava: 'பராபவ',
+    Plavanga: 'பிலவங்க', Keelaka: 'கீலக', Soumya: 'சௌமிய', Sadharana: 'சாதாரண', Virodhikrit: 'விரோதிகிருது',
+    Paridhabi: 'பரிதாபி', Pramadicha: 'பிரமாதீச', Anandha: 'ஆனந்த', Rakshasa: 'ராட்சச', Nala: 'நள',
+    Pingala: 'பிங்கள', Kalayukthi: 'காளயுக்தி', Siddharthi: 'சித்தார்த்தி', Raudhri: 'ரௌத்திரி', Dunmathi: 'துன்மதி',
+    Dundubhi: 'துந்துபி', Rudhrothgari: 'ருத்ரோத்காரி', Raktakshi: 'ரக்தாட்சி', Krodhana: 'குரோதன', Akshaya: 'அட்சய'
+  }
+};
+
+/**
+ * Panchanga calendar name in the chosen language. English passes through, except Tamil months, which
+ * keep the "English (தமிழ்)" form the Tamil Month row has always used.
+ * @param {string} lang
+ * @param {'lunar'|'tamilMonth'|'year60'} kind
+ * @param {string} englishName - As returned by the panchanga module
+ * @returns {string}
+ */
+export function calendarName(lang, kind, englishName) {
+  const tamil = CALENDAR_TA[kind][englishName] ?? englishName;
+  if (lang === 'ta') return tamil;
+  return kind === 'tamilMonth' ? `${englishName} (${tamil})` : englishName;
 }

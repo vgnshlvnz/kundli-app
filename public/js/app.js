@@ -5,11 +5,12 @@ import { resolveBirth, searchLocations, localToUtc } from './kundli/geo/index.js
 import { computePlanets, SECONDS_PER_YEAR } from './kundli/ephemeris/index.js';
 import { calculateHouses } from './kundli/houses/index.js';
 import { computeVimshottariDasha, computeBhuktis, getNakshatra, splitYears } from './kundli/dasha/index.js';
-import { calculatePanchanga } from './kundli/panchanga/index.js';
+import { computePanchanga } from './kundli/panchanga/index.js';
+import { panchangaHtml } from './kundli/render/panchanga.js';
 import { kpLords, signLord, significators } from './kundli/kp/index.js';
 import { computeVarga } from './kundli/vargas/index.js';
 import { southIndianChart } from './kundli/render/index.js';
-import { LANGUAGES, translate, term, planetAbbreviation, tamilMonth } from './kundli/i18n/index.js';
+import { LANGUAGES, translate, term, planetAbbreviation } from './kundli/i18n/index.js';
 
 const SIGN_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
                     'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -293,11 +294,13 @@ async function handleSubmit(e) {
     state.dasha = computeVimshottariDasha({ utc: utcSeconds }, moonPlanet.siderealLongitude);
 
     // Compute panchanga
-    state.panchanga = calculatePanchanga({
+    // (resolveBirth already refuses country-centroid locations, so no `centroid` flag is needed here.)
+    state.panchanga = computePanchanga({
       utc: utcSeconds,
       longitude: state.resolvedBirth.longitude,
-      latitude: state.resolvedBirth.latitude
-    }, state.settings.ayanamsa);
+      latitude: state.resolvedBirth.latitude,
+      timezone: state.resolvedBirth.timezone
+    }, { ayanamsa: state.settings.ayanamsa });
 
     // Update UTC offset display with actual conversion result
     utcOffsetEl.textContent = t('timezone.resolved', { tz: state.resolvedBirth.timezone });
@@ -594,25 +597,7 @@ function renderVimshottariTab() {
 
 function renderPanchangaTab() {
   if (!state.panchanga) return;
-
-  const p = state.panchanga;
-  const sun = state.planets.find(planet => planet.name === 'Sun');
-  const vara = lang === 'ta' ? tr(p.vara.english) : `${p.vara.name} (${p.vara.english})`;
-  let html = `
-    <h3>${t('panchanga.heading')}</h3>
-    <table class="chart-table">
-      <tr><th>${t('panchanga.tithi')}</th><td>${tr(p.tithi.name)} (${p.tithi.number}) - ${t('panchanga.elapsed', { percent: p.tithi.percentage.toFixed(1) })}</td></tr>
-      <tr><th>${t('panchanga.paksha')}</th><td>${tr(p.paksha.english)} (${tr(p.paksha.name)})</td></tr>
-      <tr><th>${t('panchanga.nakshatra')}</th><td>${tr(p.nakshatra.name)} (${t('dasha.lord')}: ${tr(p.nakshatra.lord)})</td></tr>
-      <tr><th>${t('panchanga.yoga')}</th><td>${tr(p.yoga.name)}</td></tr>
-      <tr><th>${t('panchanga.karana')}</th><td>${tr(p.karana.name)}${p.karana.fixed ? ` ${t('panchanga.fixed')}` : ''}</td></tr>
-      <tr><th>${t('panchanga.vara')}</th><td>${vara}</td></tr>
-      <tr><th>${t('panchanga.tamilMonth')}</th><td>${tamilMonth(lang, sun.sign)}</td></tr>
-      ${p.sunriseSunset.sunriseUtc ? `<tr><th>${t('panchanga.sunrise')}</th><td>${birthPlaceTime(p.sunriseSunset.sunriseUtc)}</td></tr>` : ''}
-      ${p.sunriseSunset.sunsetUtc ? `<tr><th>${t('panchanga.sunset')}</th><td>${birthPlaceTime(p.sunriseSunset.sunsetUtc)}</td></tr>` : ''}
-    </table>
-  `;
-  tabs['panchanga'].innerHTML = html;
+  tabs['panchanga'].innerHTML = panchangaHtml(state.panchanga, { t, tr, lang, timeZone: state.resolvedBirth.timezone });
 }
 
 function renderKpTab() {
