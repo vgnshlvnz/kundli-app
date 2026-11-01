@@ -16,6 +16,7 @@ import {
 
 export { SUNRISE_MODES, DEFAULT_SUNRISE_MODE } from './sunrise.js';
 export { TAMIL_SANKRANTI_CUTOFF, TAMIL_SOLAR_AYANAMSA } from './calendar.js';
+export { NAKSHATRAS, LUNAR_MONTHS, TAMIL_MONTHS, YEAR60_NAMES, isFixedKarana } from './tables.js';
 
 const NAKSHATRA_WIDTH = 360 / 27;
 const LUNAR_SYSTEMS = ['amanta', 'purnimanta'];

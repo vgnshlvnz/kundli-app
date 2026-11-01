@@ -1,10 +1,10 @@
 import { describe, test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { readFileSync } from 'node:fs';
-import { translate, term, planetAbbreviation, tamilMonth } from '../../public/js/kundli/i18n/index.js';
+import { translate, term, planetAbbreviation, tamilMonth, calendarName } from '../../public/js/kundli/i18n/index.js';
 import { computePlanets } from '../../public/js/kundli/ephemeris/index.js';
 import { getNakshatra } from '../../public/js/kundli/dasha/index.js';
-import { calculatePanchanga } from '../../public/js/kundli/panchanga/index.js';
+import { calculatePanchanga, LUNAR_MONTHS, TAMIL_MONTHS, YEAR60_NAMES } from '../../public/js/kundli/panchanga/index.js';
 import { kpLords } from '../../public/js/kundli/kp/index.js';
 
 const TAMIL = /[஀-௿]/;
@@ -12,7 +12,8 @@ const TAMIL = /[஀-௿]/;
 // UI keys used by index.html and app.js
 function usedKeys() {
   const html = readFileSync(new URL('../../public/index.html', import.meta.url), 'utf8');
-  const js = readFileSync(new URL('../../public/js/app.js', import.meta.url), 'utf8');
+  const js = ['app.js', 'kundli/render/panchanga.js']
+    .map(f => readFileSync(new URL(`../../public/js/${f}`, import.meta.url), 'utf8')).join('\n');
   const keys = new Set();
   for (const m of html.matchAll(/data-i18n(?:-placeholder|-aria)?="([^"]+)"/g)) keys.add(m[1]);
   for (const m of js.matchAll(/\bt\('([^']+)'/g)) keys.add(m[1]);
@@ -66,6 +67,21 @@ describe('Tamil translations', () => {
     for (const name of names) {
       assert.match(term('ta', name), TAMIL, `no Tamil name for "${name}"`);
     }
+  });
+
+  test('Every panchanga calendar name has a Tamil name', () => {
+    assert.equal(YEAR60_NAMES.length, 60);
+    for (const [kind, names] of [['lunar', LUNAR_MONTHS], ['tamilMonth', TAMIL_MONTHS], ['year60', YEAR60_NAMES]]) {
+      for (const name of names) assert.match(calendarName('ta', kind, name), TAMIL, `no Tamil ${kind} name for "${name}"`);
+    }
+    assert.equal(new Set(YEAR60_NAMES.map(n => calendarName('ta', 'year60', n))).size, 60, 'Tamil year names are distinct');
+  });
+
+  test('Lunar months that share an English name with a nakshatra keep their own Tamil name', () => {
+    assert.equal(calendarName('ta', 'lunar', 'Jyeshtha'), 'ஜ்யேஷ்டம்');
+    assert.equal(term('ta', 'Jyeshtha'), 'கேட்டை'); // the nakshatra
+    assert.equal(calendarName('en', 'tamilMonth', 'Aippasi'), 'Aippasi (ஐப்பசி)');
+    assert.equal(calendarName('en', 'lunar', 'Magha'), 'Magha');
   });
 
   test('English names pass through unchanged', () => {
