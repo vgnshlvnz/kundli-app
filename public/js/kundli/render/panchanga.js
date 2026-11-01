@@ -19,6 +19,7 @@ export function panchangaHtml(p, { t, tr, lang, timeZone }) {
   const span = s => t('panchanga.span', { start: stamp(s.startUtc), end: stamp(s.endUtc) });
   const until = s => t('panchanga.until', { end: stamp(s.endUtc) });
   const row = (label, value) => `<tr><th>${label}</th><td>${value}</td></tr>`;
+  const note = text => `<tr><td colspan="2">${text}</td></tr>`;
   const table = (heading, rows) => `<h4>${heading}</h4><table class="chart-table">${rows.filter(Boolean).join('')}</table>`;
 
   const { atBirth: b, atSunrise: s, hinduDay: d, lunarMonth: lm, tamilSolar: ts, flags } = p;
@@ -40,7 +41,7 @@ export function panchangaHtml(p, { t, tr, lang, timeZone }) {
     d.nextSunriseUtc !== null && row(t('panchanga.nextSunrise'), seconds(d.nextSunriseUtc)),
     p.ghatiSinceSunrise && row(t('panchanga.sinceSunrise'), t('panchanga.ghatiValue', p.ghatiSinceSunrise)),
     p.horaLord && row(t('panchanga.hora'), tr(p.horaLord)),
-    flags.noSunrise && row('', t('panchanga.noSunrise'))
+    flags.noSunrise && note(t('panchanga.noSunrise'))
   ];
 
   const sunriseRows = s && [
@@ -56,8 +57,8 @@ export function panchangaHtml(p, { t, tr, lang, timeZone }) {
     ts && row(t('panchanga.tamilMonth'), calendarName(lang, 'tamilMonth', ts.month)),
     ts && row(t('panchanga.tamilDate'), String(ts.date)),
     ts && row(t('panchanga.tamilYear'), calendarName(lang, 'year60', ts.year60Name)),
-    flags.kshayaTithi && row('', t('panchanga.kshayaTithi')),
-    flags.adhikaTithi && row('', t('panchanga.adhikaTithi'))
+    flags.kshayaTithi && note(t('panchanga.kshayaTithi')),
+    flags.adhikaTithi && note(t('panchanga.adhikaTithi'))
   ];
 
   return `<h3>${t('panchanga.heading')}</h3>${[
