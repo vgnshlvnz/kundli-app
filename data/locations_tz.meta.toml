@@ -1,0 +1,10 @@
+# Written by python -m kundli_locations.derive_tz. Do not edit.
+timezonefinder = "9.2.0"
+timezonefinder_data = "4.2026.6"
+zone_tab = "/usr/share/zoneinfo/zone.tab"
+zone_tab_version = "2026f"
+rows = 722
+usable = 701
+unusable = 21
+centroid_rejected = 21
+centroid_usable = 94

@@ -15,11 +15,13 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 |---|---|---|---|
 | `core` | python | — | — |
 | `ephemeris` | python | `core` | — |
+| `locations` | python | `core` | — |
 
 ```mermaid
 graph BT
   core
   ephemeris --> core
+  locations --> core
 ```
 
 <!-- END GENERATED: module graph -->
@@ -33,7 +35,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 |---|---|---|---|---|
 | 1 | `core` | — | Shared data models, constants, reference data tables, label and palette data | built |
 | 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | built |
-| 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | planned |
+| 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | built |
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | planned |
 | 5 | `chart` | core | South Indian SVG chart | planned |
 | 6 | `placement` | core, bhava | Rule tables and the placement engine | planned |
@@ -85,9 +87,15 @@ Depends on core and pyswisseph 2.10.3.2 (AGPL-3.0). Import from `kundli_ephemeri
 - Errors: `EphemerisError`, `EphemerisFilesMissing` (raised instead of a Moshier fallback), `UnknownAyanamsa`.
 - `configure(ephe_path)` points at other data files.
 
-### locations (planned)
-- `search(query, limit)`, `get(place_id)`, `to_utc(local, tz, fold=None)`.
-- `python -m kundli_locations.derive_tz` writes `data/locations_tz.csv`.
+### locations (built)
+Depends on core; standard library at run time (sqlite3, zoneinfo with the OS tzdata). Import from `kundli_locations`.
+- `LocationStore(db, tz_csv, overrides_csv)`, `default_store()` (paths from `KUNDLI_LOCATIONS_DB`,
+  `KUNDLI_LOCATIONS_TZ`, `KUNDLI_LOCATIONS_TZ_OVERRIDES`, or `data/`); `search(query, limit) -> list[Place]`
+  (prefix match on every word, case- and accent-insensitive), `get(place_id) -> Place`.
+- `to_utc(local, tz, fold=None)`, `utc_offset(...)`, `make_moment(local, place, fold=None) -> BirthMoment`.
+- Errors: `UnknownPlace`, `PlaceNotUsable`, `UnknownTimezone`, `NonexistentLocalTime` (gap), `AmbiguousLocalTime`
+  (overlap; pass `fold=0` or `1`).
+- `python -m kundli_locations.derive_tz [--check]` (extra `derive`: timezonefinder) regenerates `data/locations_tz.csv`.
 
 ### bhava (planned)
 - `whole_sign(lagna, lon)`, `chalit_madhyas(lagna)`, `chalit_sandhis(lagna)`, `chalit(lagna, lon)`, `assign(chart)`.
