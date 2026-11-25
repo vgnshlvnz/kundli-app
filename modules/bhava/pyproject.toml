@@ -1,0 +1,14 @@
+[project]
+name = "kundli-bhava"
+version = "0.1.0"
+description = "Kundli App bhava: whole-sign and bhava chalit (equal bhavas, Lagna as madhya)"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = ["kundli-core"]
+
+[tool.uv.sources]
+kundli-core = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"

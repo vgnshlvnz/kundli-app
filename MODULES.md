@@ -14,11 +14,13 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 | Module | Kind | Depends on (imports) | Talks to over HTTP |
 |---|---|---|---|
 | `core` | python | — | — |
+| `bhava` | python | `core` | — |
 | `ephemeris` | python | `core` | — |
 | `locations` | python | `core` | — |
 
 ```mermaid
 graph BT
+  bhava --> core
   core
   ephemeris --> core
   locations --> core
@@ -36,7 +38,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | 1 | `core` | — | Shared data models, constants, reference data tables, label and palette data | built |
 | 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | built |
 | 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | built |
-| 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | planned |
+| 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | built |
 | 5 | `chart` | core | South Indian SVG chart | planned |
 | 6 | `placement` | core, bhava | Rule tables and the placement engine | planned |
 | 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | planned |
@@ -97,8 +99,12 @@ Depends on core; standard library at run time (sqlite3, zoneinfo with the OS tzd
   (overlap; pass `fold=0` or `1`).
 - `python -m kundli_locations.derive_tz [--check]` (extra `derive`: timezonefinder) regenerates `data/locations_tz.csv`.
 
-### bhava (planned)
-- `whole_sign(lagna, lon)`, `chalit_madhyas(lagna)`, `chalit_sandhis(lagna)`, `chalit(lagna, lon)`, `assign(chart)`.
+### bhava (built)
+Depends on core. Import from `kundli_bhava`.
+- `whole_sign(lagna, lon) -> int`, `chalit(lagna, lon) -> int` (equal bhavas, Lagna as madhya; a point on a sandhi
+  goes to the later bhava), `chalit_madhyas(lagna)`, `chalit_sandhis(lagna)`.
+- `placement(lagna, lon) -> BhavaPlacement(whole_sign, chalit, differs)`, `assign(chart) -> {Graha: BhavaPlacement}`.
+- The method's numbers and source phrases are data in `methods.toml`.
 
 ### chart (planned)
 - `render_south_indian(chart, info, lang) -> str` (SVG).

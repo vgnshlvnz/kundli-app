@@ -1,0 +1,18 @@
+# The two bhava methods (CONVENTIONS D1, C6). The numbers below drive the calculation; the phrases in src_text are
+# checked against the source sections, so the test fails if the definition there changes.
+
+[whole_sign]
+source_file = "docs/reference/houses_bhavas_course_notes_llm_ready.md"
+source_section = "3. House systems"
+src_text = ["| Whole Sign | Each sign becomes a house; the rising sign is the 1st house |"]
+
+[chalit]
+name = "Bhava chalit (equal, Lagna as madhya)"
+bhava_span_deg = 30      # each bhava spans 30°
+madhya_offset_deg = 15   # bhava 1 starts 15° before the Lagna degree
+source_file = "docs/reference/horoscope_signs_houses_llm_ready.md"
+source_section = "3.3 Bhava Chalit chart"
+src_text = [
+  "1. Lagna degree as the Bhava Madhya (middle of the house).",
+  "Method 1 in detail: each house spans 30°. The 1st house runs from 15° before the Lagna degree to 15° after it, and the other houses follow at 30° intervals.",
+]
