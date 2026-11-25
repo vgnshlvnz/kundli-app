@@ -1,0 +1,5 @@
+name = "placement"
+kind = "python"
+package = "kundli_placement"
+depends_on = ["core", "bhava"]
+description = "Rule tables and the placement engine"
