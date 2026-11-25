@@ -15,12 +15,14 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 |---|---|---|---|
 | `core` | python | — | — |
 | `bhava` | python | `core` | — |
+| `chart` | python | `core` | — |
 | `ephemeris` | python | `core` | — |
 | `locations` | python | `core` | — |
 
 ```mermaid
 graph BT
   bhava --> core
+  chart --> core
   core
   ephemeris --> core
   locations --> core
@@ -39,7 +41,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | built |
 | 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | built |
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | built |
-| 5 | `chart` | core | South Indian SVG chart | planned |
+| 5 | `chart` | core | South Indian SVG chart | built |
 | 6 | `placement` | core, bhava | Rule tables and the placement engine | planned |
 | 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | planned |
 | 8 | `web` | — (HTTP: api) | Input form, chart and placement table | planned |
@@ -106,8 +108,15 @@ Depends on core. Import from `kundli_bhava`.
 - `placement(lagna, lon) -> BhavaPlacement(whole_sign, chalit, differs)`, `assign(chart) -> {Graha: BhavaPlacement}`.
 - The method's numbers and source phrases are data in `methods.toml`.
 
-### chart (planned)
-- `render_south_indian(chart, info, lang) -> str` (SVG).
+### chart (built)
+Depends on core. Import from `kundli_chart`.
+- `render_south_indian(chart, ChartInfo(name, place), lang="en") -> str`: a self-contained SVG (760 × 760 viewBox).
+  The fixed sign grid comes from `layout.toml`, checked against horoscope_signs_houses §1.3. The Lagna box is filled
+  turmeric with the diagonal mark and the Lagna degree. Grahas show degree and minute (truncated) and the retrograde
+  mark, in longitude order; more than 5 entries in a box are written in two columns. The centre shows name, date, time
+  (with UTC offset), place and ayanamsa (name and DMS). The border is a kolam chain with lotus corner motifs.
+- Every `<text>` carries `data-fg`/`data-bg` palette names; the tests check each against the declared contrast pairs.
+- `GRID`, `CELL_OF` expose the layout.
 
 ### placement (planned)
 - `build_table(chart) -> PlacementTable`, driven by the rule tables in `rules/*.toml`.
