@@ -33,6 +33,12 @@ uv run python tools/check_modules.py      # the module dependency rule (also run
 uv run pytest                             # all tests
 ```
 
+## Running the app
+
+```sh
+uv run uvicorn kundli_api.app:app      # then open http://127.0.0.1:8000/  (API docs at /api/docs)
+```
+
 ## Location data
 
 `data/locations.db` (SQLite, 114 KB) holds the places: table `locations(id, country, state, latitude,
