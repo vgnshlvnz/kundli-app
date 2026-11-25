@@ -1,0 +1,28 @@
+[project]
+name = "kundli-api"
+version = "0.1.0"
+description = "Kundli App API: FastAPI service composing the calculation modules"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = [
+    "kundli-core",
+    "kundli-ephemeris",
+    "kundli-locations",
+    "kundli-bhava",
+    "kundli-placement",
+    "kundli-chart",
+    "fastapi>=0.165,<1",
+    "uvicorn>=0.54,<1",
+]
+
+[tool.uv.sources]
+kundli-core = { workspace = true }
+kundli-ephemeris = { workspace = true }
+kundli-locations = { workspace = true }
+kundli-bhava = { workspace = true }
+kundli-placement = { workspace = true }
+kundli-chart = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
