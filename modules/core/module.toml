@@ -1,0 +1,5 @@
+name = "core"
+kind = "python"
+package = "kundli_core"
+depends_on = []
+description = "Shared data models, constants, reference data tables, labels and palette"
