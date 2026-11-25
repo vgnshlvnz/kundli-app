@@ -1,0 +1,5 @@
+name = "chart"
+kind = "python"
+package = "kundli_chart"
+depends_on = ["core"]
+description = "South Indian rasi chart rendered as SVG"

@@ -1,0 +1,10 @@
+# South Indian chart: fixed sign positions in a 4 × 4 grid, Meena at top-left, signs running clockwise; the four
+# centre boxes are empty. Checked against the source table by the chart tests.
+source_file = "docs/reference/horoscope_signs_houses_llm_ready.md"
+source_section = "1.3 Chart formats"
+grid = [
+  ["MEENA",  "MESHA",     "VRISHABHA", "MITHUNA"],
+  ["KUMBHA", "",          "",          "KARKA"],
+  ["MAKARA", "",          "",          "SIMHA"],
+  ["DHANUS", "VRISCHIKA", "TULA",      "KANYA"],
+]
