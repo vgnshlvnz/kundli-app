@@ -1,0 +1,11 @@
+[project]
+name = "kundli-core"
+version = "0.1.0"
+description = "Kundli App core: data models, constants and reference data tables (no dependencies)"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"

@@ -1,0 +1,57 @@
+# Two-letter graha abbreviations and the retrograde mark, used in the English chart.
+
+[meta]
+source_file = "docs/reference/horoscope_signs_houses_llm_ready.md"
+source_section = "1.4 Abbreviations"
+kind = "text"
+rows = "abbreviation"
+
+[[abbreviation]]
+id = "SURYA"
+abbrev = "SU"
+src_text = ["SU Sun"]
+
+[[abbreviation]]
+id = "CHANDRA"
+abbrev = "MO"
+src_text = ["MO Moon"]
+
+[[abbreviation]]
+id = "MANGALA"
+abbrev = "MA"
+src_text = ["MA Mars"]
+
+[[abbreviation]]
+id = "BUDHA"
+abbrev = "ME"
+src_text = ["ME Mercury"]
+
+[[abbreviation]]
+id = "GURU"
+abbrev = "JU"
+src_text = ["JU Jupiter"]
+
+[[abbreviation]]
+id = "SHUKRA"
+abbrev = "VE"
+src_text = ["VE Venus"]
+
+[[abbreviation]]
+id = "SHANI"
+abbrev = "SA"
+src_text = ["SA Saturn"]
+
+[[abbreviation]]
+id = "RAHU"
+abbrev = "RA"
+src_text = ["RA Rahu"]
+
+[[abbreviation]]
+id = "KETU"
+abbrev = "KE"
+src_text = ["KE Ketu"]
+
+[[abbreviation]]
+id = "RETROGRADE"
+abbrev = "R"
+src_text = ["An \"R\" after a planet's abbreviation means it is retrograde."]

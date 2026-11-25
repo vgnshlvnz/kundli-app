@@ -1,0 +1,62 @@
+# Grahas: English and Sanskrit names, in the order Sun … Saturn, Rahu, Ketu.
+# The source is prose, so each row lists the phrases (`src_text`) that must still appear in that section.
+
+[meta]
+source_file = "docs/reference/planets_day1_navagrahas_llm_ready.md"
+source_section = "1. The nine planets (Navagrahas)"
+kind = "text"
+rows = "graha"
+
+[[graha]]
+id = "SURYA"
+english = "Sun"
+sanskrit = "Surya"
+src_text = ["Sun (Surya)"]
+
+[[graha]]
+id = "CHANDRA"
+english = "Moon"
+sanskrit = "Chandra"
+src_text = ["Moon (Chandra)"]
+
+[[graha]]
+id = "MANGALA"
+english = "Mars"
+sanskrit = "Mangal"
+src_text = ["Mars (Mangal; Tamil Sevvai)"]
+
+[[graha]]
+id = "BUDHA"
+english = "Mercury"
+sanskrit = "Budha"
+src_text = ["Mercury (Budha)"]
+
+[[graha]]
+id = "GURU"
+english = "Jupiter"
+sanskrit = "Guru"
+src_text = ["Jupiter (Guru, Brihaspati)"]
+
+[[graha]]
+id = "SHUKRA"
+english = "Venus"
+sanskrit = "Shukra"
+src_text = ["Venus (Shukra)"]
+
+[[graha]]
+id = "SHANI"
+english = "Saturn"
+sanskrit = "Shani"
+src_text = ["Saturn (Shani)"]
+
+[[graha]]
+id = "RAHU"
+english = "Rahu"
+sanskrit = "Rahu"
+src_text = ["Rahu and Ketu"]
+
+[[graha]]
+id = "KETU"
+english = "Ketu"
+sanskrit = "Ketu"
+src_text = ["Rahu and Ketu"]

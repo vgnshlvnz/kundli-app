@@ -11,18 +11,25 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 
 <!-- BEGIN GENERATED: module graph (python tools/check_modules.py --write) -->
 
-_No modules yet._
+| Module | Kind | Depends on (imports) | Talks to over HTTP |
+|---|---|---|---|
+| `core` | python | — | — |
+
+```mermaid
+graph BT
+  core
+```
 
 <!-- END GENERATED: module graph -->
 
 ## Planned modules and public interfaces
 
 Modules are built in this order, each in its own worktree and pull request. A module's section moves from
-"planned" to "built" when its PR is merged.
+"planned" to "built" in the PR that builds it.
 
 | Order | Module | Depends on | Purpose | Status |
 |---|---|---|---|---|
-| 1 | `core` | — | Shared data models, constants, reference data tables, label and palette data | planned |
+| 1 | `core` | — | Shared data models, constants, reference data tables, label and palette data | built |
 | 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | planned |
 | 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | planned |
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | planned |
@@ -48,13 +55,21 @@ graph BT
   web -. HTTP .-> api
 ```
 
-### core (planned)
-Standard library only.
-- Enums `Graha` (SURYA … KETU), `Rasi` (1–12), `Nakshatra` (1–27).
-- Frozen dataclasses `GeoPoint`, `Place`, `BirthMoment`, `AyanamsaValue`, `BodyPosition`, `ChartPositions`.
-- `norm360`, `rasi_of`, `deg_in_rasi`, `nakshatra_pada`, `to_dms(truncate=True)`, `count_from`.
-- Data: `rasis.toml`, `nakshatras.toml`, `grahas.toml`, `labels.toml` (en/ta/sa), `palette.toml`.
-- `mdtables.read_table(path, section, index)` for checking data tables against `docs/reference/`.
+### core (built)
+Standard library only. Import from `kundli_core`.
+- Enums `Graha` (SURYA … KETU), `Rasi` (MESHA=1 … MEENA=12), `Nakshatra` (ASHWINI=1 … REVATI=27);
+  `SEVEN_GRAHAS` (the only sign lords), `NODES`.
+- Frozen models `GeoPoint(lat, lon)`, `Place`, `BirthMoment(local, tz, utc)`, `AyanamsaValue(option, name, degrees)`,
+  `BodyPosition(longitude, speed, retrograde)`, `ChartPositions(moment, geo, jd_ut, ayanamsa, lagna, grahas)`.
+- Longitudes (all on one quantised arc-second value; ranges [start, end); display truncates, CONVENTIONS C5):
+  `norm360`, `to_arcsec`, `rasi_of`, `deg_in_rasi`, `nakshatra_pada`, `position(lon) -> RasiPosition`,
+  `to_dms(deg) -> DMS`, `count_from(start, target)`, `angular_distance(a, b)`.
+- Reference data: `rasi_info`, `sign_lord`, `nakshatra_info`, `graha_info`, `retrograde_mark`, `load_table(name)`;
+  tables in `kundli_core/data/*.toml`, each checked against its source section.
+- Labels: `labels(lang)`, `label(key, lang)`, `LANGUAGES = ("en", "ta", "sa")`; keys like `"rasi.MESHA"`.
+- Palette: `palette() -> Palette` (colours, decorative-only colours, allowed text pairs), `contrast_ratio(fg, bg)`.
+- Reference checking: `kundli_core.mdtables.read_table(path, heading, index)`, `section_text(...)`;
+  `kundli_core.refcheck.verify(table, repo_root)` returns the differences between a data table and its source.
 
 ### ephemeris (planned)
 - `list_ayanamsas()`, `ayanamsa(jd_ut, option_id) -> AyanamsaValue` (the only place the sidereal mode is set).
