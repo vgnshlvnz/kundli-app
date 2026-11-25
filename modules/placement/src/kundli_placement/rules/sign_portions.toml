@@ -1,0 +1,78 @@
+# How a sign is split when it is a graha's exaltation, moolatrikona and/or own sign.
+# Each segment is [from_deg, to_deg) within the sign. 'remainder' means from the end of the moolatrikona to 30°
+# (CONVENTIONS C2). Signs not listed here are wholly uccha, neecha or swakshetra (CONVENTIONS C1).
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "4.1 Combined view of a planet's own or exaltation sign"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["C1", "C2"]
+
+[[graha]]
+id = "SURYA"
+rasi = "SIMHA"
+segments = [
+  { from_deg = 0, to_deg = 20, dignity = "MOOLATRIKONA" },
+  { from_deg = 20, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Sun", "Sign" = "Leo", "Exalted" = "—", "Moolatrikona" = "0°–20°", "Swakshetra" = "20°–30°" }
+
+[[graha]]
+id = "CHANDRA"
+rasi = "VRISHABHA"
+segments = [
+  { from_deg = 0, to_deg = 3, dignity = "UCCHA" },
+  { from_deg = 3, to_deg = 30, dignity = "MOOLATRIKONA" },
+]
+src = { "Planet" = "Moon", "Sign" = "Taurus", "Exalted" = "0°–3°", "Moolatrikona" = "3°–30°", "Swakshetra" = "—" }
+
+[[graha]]
+id = "MANGALA"
+rasi = "MESHA"
+segments = [
+  { from_deg = 0, to_deg = 12, dignity = "MOOLATRIKONA" },
+  { from_deg = 12, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Mars", "Sign" = "Aries", "Exalted" = "—", "Moolatrikona" = "0°–12°", "Swakshetra" = "12°–30°" }
+
+[[graha]]
+id = "BUDHA"
+rasi = "KANYA"
+segments = [
+  { from_deg = 0, to_deg = 15, dignity = "UCCHA" },
+  { from_deg = 15, to_deg = 20, dignity = "MOOLATRIKONA" },
+  { from_deg = 20, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Mercury", "Sign" = "Virgo", "Exalted" = "0°–15°", "Moolatrikona" = "15°–20°", "Swakshetra" = "20°–30°" }
+
+[[graha]]
+id = "GURU"
+rasi = "DHANUS"
+segments = [
+  { from_deg = 0, to_deg = 10, dignity = "MOOLATRIKONA" },
+  { from_deg = 10, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Jupiter", "Sign" = "Sagittarius", "Exalted" = "—", "Moolatrikona" = "0°–10°", "Swakshetra" = "remainder" }
+
+[[graha]]
+id = "SHUKRA"
+rasi = "TULA"
+segments = [
+  { from_deg = 0, to_deg = 15, dignity = "MOOLATRIKONA" },
+  { from_deg = 15, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Venus", "Sign" = "Libra", "Exalted" = "—", "Moolatrikona" = "0°–15°", "Swakshetra" = "remainder" }
+
+[[graha]]
+id = "SHANI"
+rasi = "KUMBHA"
+segments = [
+  { from_deg = 0, to_deg = 20, dignity = "MOOLATRIKONA" },
+  { from_deg = 20, to_deg = 30, dignity = "SWAKSHETRA" },
+]
+src = { "Planet" = "Saturn", "Sign" = "Aquarius", "Exalted" = "—", "Moolatrikona" = "0°–20°", "Swakshetra" = "20°–30°" }
+

@@ -1,0 +1,15 @@
+[project]
+name = "kundli-placement"
+version = "0.1.0"
+description = "Kundli App placement: rule tables and the placement engine"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = ["kundli-core", "kundli-bhava"]
+
+[tool.uv.sources]
+kundli-core = { workspace = true }
+kundli-bhava = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"

@@ -18,6 +18,7 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 | `chart` | python | `core` | — |
 | `ephemeris` | python | `core` | — |
 | `locations` | python | `core` | — |
+| `placement` | python | `core`, `bhava` | — |
 
 ```mermaid
 graph BT
@@ -26,6 +27,8 @@ graph BT
   core
   ephemeris --> core
   locations --> core
+  placement --> core
+  placement --> bhava
 ```
 
 <!-- END GENERATED: module graph -->
@@ -42,7 +45,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | built |
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | built |
 | 5 | `chart` | core | South Indian SVG chart | built |
-| 6 | `placement` | core, bhava | Rule tables and the placement engine | planned |
+| 6 | `placement` | core, bhava | Rule tables and the placement engine | built |
 | 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | planned |
 | 8 | `web` | — (HTTP: api) | Input form, chart and placement table | planned |
 
@@ -118,8 +121,17 @@ Depends on core. Import from `kundli_chart`.
 - Every `<text>` carries `data-fg`/`data-bg` palette names; the tests check each against the declared contrast pairs.
 - `GRID`, `CELL_OF` expose the layout.
 
-### placement (planned)
-- `build_table(chart) -> PlacementTable`, driven by the rule tables in `rules/*.toml`.
+### placement (built)
+Depends on core and bhava. Import from `kundli_placement`.
+- Rule tables in `kundli_placement/rules/*.toml`, each with its source section, verbatim source cells and the
+  CONVENTIONS entries it applies: `uccha_neecha`, `moolatrikona`, `own_signs`, `sign_portions`, `naisargika_maitri`,
+  `combustion`, `bhava_categories`, `dignity_precedence`. `rules()` loads them; `load_rule_table(name)` gives the raw table.
+- `build_table(chart) -> PlacementTable(lagna: LagnaRow, rows: 9 × PlacementRow)`. Each row has the rasi, degree (DMS),
+  nakshatra and pada, retrograde, combust and distance from the Sun, bhava (whole sign and chalit) and whether they
+  differ, categories for both, dignity, the relationship to the sign lord, the bhavas it rules, and the dispositor and
+  its bhavas. Codes are language-neutral.
+- Building blocks: `dignity(graha, lon)`, `kshetra(graha, lord)`, `combustion(graha, lon, retro, sun_lon)`,
+  `categories(bhava)`, `lordships(lagna)`.
 
 ### api (planned)
 - `GET /api/health`, `GET /api/places?q=`, `GET /api/ayanamsas`, `GET /api/labels?lang=`, `POST /api/chart`,

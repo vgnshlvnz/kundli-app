@@ -9,6 +9,7 @@ members = [
     "kundli-core",
     "kundli-ephemeris",
     "kundli-locations",
+    "kundli-placement",
 ]
 
 [manifest.dependency-groups]
@@ -188,6 +189,21 @@ requires-dist = [
     { name = "timezonefinder-data", marker = "extra == 'derive'", specifier = "==4.2026.6" },
 ]
 provides-extras = ["derive"]
+
+[[package]]
+name = "kundli-placement"
+version = "0.1.0"
+source = { editable = "modules/placement" }
+dependencies = [
+    { name = "kundli-bhava" },
+    { name = "kundli-core" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "kundli-bhava", editable = "modules/bhava" },
+    { name = "kundli-core", editable = "modules/core" },
+]
 
 [[package]]
 name = "numpy"

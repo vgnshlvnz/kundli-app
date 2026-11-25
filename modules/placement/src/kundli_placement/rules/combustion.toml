@@ -1,0 +1,47 @@
+# Combustion orbs: a graha within this angular distance of the Sun is combust.
+# Angular distance only; the source's 'same sign as the Sun' condition is not applied (CONVENTIONS D3).
+# The Sun, Rahu and Ketu are never combust; 'within' means distance <= orb; the retrograde orb applies when
+# the graha is retrograde (CONVENTIONS C4).
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "9.4 Combustion (Astanga)"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["D3", "C4"]
+
+[[graha]]
+id = "CHANDRA"
+orb_deg = 12
+src = { "Planet" = "Moon", "Combust within (degrees from the Sun)" = "12°", "When retrograde" = "—" }
+
+[[graha]]
+id = "MANGALA"
+orb_deg = 17
+src = { "Planet" = "Mars", "Combust within (degrees from the Sun)" = "17°", "When retrograde" = "—" }
+
+[[graha]]
+id = "BUDHA"
+orb_deg = 14
+retrograde_orb_deg = 12
+src = { "Planet" = "Mercury", "Combust within (degrees from the Sun)" = "14°", "When retrograde" = "12°" }
+
+[[graha]]
+id = "GURU"
+orb_deg = 11
+src = { "Planet" = "Jupiter", "Combust within (degrees from the Sun)" = "11°", "When retrograde" = "—" }
+
+[[graha]]
+id = "SHUKRA"
+orb_deg = 10
+retrograde_orb_deg = 8
+src = { "Planet" = "Venus", "Combust within (degrees from the Sun)" = "10°", "When retrograde" = "8°" }
+
+[[graha]]
+id = "SHANI"
+orb_deg = 15
+src = { "Planet" = "Saturn", "Combust within (degrees from the Sun)" = "15°", "When retrograde" = "—" }
+
