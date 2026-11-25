@@ -121,3 +121,29 @@ def test_bad_options_and_errors_are_reported():
     with pytest.raises(KeyError):
         at(datetime(2000, 1, 1, tzinfo=UTC), option="nope")
     assert issubclass(EphemerisFilesMissing, EphemerisError)
+
+
+def test_positions_in_another_thread_use_the_data_files():
+    """Swiss Ephemeris keeps its settings per thread, and a web server calls from worker threads."""
+    import threading
+
+    utc = datetime(1992, 3, 10, 22, 14, tzinfo=UTC)
+    main = at(utc)
+    results = {}
+
+    def work(name):
+        try:
+            results[name] = at(utc, option="kp_new"), at(utc)
+        except Exception as exc:  # noqa: BLE001 - reported below
+            results[name] = exc
+
+    threads = [threading.Thread(target=work, args=(i,)) for i in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    for name, r in results.items():
+        assert not isinstance(r, Exception), f"thread {name}: {r!r}"
+        kp, lahiri = r
+        assert lahiri.grahas == main.grahas and lahiri.lagna == main.lagna
+        assert kp.ayanamsa.option == "kp_new"
