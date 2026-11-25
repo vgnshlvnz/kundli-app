@@ -1,0 +1,5 @@
+name = "bhava"
+kind = "python"
+package = "kundli_bhava"
+depends_on = ["core"]
+description = "Whole-sign and chalit (equal, Lagna as madhya) bhava numbers"
