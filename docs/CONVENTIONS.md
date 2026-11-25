@@ -34,15 +34,16 @@ Sources are cited as in [REFERENCE_INDEX.md](REFERENCE_INDEX.md): file name with
 | 1. Lahiri (default) | `SIDM_LAHIRI` (1) | DECIDED (prompt) |
 | 2. Raman | `SIDM_RAMAN` (3) | DECIDED (prompt) |
 | 3. KP Old | `SIDM_KRISHNAMURTI` (5) | DECIDED (prompt) |
-| 4. KP New | candidate `SIDM_KRISHNAMURTI_VP291` (45) | **OPEN**: needs comparison with your guru's software |
+| 4. KP New | `SIDM_KRISHNAMURTI_VP291` (45) | DECIDED (2026-11-26) |
 
 Swiss Ephemeris (pyswisseph 2.10.03) has exactly two Krishnamurti modes: mode 5 "Krishnamurti" and mode 45,
-which it names **"Krishnamurti-Senthilathiban"** (`SIDM_KRISHNAMURTI_VP291`). If your guru's software matches
-neither, option 4 is defined with `SIDM_USER` and a reference epoch `t0` and value `ayan_t0` read from that software.
+which it names **"Krishnamurti-Senthilathiban"** (`SIDM_KRISHNAMURTI_VP291`). The owner chose mode 45 for KP New.
+If a later comparison with the guru's software shows a mismatch, option 4 can be redefined in the ayanamsa data
+table with `SIDM_USER` and a reference epoch `t0` and value `ayan_t0`, without code changes.
 
 Values at 00:00 UT, including nutation (the value actually subtracted from the positions, see C10):
 
-| Date | Lahiri (1) | Raman (3) | KP Old (5) | KP New candidate (45) | 45 − 5 |
+| Date | Lahiri (1) | Raman (3) | KP Old (5) | KP New (45) | 45 − 5 |
 |---|---|---|---|---|---|
 | 1900-01-01 | 22°27′55.34″ | 21°01′08.66″ | 22°22′06.67″ | 22°23′19.14″ | +1′12.47″ |
 | 1950-01-01 | 23°09′28.11″ | 21°42′41.42″ | 23°03′39.44″ | 23°04′51.90″ | +1′12.46″ |
@@ -51,15 +52,16 @@ Values at 00:00 UT, including nutation (the value actually subtracted from the p
 | 2050-01-01 | 24°33′35.38″ | 23°06′48.69″ | 24°27′46.71″ | 24°28′59.15″ | +1′12.44″ |
 
 Without nutation ("mean") the 2000-01-01 values are: Lahiri 23°51′25.46″, Raman 22°24′38.78″,
-KP Old 23°45′36.80″, KP New candidate 23°46′49.25″. Some software prints the mean value, which differs from the
-value above by up to about 17″. When you compare, please note which one your software shows.
+KP Old 23°45′36.80″, KP New 23°46′49.25″. Some software prints the mean value, which differs from the
+value above by up to about 17″.
 
-These values are pinned in the ephemeris tests to 0.1″. The table will gain the values at your reference-chart
-moments once you send the charts.
+These values are pinned in the ephemeris tests to 0.1″.
 
-## C. Defaults to confirm
+## C. Confirmed defaults
 
-| ID | Topic | What the files say | Proposed default (CONFIRM) |
+All of C1–C15 were proposed where the files are silent or inconsistent and **confirmed by the owner on 2026-11-26**.
+
+| ID | Topic | What the files say | Convention (confirmed) |
 |---|---|---|---|
 | C1 | When is a graha uccha, moolatrikona or swakshetra in the same sign? | planets_day2_strengths §2 gives the exaltation sign and deep degree; §4.1 splits two signs: Moon in Taurus (exalted 0–3°, MT 3–30°), Mercury in Virgo (exalted 0–15°, MT 15–20°, own 20–30°). §7 ranks exaltation > MT > own > friendly > neutral > debilitated > enemy. | Uccha and neecha apply to the **whole** sign, except for the two §4.1 splits. Precedence: uccha / neecha first, then moolatrikona, then swakshetra, then mitra / sama / shatru kshetra by the graha's natural relationship (D4) to the sign lord. A neecha graha shows "neecha"; its relationship to the sign lord is shown beside it as supporting detail. |
 | C2 | Own-sign portion for Jupiter and Venus | §4 prints Jupiter "Sagittarius 5°–30° (as printed)" and Venus "Libra 20°–30° (as printed)", which overlap or leave gaps against their moolatrikona (Sag 0–10°, Libra 0–15°). §4.1 says "remainder" for both, and the file's own source note flags §4. | Follow §4.1: **Jupiter Sagittarius 10–30°, Venus Libra 15–30°** are swakshetra. Other portions as printed: Sun Leo 20–30°, Mars Aries 12–30°, Mercury Virgo 20–30°, Saturn Aquarius 20–30°. The whole sign is swakshetra for the Moon's Cancer and for each graha's other own sign: Mars Scorpio, Mercury Gemini, Jupiter Pisces, Venus Taurus, Saturn Capricorn. |
@@ -67,7 +69,7 @@ moments once you send the charts.
 | C4 | Combustion details | §9.4 gives orbs for Moon, Mars, Mercury, Jupiter, Venus, Saturn and retrograde orbs for Mercury and Venus. | The **Sun, Rahu and Ketu are never combust.** "Within N°" means angular distance **≤ N°**. The retrograde orb applies when the graha is retrograde at the birth moment. The table shows the distance from the Sun. |
 | C5 | Boundaries and display | Not stated. | Sign, nakshatra, pada and bhava ranges are half-open, **[start, end)**: a graha at exactly 0°00′00″ Taurus is in Taurus, Krittika pada 2. Degrees are **truncated, not rounded**, for display, so 29°59′59.6″ shows as 29°59′ and never as 30°00′. Calculations always use the full value. |
 | C6 | Chalit sandhi | horoscope_signs_houses §3.3: bhava 1 is Lagna ± 15°. | Bhava *n* = [Lagna + 30°(n−1) − 15°, Lagna + 30°(n−1) + 15°). A graha exactly on a sandhi belongs to the **later** bhava (consistent with C5). |
-| C7 | Bhava categories | houses_bhavas_day1 §7 and houses_bhavas_course_notes §7 define seven: Kendra 1,4,7,10; Panapara 2,5,8,11; Apoklima 3,6,9,12; Trikona 1,5,9; Upachaya 3,6,10,11; Dusthana 6,8,12; Maraka 2,7. The prompt lists five of them (no Panapara or Apoklima). | The five values in the prompt match the files exactly. **Include Panapara and Apoklima as well**, because the files define them, unless you prefer the prompt's five. Categories are shown for the **whole-sign bhava**, and also for the chalit bhava when it differs. |
+| C7 | Bhava categories | houses_bhavas_day1 §7 and houses_bhavas_course_notes §7 define seven: Kendra 1,4,7,10; Panapara 2,5,8,11; Apoklima 3,6,9,12; Trikona 1,5,9; Upachaya 3,6,10,11; Dusthana 6,8,12; Maraka 2,7. The prompt lists five of them (no Panapara or Apoklima). | The five values in the prompt match the files exactly. **Panapara and Apoklima are included as well**, because the files define them. Categories are shown for the **whole-sign bhava**, and also for the chalit bhava when it differs. |
 | C8 | Lordship and dispositor | houses_bhavas_day1 §8: the lord of a house is the lord of its sign. houses_bhavas_course_notes §9: the dispositor is the lord of the sign a graha occupies. | Lordship is **sign-based, counted from the Lagna sign** (whole-sign); the chalit cusps do not change lordship. A graha in its own sign is its own dispositor. The dispositor's bhava is shown both whole-sign and chalit. |
 | C9 | Positions | horoscope_signs_houses §3.2: positions are geocentric. The prompt: mean node; Ketu = Rahu + 180°; Rahu and Ketu always retrograde. | **Geocentric, apparent** positions from the **Swiss Ephemeris data files** (no silent fallback to the Moshier model; the app fails with a clear error if the files are missing). Lagna is the sidereal ascendant from `swe.houses_ex`. Retrograde means longitudinal speed < 0. The Sun and Moon are never retrograde. Rahu is `MEAN_NODE`, Ketu is Rahu + 180°, and both are always marked R. |
 | C10 | Ayanamsa shown on the chart | Not stated. | Show the value **actually subtracted** from the positions: Swiss Ephemeris applies the ayanamsa including nutation. A test checks that the tropical Sun minus the sidereal Sun equals the displayed value (it does, to 0.01″, for all four options). |
@@ -105,11 +107,11 @@ These are listed so you know they were seen. The app's output does not depend on
   longitude from Chennai, which can move the Lagna by about a degree. Manual latitude/longitude entry is not in
   scope unless you ask for it.
 
-## F. Needed from you
+## F. Still needed from the owner
 
-1. Confirm or correct C1–C15.
-2. KP New (section B): the value your guru's software shows for 2000-01-01, and whether it is the mean or the true value.
-3. At least three reference charts from established software (section G).
+- At least three reference charts from established software (section G). The owner will provide them during the
+  testing period; the reference-chart tests are added then. Until then, calculations are checked against the
+  pinned Swiss Ephemeris values, the worked examples in the reference files, and the boundary tests.
 
 ## G. Reference charts: what to send
 
