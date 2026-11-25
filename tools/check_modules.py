@@ -251,7 +251,10 @@ def check_web_imports(manifests: dict[str, Manifest], root: Path, report: Report
             refs = [(mt.group(1), text.count("\n", 0, mt.start()) + 1) for mt in _JS_IMPORT.finditer(text)]
             if f.suffix == ".html":
                 refs += [(mt.group(1), text.count("\n", 0, mt.start()) + 1) for mt in _HTML_REF.finditer(text)]
+            in_tests = "tests" in f.relative_to(m.path).parts
             for spec, line in refs:
+                if in_tests and spec.startswith("node:"):
+                    continue  # Node built-ins in unit tests, which run under Node and are never served
                 if re.match(r"^[a-z]+:", spec) or spec.startswith("//"):
                     report.add(f"{rel}:{line}: loads {spec!r} from another origin; serve it from modules/web")
                 elif spec.startswith("/"):

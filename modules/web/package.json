@@ -1,0 +1,7 @@
+{
+  "name": "kundli-web",
+  "private": true,
+  "type": "module",
+  "description": "Static web page for the Kundli App; no dependencies. Unit tests: node --test modules/web/tests/",
+  "license": "AGPL-3.0-or-later"
+}

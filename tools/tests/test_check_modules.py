@@ -146,6 +146,20 @@ def test_web_rules(tmp_path):
     assert not any("util.js" in e or "app.js:1" in e or "index.html:1" in e or "index.html:2" in e for e in errors)
 
 
+def test_node_builtins_are_allowed_only_in_web_tests(tmp_path):
+    make_module(tmp_path, "api")
+    web = make_module(tmp_path, "web", kind="web", http=["api"])
+    (web / "static").mkdir()
+    (web / "tests").mkdir()
+    (web / "static" / "render.js").write_text("export const x = 1;\n")
+    (web / "tests" / "render.test.js").write_text(
+        "import { test } from 'node:test';\nimport { x } from '../static/render.js';\n"
+    )
+    (web / "static" / "app.js").write_text("import fs from 'node:fs';\n")
+    errors = finish(tmp_path)
+    assert errors == ["modules/web/static/app.js:1: loads 'node:fs' from another origin; serve it from modules/web"]
+
+
 def test_web_cannot_import_python_modules(tmp_path):
     make_module(tmp_path, "api")
     mdir = make_module(tmp_path, "web", kind="web")

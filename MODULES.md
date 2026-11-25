@@ -14,6 +14,7 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 | Module | Kind | Depends on (imports) | Talks to over HTTP |
 |---|---|---|---|
 | `core` | python | — | — |
+| `web` | web | — | `api` |
 | `bhava` | python | `core` | — |
 | `chart` | python | `core` | — |
 | `ephemeris` | python | `core` | — |
@@ -36,11 +37,12 @@ graph BT
   locations --> core
   placement --> core
   placement --> bhava
+  web -. HTTP .-> api
 ```
 
 <!-- END GENERATED: module graph -->
 
-## Planned modules and public interfaces
+## Modules and public interfaces
 
 Modules are built in this order, each in its own worktree and pull request. A module's section moves from
 "planned" to "built" in the PR that builds it.
@@ -54,7 +56,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | 5 | `chart` | core | South Indian SVG chart | built |
 | 6 | `placement` | core, bhava | Rule tables and the placement engine | built |
 | 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | built |
-| 8 | `web` | — (HTTP: api) | Input form, chart and placement table | planned |
+| 8 | `web` | — (HTTP: api) | Input form, chart and placement table | built |
 
 ```mermaid
 graph BT
@@ -152,8 +154,15 @@ Depends on core, ephemeris, locations, bhava, placement, chart; FastAPI. Run: `u
   (`KUNDLI_WEB_DIR` overrides the path); `/api/docs` is the OpenAPI page.
 - `create_app(store=None, web_dir=None)` builds the app (tests use it).
 
-### web (planned)
-- Static `index.html`, `app.js`, `styles.css` and fonts, served by the api; talks to it over HTTP only.
+### web (built)
+Static files in `modules/web/static/`, served by the api at `/`; talks to it over HTTP only (no imports, no build
+step, no package dependencies).
+- `index.html`: birth form (name, date, time, place search, ayanamsa), language switch (English / தமிழ் / संस्कृतम्),
+  the chart, and the placement table below it.
+- `render.js`: DOM-free functions that turn API data and labels into HTML (unit-tested with `node --test`).
+- `app.js`: the page logic; asks the user to choose when a local time is ambiguous; re-renders on language change.
+- `styles.css`: the mangalakara look from `/theme.css` (the core palette), self-hosted Noto Serif fonts
+  (`fonts/`, OFL), and a print stylesheet for A4 (chart and table only).
 
 ## The dependency rule
 
