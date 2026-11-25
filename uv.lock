@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 [manifest]
 members = [
     "kundli-bhava",
+    "kundli-chart",
     "kundli-core",
     "kundli-ephemeris",
     "kundli-locations",
@@ -128,6 +129,17 @@ wheels = [
 name = "kundli-bhava"
 version = "0.1.0"
 source = { editable = "modules/bhava" }
+dependencies = [
+    { name = "kundli-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "kundli-core", editable = "modules/core" }]
+
+[[package]]
+name = "kundli-chart"
+version = "0.1.0"
+source = { editable = "modules/chart" }
 dependencies = [
     { name = "kundli-core" },
 ]
