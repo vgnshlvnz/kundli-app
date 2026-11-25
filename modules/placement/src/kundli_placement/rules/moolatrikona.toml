@@ -1,0 +1,63 @@
+# Moolatrikona sign and degree range of the seven grahas.
+# Rahu and Ketu have no moolatrikona: the reference files give none (CONVENTIONS C3).
+# The ranges must agree with sign_portions.toml; a test checks this.
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "3. Moolatrikona (trinal strength)"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["C3"]
+
+[[graha]]
+id = "SURYA"
+rasi = "SIMHA"
+from_deg = 0
+to_deg = 20
+src = { "Planet" = "Sun", "Moolatrikona sign" = "Leo", "Moolatrikona degrees" = "0°–20°" }
+
+[[graha]]
+id = "CHANDRA"
+rasi = "VRISHABHA"
+from_deg = 3
+to_deg = 30
+src = { "Planet" = "Moon", "Moolatrikona sign" = "Taurus", "Moolatrikona degrees" = "3°–30°" }
+
+[[graha]]
+id = "MANGALA"
+rasi = "MESHA"
+from_deg = 0
+to_deg = 12
+src = { "Planet" = "Mars", "Moolatrikona sign" = "Aries", "Moolatrikona degrees" = "0°–12°" }
+
+[[graha]]
+id = "BUDHA"
+rasi = "KANYA"
+from_deg = 15
+to_deg = 20
+src = { "Planet" = "Mercury", "Moolatrikona sign" = "Virgo", "Moolatrikona degrees" = "15°–20°" }
+
+[[graha]]
+id = "GURU"
+rasi = "DHANUS"
+from_deg = 0
+to_deg = 10
+src = { "Planet" = "Jupiter", "Moolatrikona sign" = "Sagittarius", "Moolatrikona degrees" = "0°–10°" }
+
+[[graha]]
+id = "SHUKRA"
+rasi = "TULA"
+from_deg = 0
+to_deg = 15
+src = { "Planet" = "Venus", "Moolatrikona sign" = "Libra", "Moolatrikona degrees" = "0°–15°" }
+
+[[graha]]
+id = "SHANI"
+rasi = "KUMBHA"
+from_deg = 0
+to_deg = 20
+src = { "Planet" = "Saturn", "Moolatrikona sign" = "Aquarius", "Moolatrikona degrees" = "0°–20°" }
+

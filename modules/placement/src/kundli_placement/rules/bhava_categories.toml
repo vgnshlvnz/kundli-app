@@ -1,0 +1,48 @@
+# Bhava categories. A bhava can belong to several.
+# Your prompt lists five; the reference files also define Panapara and Apoklima, which are included (CONVENTIONS C7).
+
+[meta]
+source_file = "docs/reference/houses_bhavas_day1_llm_ready.md"
+source_section = "7. Classification of houses"
+kind = "table"
+table_index = 1
+key = ["Classification"]
+complete = true
+rows = "category"
+conventions = ["C7"]
+
+[[category]]
+id = "KENDRA"
+bhavas = [1, 4, 7, 10]
+src = { "Classification" = "Kendra", "Other names" = "Angular, cardinal, quadrant", "Houses" = "1, 4, 7, 10", "Tamil term" = "Kentiram, Narkona Veedugal", "Keynote" = "\"The four pillars\"" }
+
+[[category]]
+id = "PANAPARA"
+bhavas = [2, 5, 8, 11]
+src = { "Classification" = "Panapara", "Other names" = "Succedent", "Houses" = "2, 5, 8, 11", "Tamil term" = "Panapara Veedugal", "Keynote" = "Houses of accumulation" }
+
+[[category]]
+id = "APOKLIMA"
+bhavas = [3, 6, 9, 12]
+src = { "Classification" = "Apoklima", "Other names" = "Cadent", "Houses" = "3, 6, 9, 12", "Tamil term" = "Apoklimam Veedugal", "Keynote" = "Houses of falling away" }
+
+[[category]]
+id = "TRIKONA"
+bhavas = [1, 5, 9]
+src = { "Classification" = "Trikona", "Other names" = "Trine", "Houses" = "1, 5, 9", "Tamil term" = "Trikona Veedugal", "Keynote" = "The auspicious triangle of dharma and fortune" }
+
+[[category]]
+id = "UPACHAYA"
+bhavas = [3, 6, 10, 11]
+src = { "Classification" = "Upachaya", "Other names" = "Growth houses", "Houses" = "3, 6, 10, 11", "Tamil term" = "Upachaya Sthanangal, Valarchi Sthanangal", "Keynote" = "Improvement over time" }
+
+[[category]]
+id = "DUSTHANA"
+bhavas = [6, 8, 12]
+src = { "Classification" = "Dusthana", "Other names" = "Trika, challenging houses", "Houses" = "6, 8, 12", "Tamil term" = "Dusthana Sthanangal, Tunba Sthanangal", "Keynote" = "Growth through struggle" }
+
+[[category]]
+id = "MARAKA"
+bhavas = [2, 7]
+src = { "Classification" = "Maraka", "Other names" = "Killer, death-inflicting houses", "Houses" = "2, 7", "Tamil term" = "—", "Keynote" = "Used in longevity analysis" }
+

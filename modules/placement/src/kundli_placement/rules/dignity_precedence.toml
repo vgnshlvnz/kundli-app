@@ -1,0 +1,16 @@
+# The order in which a graha's dignity is decided; the first that applies is shown (CONVENTIONS C1).
+# Where sign_portions.toml splits a sign, the portion containing the graha decides between uccha, moolatrikona and
+# swakshetra. A graha that is none of these is in mitra, sama or shatru kshetra by its natural relationship to the
+# lord of the sign it occupies (CONVENTIONS D4). The source ranks strength (exaltation > moolatrikona > own > ...);
+# this order follows that ranking for the categories that can coincide in one sign.
+order = ["UCCHA", "NEECHA", "MOOLATRIKONA", "SWAKSHETRA"]
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "7. Ranking of sign placements by strength"
+kind = "text"
+rows = "basis"
+conventions = ["C1"]
+
+[[basis]]
+src_text = ["1. Exaltation sign", "2. Moolatrikona sign", "3. Own sign", "4. Friendly sign", "5. Neutral sign", "7. Enemy sign"]

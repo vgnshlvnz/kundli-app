@@ -1,0 +1,85 @@
+# Uccha (exaltation) and neecha (debilitation) signs and deep degrees.
+# Uccha and neecha apply to the whole sign, except where sign_portions.toml splits the sign (CONVENTIONS C1).
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "2. Exaltation (Uchcha) and debilitation (Neecha)"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["C1", "C3"]
+
+[[graha]]
+id = "SURYA"
+uccha_rasi = "MESHA"
+uccha_deg = 10
+neecha_rasi = "TULA"
+neecha_deg = 10
+src = { "Planet" = "Sun", "Sign(s) owned" = "Leo", "Exaltation sign" = "Aries", "Deep exaltation degree" = "10°", "Debilitation sign" = "Libra", "Deep debilitation degree" = "10°" }
+
+[[graha]]
+id = "CHANDRA"
+uccha_rasi = "VRISHABHA"
+uccha_deg = 3
+neecha_rasi = "VRISCHIKA"
+neecha_deg = 3
+src = { "Planet" = "Moon", "Sign(s) owned" = "Cancer", "Exaltation sign" = "Taurus", "Deep exaltation degree" = "3°", "Debilitation sign" = "Scorpio", "Deep debilitation degree" = "3°" }
+
+[[graha]]
+id = "MANGALA"
+uccha_rasi = "MAKARA"
+uccha_deg = 28
+neecha_rasi = "KARKA"
+neecha_deg = 28
+src = { "Planet" = "Mars", "Sign(s) owned" = "Aries, Scorpio", "Exaltation sign" = "Capricorn", "Deep exaltation degree" = "28°", "Debilitation sign" = "Cancer", "Deep debilitation degree" = "28°" }
+
+[[graha]]
+id = "BUDHA"
+uccha_rasi = "KANYA"
+uccha_deg = 15
+neecha_rasi = "MEENA"
+neecha_deg = 15
+src = { "Planet" = "Mercury", "Sign(s) owned" = "Gemini, Virgo", "Exaltation sign" = "Virgo", "Deep exaltation degree" = "15°", "Debilitation sign" = "Pisces", "Deep debilitation degree" = "15°" }
+
+[[graha]]
+id = "GURU"
+uccha_rasi = "KARKA"
+uccha_deg = 5
+neecha_rasi = "MAKARA"
+neecha_deg = 5
+src = { "Planet" = "Jupiter", "Sign(s) owned" = "Sagittarius, Pisces", "Exaltation sign" = "Cancer", "Deep exaltation degree" = "5°", "Debilitation sign" = "Capricorn", "Deep debilitation degree" = "5°" }
+
+[[graha]]
+id = "SHUKRA"
+uccha_rasi = "MEENA"
+uccha_deg = 27
+neecha_rasi = "KANYA"
+neecha_deg = 27
+src = { "Planet" = "Venus", "Sign(s) owned" = "Taurus, Libra", "Exaltation sign" = "Pisces", "Deep exaltation degree" = "27°", "Debilitation sign" = "Virgo", "Deep debilitation degree" = "27°" }
+
+[[graha]]
+id = "SHANI"
+uccha_rasi = "TULA"
+uccha_deg = 20
+neecha_rasi = "MESHA"
+neecha_deg = 20
+src = { "Planet" = "Saturn", "Sign(s) owned" = "Capricorn, Aquarius", "Exaltation sign" = "Libra", "Deep exaltation degree" = "20°", "Debilitation sign" = "Aries", "Deep debilitation degree" = "20°" }
+
+[[graha]]
+id = "RAHU"
+uccha_rasi = "VRISHABHA"
+uccha_deg = 20
+neecha_rasi = "VRISCHIKA"
+neecha_deg = 20
+src = { "Planet" = "Rahu", "Sign(s) owned" = "Aquarius", "Exaltation sign" = "Taurus", "Deep exaltation degree" = "20°", "Debilitation sign" = "Scorpio", "Deep debilitation degree" = "20°" }
+
+[[graha]]
+id = "KETU"
+uccha_rasi = "VRISCHIKA"
+uccha_deg = 20
+neecha_rasi = "VRISHABHA"
+neecha_deg = 20
+src = { "Planet" = "Ketu", "Sign(s) owned" = "Scorpio", "Exaltation sign" = "Scorpio", "Deep exaltation degree" = "20°", "Debilitation sign" = "Taurus", "Deep debilitation degree" = "20°" }
+

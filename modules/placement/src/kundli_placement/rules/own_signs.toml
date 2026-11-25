@@ -1,0 +1,60 @@
+# Own signs (swakshetra), including Rahu's Aquarius and Ketu's Scorpio.
+# Co-lordship by Rahu and Ketu counts for dignity only, never for lordship or dispositor (CONVENTIONS D2).
+# The 'Swakshetra portion' column is not used for the degree split: sign_portions.toml (§4.1) is, because §4
+# prints Jupiter 5°–30° and Venus 20°–30°, which contradict their moolatrikona ranges (CONVENTIONS C2).
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "4. Swakshetra (own sign)"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["D2", "C2"]
+
+[[graha]]
+id = "SURYA"
+own = ["SIMHA"]
+src = { "Planet" = "Sun", "Positive sign" = "Leo", "Negative sign" = "—", "Swakshetra portion" = "Leo 20°–30°" }
+
+[[graha]]
+id = "CHANDRA"
+own = ["KARKA"]
+src = { "Planet" = "Moon", "Positive sign" = "—", "Negative sign" = "Cancer", "Swakshetra portion" = "Cancer, full sign" }
+
+[[graha]]
+id = "MANGALA"
+own = ["MESHA", "VRISCHIKA"]
+src = { "Planet" = "Mars", "Positive sign" = "Aries", "Negative sign" = "Scorpio", "Swakshetra portion" = "Aries 12°–30°; Scorpio, full sign" }
+
+[[graha]]
+id = "BUDHA"
+own = ["MITHUNA", "KANYA"]
+src = { "Planet" = "Mercury", "Positive sign" = "Gemini", "Negative sign" = "Virgo", "Swakshetra portion" = "Virgo 20°–30°; Gemini, full sign" }
+
+[[graha]]
+id = "GURU"
+own = ["DHANUS", "MEENA"]
+src = { "Planet" = "Jupiter", "Positive sign" = "Sagittarius", "Negative sign" = "Pisces", "Swakshetra portion" = "Sagittarius 5°–30° (as printed); Pisces, full sign" }
+
+[[graha]]
+id = "SHUKRA"
+own = ["TULA", "VRISHABHA"]
+src = { "Planet" = "Venus", "Positive sign" = "Libra", "Negative sign" = "Taurus", "Swakshetra portion" = "Libra 20°–30° (as printed); Taurus, full sign" }
+
+[[graha]]
+id = "SHANI"
+own = ["KUMBHA", "MAKARA"]
+src = { "Planet" = "Saturn", "Positive sign" = "Aquarius", "Negative sign" = "Capricorn", "Swakshetra portion" = "Aquarius 20°–30°; Capricorn, full sign" }
+
+[[graha]]
+id = "RAHU"
+own = ["KUMBHA"]
+src = { "Planet" = "Rahu", "Positive sign" = "Aquarius", "Negative sign" = "—", "Swakshetra portion" = "Aquarius, full sign" }
+
+[[graha]]
+id = "KETU"
+own = ["VRISCHIKA"]
+src = { "Planet" = "Ketu", "Positive sign" = "Scorpio", "Negative sign" = "—", "Swakshetra portion" = "Scorpio, full sign" }
+

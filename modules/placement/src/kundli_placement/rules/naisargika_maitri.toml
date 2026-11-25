@@ -1,0 +1,77 @@
+# Natural (naisargika) friendships: the relationship of each graha (row) to the others.
+# Used for mitra / sama / shatru kshetra: the graha's relationship to the lord of the sign it occupies
+# (CONVENTIONS D4). The table is used as printed (CONVENTIONS C14).
+
+[meta]
+source_file = "docs/reference/planets_day2_strengths_llm_ready.md"
+source_section = "6.1 Natural (permanent) relationships — Naisargika Maitri"
+kind = "table"
+table_index = 0
+key = ["Planet"]
+complete = true
+rows = "graha"
+conventions = ["D4", "C14"]
+
+[[graha]]
+id = "SURYA"
+friends = ["CHANDRA", "MANGALA", "GURU"]
+enemies = ["SHUKRA", "SHANI"]
+neutrals = ["BUDHA"]
+src = { "Planet" = "Sun", "Friends (Mitra)" = "Moon, Mars, Jupiter", "Enemies (Shatru)" = "Venus, Saturn", "Neutrals (Sama)" = "Mercury" }
+
+[[graha]]
+id = "CHANDRA"
+friends = ["SURYA", "BUDHA"]
+enemies = []
+neutrals = ["MANGALA", "GURU", "SHUKRA", "SHANI"]
+src = { "Planet" = "Moon", "Friends (Mitra)" = "Sun, Mercury", "Enemies (Shatru)" = "—", "Neutrals (Sama)" = "Mars, Jupiter, Venus, Saturn" }
+
+[[graha]]
+id = "MANGALA"
+friends = ["SURYA", "CHANDRA", "GURU"]
+enemies = ["BUDHA"]
+neutrals = ["SHUKRA", "SHANI"]
+src = { "Planet" = "Mars", "Friends (Mitra)" = "Sun, Moon, Jupiter", "Enemies (Shatru)" = "Mercury", "Neutrals (Sama)" = "Venus, Saturn" }
+
+[[graha]]
+id = "BUDHA"
+friends = ["SURYA", "SHUKRA"]
+enemies = ["CHANDRA"]
+neutrals = ["MANGALA", "GURU", "SHANI"]
+src = { "Planet" = "Mercury", "Friends (Mitra)" = "Sun, Venus", "Enemies (Shatru)" = "Moon", "Neutrals (Sama)" = "Mars, Jupiter, Saturn" }
+
+[[graha]]
+id = "GURU"
+friends = ["SURYA", "CHANDRA", "MANGALA"]
+enemies = ["BUDHA", "SHUKRA"]
+neutrals = ["SHANI"]
+src = { "Planet" = "Jupiter", "Friends (Mitra)" = "Sun, Moon, Mars", "Enemies (Shatru)" = "Mercury, Venus", "Neutrals (Sama)" = "Saturn" }
+
+[[graha]]
+id = "SHUKRA"
+friends = ["BUDHA", "SHANI"]
+enemies = ["SURYA", "CHANDRA"]
+neutrals = ["MANGALA", "GURU"]
+src = { "Planet" = "Venus", "Friends (Mitra)" = "Mercury, Saturn", "Enemies (Shatru)" = "Sun, Moon", "Neutrals (Sama)" = "Mars, Jupiter" }
+
+[[graha]]
+id = "SHANI"
+friends = ["BUDHA", "SHUKRA"]
+enemies = ["SURYA", "CHANDRA", "MANGALA"]
+neutrals = ["GURU"]
+src = { "Planet" = "Saturn", "Friends (Mitra)" = "Mercury, Venus", "Enemies (Shatru)" = "Sun, Moon, Mars", "Neutrals (Sama)" = "Jupiter" }
+
+[[graha]]
+id = "RAHU"
+friends = ["GURU", "SHUKRA", "SHANI"]
+enemies = ["SURYA", "CHANDRA", "MANGALA"]
+neutrals = ["BUDHA"]
+src = { "Planet" = "Rahu", "Friends (Mitra)" = "Jupiter, Venus, Saturn", "Enemies (Shatru)" = "Sun, Moon, Mars", "Neutrals (Sama)" = "Mercury" }
+
+[[graha]]
+id = "KETU"
+friends = ["MANGALA", "SHUKRA", "SHANI"]
+enemies = ["SURYA", "CHANDRA"]
+neutrals = ["GURU", "BUDHA"]
+src = { "Planet" = "Ketu", "Friends (Mitra)" = "Mars, Venus, Saturn", "Enemies (Shatru)" = "Sun, Moon", "Neutrals (Sama)" = "Jupiter, Mercury" }
+
