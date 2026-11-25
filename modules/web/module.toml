@@ -1,0 +1,5 @@
+name = "web"
+kind = "web"
+depends_on = []
+http_depends_on = ["api"]
+description = "Input form, chart and placement table (static files served by the api)"

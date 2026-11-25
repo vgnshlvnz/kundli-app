@@ -1,0 +1,128 @@
+/* Colours come from /theme.css (generated from the core palette). Every text colour sits on a background it is
+   declared against in kundli_core/data/palette.toml, where the contrast of each pair is tested:
+   maroon or kumkum on sandal, sandal-deep, ivory, turmeric-soft and saffron-soft; ivory on kumkum.
+   Gold and saffron are used only for borders and the kolam. */
+
+@font-face { font-family: "Noto Serif"; src: url("fonts/NotoSerif-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Noto Serif"; src: url("fonts/NotoSerif-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Noto Serif Tamil"; src: url("fonts/NotoSerifTamil-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Noto Serif Tamil"; src: url("fonts/NotoSerifTamil-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Noto Serif Devanagari"; src: url("fonts/NotoSerifDevanagari-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Noto Serif Devanagari"; src: url("fonts/NotoSerifDevanagari-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root { --font: "Noto Serif", "Noto Serif Tamil", "Noto Serif Devanagari", serif; }
+:lang(ta) { --font: "Noto Serif Tamil", "Noto Serif", serif; }
+:lang(sa) { --font: "Noto Serif Devanagari", "Noto Serif", serif; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }  /* even where a rule below sets display */
+body {
+  margin: 0; font-family: var(--font); color: var(--maroon); background: var(--sandal);
+  line-height: 1.5; font-size: 16px;
+}
+h1, h2 { color: var(--kumkum); font-weight: 700; line-height: 1.2; }
+h2 { font-size: 1.3rem; margin: 0 0 0.9rem; }
+
+/* --- banner ---------------------------------------------------------------------------------------------------- */
+.banner { background: var(--sandal-deep); border-bottom: 3px double var(--gold); }
+.kolam-band { display: block; width: 100%; height: 24px; }
+.banner-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0.6rem 1.2rem 0.9rem; display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.banner h1 { margin: 0; font-size: 2rem; letter-spacing: 0.02em; }
+.banner h1::before { content: "❀ "; color: var(--kumkum); }
+.lang { display: flex; gap: 0.4rem; }
+
+button {
+  font: inherit; cursor: pointer; border-radius: 6px; padding: 0.45rem 0.9rem;
+  background: var(--ivory); color: var(--kumkum); border: 1.5px solid var(--gold);
+}
+button[aria-pressed="true"] { background: var(--kumkum); color: var(--ivory); border-color: var(--kumkum); }
+button.primary { background: var(--kumkum); color: var(--ivory); border-color: var(--kumkum); font-weight: 700; padding: 0.6rem 1.4rem; }
+button:disabled { cursor: progress; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--kumkum); outline-offset: 2px; }
+
+/* --- cards and form --------------------------------------------------------------------------------------------- */
+main {
+  max-width: 1100px; margin: 1.5rem auto; padding: 0 1.2rem; display: grid; gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);  /* a wide table scrolls inside its box instead of widening the page */
+}
+.card {
+  background: var(--ivory); border: 1.5px solid var(--gold); border-radius: 12px; padding: 1.4rem 1.5rem;
+  box-shadow: 0 0 0 5px var(--sandal), 0 0 0 6.5px var(--gold);
+}
+#birth-form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem 1.1rem; align-items: start; }
+.field { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 700; position: relative; }
+.field.wide { grid-column: span 2; }
+.field.actions { margin-top: 1.75rem; }  /* the height of a field label, so the button lines up with the inputs */
+.field.actions button { min-height: 2.6rem; }
+input, select {
+  font: inherit; font-weight: 400; color: var(--maroon); background: var(--sandal);
+  border: 1.5px solid var(--gold); border-radius: 6px; padding: 0.5rem 0.6rem; min-height: 2.6rem;
+}
+input::placeholder { color: var(--maroon); font-style: italic; opacity: 1; }
+.hint { margin: 0.2rem 0 0; font-weight: 400; font-size: 0.9rem; min-height: 1.2em; }
+
+#place-list {
+  position: absolute; top: 4.6rem; left: 0; right: 0; z-index: 10; margin: 0; padding: 0.25rem 0; list-style: none;
+  background: var(--ivory); border: 1.5px solid var(--gold); border-radius: 6px; max-height: 18rem; overflow-y: auto;
+  font-weight: 400; box-shadow: 0 6px 18px rgb(90 20 20 / 0.15);
+}
+#place-list li { padding: 0.4rem 0.7rem; cursor: pointer; }
+#place-list li.active, #place-list li:hover { background: var(--turmeric-soft); }
+#place-list li.unusable { cursor: not-allowed; font-style: italic; }
+#place-list li.empty { cursor: default; font-style: italic; }
+
+.message { margin-top: 1rem; padding: 0.8rem 1rem; border: 1.5px solid var(--kumkum); border-radius: 8px; color: var(--kumkum); }
+.message p { margin: 0; }
+.message .detail { color: var(--maroon); font-size: 0.9rem; margin-top: 0.3rem; }
+.fold-choice { margin-top: 1rem; border: 1.5px solid var(--gold); border-radius: 8px; padding: 0.8rem 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.fold-choice legend { color: var(--kumkum); font-weight: 700; padding: 0 0.3rem; }
+
+/* --- result ----------------------------------------------------------------------------------------------------- */
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 0.5rem; }
+.chart { display: flex; justify-content: center; }
+.chart svg { width: 100%; max-width: 640px; height: auto; }
+.warnings p { margin: 0.8rem 0 0; padding: 0.6rem 0.9rem; background: var(--turmeric-soft); border-radius: 6px; }
+.result h2 { margin-top: 1.6rem; }
+.table-wrap { overflow-x: auto; border: 1.5px solid var(--gold); border-radius: 8px; }
+.placements { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.placements th, .placements td { padding: 0.45rem 0.55rem; border-bottom: 1px solid var(--gold); text-align: left; vertical-align: top; }
+.placements thead th { background: var(--sandal-deep); position: sticky; top: 0; }
+.placements tbody th { color: var(--kumkum); white-space: nowrap; }
+.placements .num, .placements .mark { white-space: nowrap; }
+.placements .mark { color: var(--kumkum); font-weight: 700; text-align: center; }
+.placements tr.lagna { background: var(--turmeric-soft); }
+.placements tr.differs { background: var(--saffron-soft); }
+.differs-mark { color: var(--kumkum); font-weight: 700; }
+.detail { display: block; font-size: 0.85em; }
+.detail-inline { font-size: 0.9em; }
+.method { font-size: 0.88rem; margin: 0.8rem 0 0; }
+
+.footer { max-width: 1100px; margin: 0 auto 2rem; padding: 0 1.2rem; font-size: 0.85rem; text-align: center; }
+
+@media (max-width: 760px) {
+  #birth-form { grid-template-columns: 1fr 1fr; }
+  .field.wide { grid-column: span 2; }
+  .banner h1 { font-size: 1.6rem; }
+}
+@media (max-width: 480px) {
+  #birth-form { grid-template-columns: 1fr; }
+  .field.wide { grid-column: span 1; }
+}
+
+/* --- print: the chart and the table only, on A4 ----------------------------------------------------------------- */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { background: #fff; font-size: 10.5pt; }
+  .banner, .form-card, .toolbar, .footer { display: none !important; }
+  main { margin: 0; padding: 0; max-width: none; }
+  .card { border: none; box-shadow: none; padding: 0; }
+  .chart svg { max-width: 15cm; }
+  .table-wrap { overflow: visible; border: none; }
+  .placements { font-size: 8.5pt; }
+  .placements tr { break-inside: avoid; }
+  .placements thead th { position: static; }
+  .result h2 { margin-top: 0.6cm; }
+}

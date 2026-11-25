@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kundli</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="banner">
+    <svg class="kolam-band" aria-hidden="true" focusable="false" preserveAspectRatio="none" viewBox="0 0 400 24">
+      <defs>
+        <pattern id="pulli" width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M0 12 A6 6 0 0 1 12 12 A6 6 0 0 0 24 12 M0 12 A6 6 0 0 0 12 12 A6 6 0 0 1 24 12"
+                fill="none" stroke="var(--saffron)" stroke-width="1.4"/>
+          <circle cx="6" cy="12" r="1.6" fill="var(--kumkum-bright)"/>
+          <circle cx="18" cy="12" r="1.6" fill="var(--kumkum-bright)"/>
+        </pattern>
+      </defs>
+      <rect width="400" height="24" fill="url(#pulli)"/>
+    </svg>
+    <div class="banner-inner">
+      <h1 data-label="ui.APP_TITLE">Kundli</h1>
+      <nav class="lang" aria-label="Language">
+        <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="ta" lang="ta" aria-pressed="false">தமிழ்</button>
+        <button type="button" data-lang="sa" lang="sa" aria-pressed="false">संस्कृतम्</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="card form-card" aria-labelledby="birth-heading">
+      <h2 id="birth-heading" data-label="ui.BIRTH_DETAILS">Birth details</h2>
+      <form id="birth-form" autocomplete="off">
+        <label class="field wide"><span data-label="ui.NAME">Name</span>
+          <input id="name" name="name" maxlength="100"></label>
+        <label class="field"><span data-label="ui.DATE">Date</span>
+          <input id="date" name="date" type="date" min="1800-01-01" max="2399-12-31" required></label>
+        <label class="field"><span data-label="ui.TIME">Time</span>
+          <input id="time" name="time" type="time" step="1" required></label>
+        <div class="field wide place-field">
+          <label for="place" data-label="ui.PLACE">Place</label>
+          <input id="place" name="place" role="combobox" aria-autocomplete="list" aria-expanded="false"
+                 aria-controls="place-list" data-label-placeholder="ui.SEARCH_PLACE" required>
+          <ul id="place-list" role="listbox" hidden></ul>
+          <p id="place-info" class="hint" aria-live="polite"></p>
+        </div>
+        <label class="field"><span data-label="ui.AYANAMSA">Ayanamsa</span>
+          <select id="ayanamsa" name="ayanamsa"></select></label>
+        <div class="field actions">
+          <button id="cast" type="submit" class="primary" data-label="ui.CAST_CHART">Cast chart</button>
+        </div>
+      </form>
+      <div id="message" class="message" role="alert" hidden></div>
+      <fieldset id="fold-choice" class="fold-choice" hidden></fieldset>
+    </section>
+
+    <section id="result" class="card result" hidden aria-live="polite">
+      <div class="toolbar"><button id="print" type="button" data-label="ui.PRINT">Print</button></div>
+      <div id="chart" class="chart"></div>
+      <div id="warnings" class="warnings"></div>
+      <h2 data-label="ui.PLACEMENT_TABLE">Graha placements</h2>
+      <div class="table-wrap"><table id="placements" class="placements"></table></div>
+      <p id="method" class="method"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Calculations: Swiss Ephemeris (Astrodienst AG) via pyswisseph, GNU AGPL v3. This app: AGPL-3.0-or-later.
+      Deterministic rules from the reference files; no AI is used.</p>
+  </footer>
+</body>
+</html>
