@@ -1,0 +1,5 @@
+name = "locations"
+kind = "python"
+package = "kundli_locations"
+depends_on = ["core"]
+description = "Place search in data/locations.db, timezone lookup, local time to UTC"
