@@ -1,0 +1,17 @@
+[project]
+name = "kundli-ephemeris"
+version = "0.1.0"
+description = "Kundli App ephemeris: sidereal positions, Lagna and ayanamsa from the Swiss Ephemeris"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = [
+    "kundli-core",
+    "pyswisseph==2.10.3.2",
+]
+
+[tool.uv.sources]
+kundli-core = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"

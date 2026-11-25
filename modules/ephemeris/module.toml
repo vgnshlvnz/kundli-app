@@ -1,0 +1,5 @@
+name = "ephemeris"
+kind = "python"
+package = "kundli_ephemeris"
+depends_on = ["core"]
+description = "pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa"
