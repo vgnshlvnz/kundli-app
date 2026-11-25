@@ -19,9 +19,16 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 | `ephemeris` | python | `core` | — |
 | `locations` | python | `core` | — |
 | `placement` | python | `core`, `bhava` | — |
+| `api` | python | `core`, `ephemeris`, `locations`, `bhava`, `placement`, `chart` | — |
 
 ```mermaid
 graph BT
+  api --> core
+  api --> ephemeris
+  api --> locations
+  api --> bhava
+  api --> placement
+  api --> chart
   bhava --> core
   chart --> core
   core
@@ -46,7 +53,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | built |
 | 5 | `chart` | core | South Indian SVG chart | built |
 | 6 | `placement` | core, bhava | Rule tables and the placement engine | built |
-| 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | planned |
+| 7 | `api` | core, ephemeris, locations, bhava, placement, chart | FastAPI service composing the modules | built |
 | 8 | `web` | — (HTTP: api) | Input form, chart and placement table | planned |
 
 ```mermaid
@@ -133,9 +140,17 @@ Depends on core and bhava. Import from `kundli_placement`.
 - Building blocks: `dignity(graha, lon)`, `kshetra(graha, lord)`, `combustion(graha, lon, retro, sun_lon)`,
   `categories(bhava)`, `lordships(lagna)`.
 
-### api (planned)
-- `GET /api/health`, `GET /api/places?q=`, `GET /api/ayanamsas`, `GET /api/labels?lang=`, `POST /api/chart`,
-  `GET /theme.css`, and the web module's static files.
+### api (built)
+Depends on core, ephemeris, locations, bhava, placement, chart; FastAPI. Run: `uv run uvicorn kundli_api.app:app`.
+- `GET /api/health`, `GET /api/places?q=&limit=`, `GET /api/ayanamsas`, `GET /api/labels?lang=en|ta|sa`.
+- `POST /api/chart` with `{name, date: "YYYY-MM-DD", time: "HH:MM[:SS]", place_id, ayanamsa?, lang?, fold?}` returns
+  the input, the birth moment (local, tz, UTC, offset, JD), the ayanamsa (name, degrees, DMS), the chalit method, the
+  Lagna row, 9 placement rows (codes, not labels), warnings, and the chart SVG.
+- Errors never guess: 400 `nonexistent_time` (with the two offsets) or `ambiguous_time` (with `fold` choices),
+  404 `unknown_place`, 422 `place_not_usable`, `date_out_of_range` or invalid input.
+- `GET /theme.css`: the palette as CSS custom properties. The web module's `static/` is served at `/`
+  (`KUNDLI_WEB_DIR` overrides the path); `/api/docs` is the OpenAPI page.
+- `create_app(store=None, web_dir=None)` builds the app (tests use it).
 
 ### web (planned)
 - Static `index.html`, `app.js`, `styles.css` and fonts, served by the api; talks to it over HTTP only.

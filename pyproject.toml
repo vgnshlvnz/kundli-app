@@ -5,7 +5,7 @@ members = ["modules/*"]
 exclude = ["modules/web"]
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "httpx2>=2.16"]
 
 [tool.pytest.ini_options]
 testpaths = ["tools/tests", "modules"]

@@ -1,0 +1,5 @@
+name = "api"
+kind = "python"
+package = "kundli_api"
+depends_on = ["core", "ephemeris", "locations", "bhava", "placement", "chart"]
+description = "FastAPI service composing the modules; also serves the web module's static files"
