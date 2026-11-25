@@ -14,10 +14,12 @@ This block is generated from the manifests. Do not edit it by hand; run `uv run 
 | Module | Kind | Depends on (imports) | Talks to over HTTP |
 |---|---|---|---|
 | `core` | python | — | — |
+| `ephemeris` | python | `core` | — |
 
 ```mermaid
 graph BT
   core
+  ephemeris --> core
 ```
 
 <!-- END GENERATED: module graph -->
@@ -30,7 +32,7 @@ Modules are built in this order, each in its own worktree and pull request. A mo
 | Order | Module | Depends on | Purpose | Status |
 |---|---|---|---|---|
 | 1 | `core` | — | Shared data models, constants, reference data tables, label and palette data | built |
-| 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | planned |
+| 2 | `ephemeris` | core | pyswisseph wrapper: sidereal longitudes, Lagna, ayanamsa | built |
 | 3 | `locations` | core | Place search in `data/locations.db`, timezone lookup, local time → UT | planned |
 | 4 | `bhava` | core | Whole-sign and chalit (equal, Lagna as madhya) bhava numbers | planned |
 | 5 | `chart` | core | South Indian SVG chart | planned |
@@ -71,9 +73,17 @@ Standard library only. Import from `kundli_core`.
 - Reference checking: `kundli_core.mdtables.read_table(path, heading, index)`, `section_text(...)`;
   `kundli_core.refcheck.verify(table, repo_root)` returns the differences between a data table and its source.
 
-### ephemeris (planned)
-- `list_ayanamsas()`, `ayanamsa(jd_ut, option_id) -> AyanamsaValue` (the only place the sidereal mode is set).
-- `jd_from_utc(utc)`, `compute_positions(moment, geo, option_id) -> ChartPositions`.
+### ephemeris (built)
+Depends on core and pyswisseph 2.10.3.2 (AGPL-3.0). Import from `kundli_ephemeris`.
+- `list_ayanamsas()`, `get_option(id)`, `DEFAULT_AYANAMSA = "lahiri"`; options are data in `ayanamsas.toml`
+  (lahiri, raman, kp_old, kp_new); a new option needs no code change.
+- `ayanamsa(jd_ut, option_id) -> AyanamsaValue`: the value including nutation, which is what the positions
+  subtract (CONVENTIONS C10). It is the only place an ayanamsa option is applied.
+- `jd_from_utc(utc) -> float` (UT1), `compute_positions(moment, geo, option_id) -> ChartPositions`: apparent
+  geocentric sidereal longitudes from the bundled Swiss Ephemeris files (1800–2399 CE), mean node, Ketu = Rahu + 180°,
+  sidereal Lagna (the rising point).
+- Errors: `EphemerisError`, `EphemerisFilesMissing` (raised instead of a Moshier fallback), `UnknownAyanamsa`.
+- `configure(ephe_path)` points at other data files.
 
 ### locations (planned)
 - `search(query, limit)`, `get(place_id)`, `to_utc(local, tz, fold=None)`.
