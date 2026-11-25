@@ -1,0 +1,26 @@
+# Ayanamsa options (CONVENTIONS section B). To add one, add an [[option]]; no code change is needed.
+#
+# swe_mode is the name of a Swiss Ephemeris sidereal mode constant (swisseph.SIDM_*). For "SIDM_USER", also give
+# t0 (the reference epoch as a Julian day in UT) and ayan_t0 (the ayanamsa at t0, in degrees).
+
+default = "lahiri"
+
+[[option]]
+id = "lahiri"
+name = "Lahiri"
+swe_mode = "SIDM_LAHIRI"
+
+[[option]]
+id = "raman"
+name = "Raman"
+swe_mode = "SIDM_RAMAN"
+
+[[option]]
+id = "kp_old"
+name = "KP Old"
+swe_mode = "SIDM_KRISHNAMURTI"
+
+[[option]]
+id = "kp_new"
+name = "KP New"
+swe_mode = "SIDM_KRISHNAMURTI_VP291"   # Swiss Ephemeris name: "Krishnamurti-Senthilathiban" (owner's choice, 2026-11-26)
