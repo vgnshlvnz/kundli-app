@@ -24,3 +24,5 @@ jobs:
         run: uv run python tools/check_modules.py
       - name: Tests
         run: uv run pytest
+      - name: Web unit tests
+        run: node --version && node --test "modules/web/tests/*.test.js"
