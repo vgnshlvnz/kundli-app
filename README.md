@@ -6,8 +6,10 @@ bhava by whole-sign and by bhava chalit, bhava categories, dignity, combustion, 
 
 All output is deterministic, rule-based calculation. **No LLM is used anywhere in the app.**
 
-> Status: under construction. The modules are being built one pull request at a time; see [MODULES.md](MODULES.md).
-> The earlier JavaScript app is preserved unchanged on the [`archive`](../../tree/archive) branch.
+> Status: all eight modules are built and tested (see [MODULES.md](MODULES.md)). Verification against reference
+> charts from established software is pending: the owner will supply them during the testing period
+> ([CONVENTIONS](docs/CONVENTIONS.md) section G). The earlier JavaScript app is preserved unchanged on the
+> [`archive`](../../tree/archive) branch.
 
 ## How the rules are kept honest
 
