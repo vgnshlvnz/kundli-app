@@ -1,0 +1,264 @@
+# Nakshatras: names, lords and the sign segments they span.
+# Each nakshatra is 13°20′ starting at (number − 1) × 13°20′; the core tests check that the source segments
+# agree with that, and that `src` still matches the source table.
+
+[meta]
+source_file = "docs/reference/rasis_signs_llm_ready.md"
+source_section = "11. The 12 signs and 27 nakshatras"
+kind = "table"
+table_index = 0
+key = ["Sign", "Nakshatra (padas)"]
+complete = true
+rows = "nakshatra"
+
+[[nakshatra]]
+number = 1
+id = "ASHWINI"
+name = "Ashwini"
+lord = "KETU"
+src = [
+  { "Sign" = "Aries (Mesha)", "Nakshatra (padas)" = "Ashwini (4)", "Degrees in sign" = "0°00'–13°20'", "Nakshatra lord" = "Ketu" },
+]
+
+[[nakshatra]]
+number = 2
+id = "BHARANI"
+name = "Bharani"
+lord = "SHUKRA"
+src = [
+  { "Sign" = "Aries (Mesha)", "Nakshatra (padas)" = "Bharani (4)", "Degrees in sign" = "13°20'–26°40'", "Nakshatra lord" = "Venus" },
+]
+
+[[nakshatra]]
+number = 3
+id = "KRITTIKA"
+name = "Krittika"
+lord = "SURYA"
+src = [
+  { "Sign" = "Aries (Mesha)", "Nakshatra (padas)" = "Krittika (1)", "Degrees in sign" = "26°40'–30°00'", "Nakshatra lord" = "Sun" },
+  { "Sign" = "Taurus (Vrishabha)", "Nakshatra (padas)" = "Krittika (3)", "Degrees in sign" = "0°00'–10°00'", "Nakshatra lord" = "Sun" },
+]
+
+[[nakshatra]]
+number = 4
+id = "ROHINI"
+name = "Rohini"
+lord = "CHANDRA"
+src = [
+  { "Sign" = "Taurus (Vrishabha)", "Nakshatra (padas)" = "Rohini (4)", "Degrees in sign" = "10°00'–23°20'", "Nakshatra lord" = "Moon" },
+]
+
+[[nakshatra]]
+number = 5
+id = "MRIGASHIRA"
+name = "Mrigashira"
+lord = "MANGALA"
+src = [
+  { "Sign" = "Taurus (Vrishabha)", "Nakshatra (padas)" = "Mrigashira (2)", "Degrees in sign" = "23°20'–30°00'", "Nakshatra lord" = "Mars" },
+  { "Sign" = "Gemini (Mithuna)", "Nakshatra (padas)" = "Mrigashira (2)", "Degrees in sign" = "0°00'–6°40'", "Nakshatra lord" = "Mars" },
+]
+
+[[nakshatra]]
+number = 6
+id = "ARDRA"
+name = "Ardra"
+lord = "RAHU"
+src = [
+  { "Sign" = "Gemini (Mithuna)", "Nakshatra (padas)" = "Ardra (4)", "Degrees in sign" = "6°40'–20°00'", "Nakshatra lord" = "Rahu" },
+]
+
+[[nakshatra]]
+number = 7
+id = "PUNARVASU"
+name = "Punarvasu"
+lord = "GURU"
+src = [
+  { "Sign" = "Gemini (Mithuna)", "Nakshatra (padas)" = "Punarvasu (3)", "Degrees in sign" = "20°00'–30°00'", "Nakshatra lord" = "Jupiter" },
+  { "Sign" = "Cancer (Kataka)", "Nakshatra (padas)" = "Punarvasu (1)", "Degrees in sign" = "0°00'–3°20'", "Nakshatra lord" = "Jupiter" },
+]
+
+[[nakshatra]]
+number = 8
+id = "PUSHYA"
+name = "Pushya"
+lord = "SHANI"
+src = [
+  { "Sign" = "Cancer (Kataka)", "Nakshatra (padas)" = "Pushya (4)", "Degrees in sign" = "3°20'–16°40'", "Nakshatra lord" = "Saturn" },
+]
+
+[[nakshatra]]
+number = 9
+id = "ASHLESHA"
+name = "Ashlesha"
+lord = "BUDHA"
+src = [
+  { "Sign" = "Cancer (Kataka)", "Nakshatra (padas)" = "Ashlesha (4)", "Degrees in sign" = "16°40'–30°00'", "Nakshatra lord" = "Mercury" },
+]
+
+[[nakshatra]]
+number = 10
+id = "MAGHA"
+name = "Magha"
+lord = "KETU"
+src = [
+  { "Sign" = "Leo (Simha)", "Nakshatra (padas)" = "Magha (4)", "Degrees in sign" = "0°00'–13°20'", "Nakshatra lord" = "Ketu" },
+]
+
+[[nakshatra]]
+number = 11
+id = "PURVA_PHALGUNI"
+name = "Purva Phalguni"
+lord = "SHUKRA"
+src = [
+  { "Sign" = "Leo (Simha)", "Nakshatra (padas)" = "Purva Phalguni (4)", "Degrees in sign" = "13°20'–26°40'", "Nakshatra lord" = "Venus" },
+]
+
+[[nakshatra]]
+number = 12
+id = "UTTARA_PHALGUNI"
+name = "Uttara Phalguni"
+lord = "SURYA"
+src = [
+  { "Sign" = "Leo (Simha)", "Nakshatra (padas)" = "Uttara Phalguni (1)", "Degrees in sign" = "26°40'–30°00'", "Nakshatra lord" = "Sun" },
+  { "Sign" = "Virgo (Kanya)", "Nakshatra (padas)" = "Uttara Phalguni (3)", "Degrees in sign" = "0°00'–10°00'", "Nakshatra lord" = "Sun" },
+]
+
+[[nakshatra]]
+number = 13
+id = "HASTA"
+name = "Hasta"
+lord = "CHANDRA"
+src = [
+  { "Sign" = "Virgo (Kanya)", "Nakshatra (padas)" = "Hasta (4)", "Degrees in sign" = "10°00'–23°20'", "Nakshatra lord" = "Moon" },
+]
+
+[[nakshatra]]
+number = 14
+id = "CHITRA"
+name = "Chitra"
+lord = "MANGALA"
+src = [
+  { "Sign" = "Virgo (Kanya)", "Nakshatra (padas)" = "Chitra (2)", "Degrees in sign" = "23°20'–30°00'", "Nakshatra lord" = "Mars" },
+  { "Sign" = "Libra (Tula)", "Nakshatra (padas)" = "Chitra (2)", "Degrees in sign" = "0°00'–6°40'", "Nakshatra lord" = "Mars" },
+]
+
+[[nakshatra]]
+number = 15
+id = "SWATI"
+name = "Swati"
+lord = "RAHU"
+src = [
+  { "Sign" = "Libra (Tula)", "Nakshatra (padas)" = "Swati (4)", "Degrees in sign" = "6°40'–20°00'", "Nakshatra lord" = "Rahu" },
+]
+
+[[nakshatra]]
+number = 16
+id = "VISHAKHA"
+name = "Vishakha"
+lord = "GURU"
+src = [
+  { "Sign" = "Libra (Tula)", "Nakshatra (padas)" = "Vishakha (3)", "Degrees in sign" = "20°00'–30°00'", "Nakshatra lord" = "Jupiter" },
+  { "Sign" = "Scorpio (Vrischika)", "Nakshatra (padas)" = "Vishakha (1)", "Degrees in sign" = "0°00'–3°20'", "Nakshatra lord" = "Jupiter" },
+]
+
+[[nakshatra]]
+number = 17
+id = "ANURADHA"
+name = "Anuradha"
+lord = "SHANI"
+src = [
+  { "Sign" = "Scorpio (Vrischika)", "Nakshatra (padas)" = "Anuradha (4)", "Degrees in sign" = "3°20'–16°40'", "Nakshatra lord" = "Saturn" },
+]
+
+[[nakshatra]]
+number = 18
+id = "JYESHTHA"
+name = "Jyeshtha"
+lord = "BUDHA"
+src = [
+  { "Sign" = "Scorpio (Vrischika)", "Nakshatra (padas)" = "Jyeshtha (4)", "Degrees in sign" = "16°40'–30°00'", "Nakshatra lord" = "Mercury" },
+]
+
+[[nakshatra]]
+number = 19
+id = "MOOLA"
+name = "Moola"
+lord = "KETU"
+src = [
+  { "Sign" = "Sagittarius (Dhanus)", "Nakshatra (padas)" = "Moola (4)", "Degrees in sign" = "0°00'–13°20'", "Nakshatra lord" = "Ketu" },
+]
+
+[[nakshatra]]
+number = 20
+id = "PURVA_ASHADHA"
+name = "Purva Ashadha"
+lord = "SHUKRA"
+src = [
+  { "Sign" = "Sagittarius (Dhanus)", "Nakshatra (padas)" = "Purva Ashadha (4)", "Degrees in sign" = "13°20'–26°40'", "Nakshatra lord" = "Venus" },
+]
+
+[[nakshatra]]
+number = 21
+id = "UTTARA_ASHADHA"
+name = "Uttara Ashadha"
+lord = "SURYA"
+src = [
+  { "Sign" = "Sagittarius (Dhanus)", "Nakshatra (padas)" = "Uttara Ashadha (1)", "Degrees in sign" = "26°40'–30°00'", "Nakshatra lord" = "Sun" },
+  { "Sign" = "Capricorn (Makara)", "Nakshatra (padas)" = "Uttara Ashadha (3)", "Degrees in sign" = "0°00'–10°00'", "Nakshatra lord" = "Sun" },
+]
+
+[[nakshatra]]
+number = 22
+id = "SHRAVANA"
+name = "Shravana"
+lord = "CHANDRA"
+src = [
+  { "Sign" = "Capricorn (Makara)", "Nakshatra (padas)" = "Shravana (4)", "Degrees in sign" = "10°00'–23°20'", "Nakshatra lord" = "Moon" },
+]
+
+[[nakshatra]]
+number = 23
+id = "DHANISHTHA"
+name = "Dhanishtha"
+lord = "MANGALA"
+src = [
+  { "Sign" = "Capricorn (Makara)", "Nakshatra (padas)" = "Dhanishtha (2)", "Degrees in sign" = "23°20'–30°00'", "Nakshatra lord" = "Mars" },
+  { "Sign" = "Aquarius (Kumbha)", "Nakshatra (padas)" = "Dhanishtha (2)", "Degrees in sign" = "0°00'–6°40'", "Nakshatra lord" = "Mars" },
+]
+
+[[nakshatra]]
+number = 24
+id = "SHATABHISHA"
+name = "Shatabhisha"
+lord = "RAHU"
+src = [
+  { "Sign" = "Aquarius (Kumbha)", "Nakshatra (padas)" = "Shatabhisha (4)", "Degrees in sign" = "6°40'–20°00'", "Nakshatra lord" = "Rahu" },
+]
+
+[[nakshatra]]
+number = 25
+id = "PURVA_BHADRAPADA"
+name = "Purva Bhadrapada"
+lord = "GURU"
+src = [
+  { "Sign" = "Aquarius (Kumbha)", "Nakshatra (padas)" = "Purva Bhadrapada (3)", "Degrees in sign" = "20°00'–30°00'", "Nakshatra lord" = "Jupiter" },
+  { "Sign" = "Pisces (Meena)", "Nakshatra (padas)" = "Purva Bhadrapada (1)", "Degrees in sign" = "0°00'–3°20'", "Nakshatra lord" = "Jupiter" },
+]
+
+[[nakshatra]]
+number = 26
+id = "UTTARA_BHADRAPADA"
+name = "Uttara Bhadrapada"
+lord = "SHANI"
+src = [
+  { "Sign" = "Pisces (Meena)", "Nakshatra (padas)" = "Uttara Bhadrapada (4)", "Degrees in sign" = "3°20'–16°40'", "Nakshatra lord" = "Saturn" },
+]
+
+[[nakshatra]]
+number = 27
+id = "REVATI"
+name = "Revati"
+lord = "BUDHA"
+src = [
+  { "Sign" = "Pisces (Meena)", "Nakshatra (padas)" = "Revati (4)", "Degrees in sign" = "16°40'–30°00'", "Nakshatra lord" = "Mercury" },
+]

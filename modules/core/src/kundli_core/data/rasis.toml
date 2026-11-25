@@ -1,0 +1,122 @@
+# Rasis: names, lords and co-lords.
+# Parsed values are what the app uses; `src` holds the cells exactly as they appear in the source table,
+# and the core tests fail if the source changes. Co-lords are used for swakshetra dignity only (CONVENTIONS D2).
+
+[meta]
+source_file = "docs/reference/rasis_signs_llm_ready.md"
+source_section = "2. Names, symbols, spans and lords"
+kind = "table"
+table_index = 0
+key = ["No."]
+complete = true
+rows = "rasi"
+
+[[rasi]]
+number = 1
+id = "MESHA"
+english = "Aries"
+sanskrit = "Mesha"
+tamil_translit = "Mesham"
+lord = "MANGALA"
+src = { "No." = "1", "Sign (English)" = "Aries", "Sanskrit" = "Mesha", "Tamil" = "Mesham", "Symbol" = "Ram", "Span (from 0° Aries)" = "0°–30°", "Lord" = "Mars", "Co-lord" = "—" }
+
+[[rasi]]
+number = 2
+id = "VRISHABHA"
+english = "Taurus"
+sanskrit = "Vrishabha"
+tamil_translit = "Vrishabham"
+lord = "SHUKRA"
+src = { "No." = "2", "Sign (English)" = "Taurus", "Sanskrit" = "Vrishabha", "Tamil" = "Vrishabham", "Symbol" = "Bull", "Span (from 0° Aries)" = "30°–60°", "Lord" = "Venus", "Co-lord" = "—" }
+
+[[rasi]]
+number = 3
+id = "MITHUNA"
+english = "Gemini"
+sanskrit = "Mithuna"
+tamil_translit = "Mithunam"
+lord = "BUDHA"
+src = { "No." = "3", "Sign (English)" = "Gemini", "Sanskrit" = "Mithuna", "Tamil" = "Mithunam", "Symbol" = "Twins", "Span (from 0° Aries)" = "60°–90°", "Lord" = "Mercury", "Co-lord" = "—" }
+
+[[rasi]]
+number = 4
+id = "KARKA"
+english = "Cancer"
+sanskrit = "Karka"
+tamil_translit = "Kataka"
+lord = "CHANDRA"
+src = { "No." = "4", "Sign (English)" = "Cancer", "Sanskrit" = "Karka", "Tamil" = "Kataka", "Symbol" = "Crab", "Span (from 0° Aries)" = "90°–120°", "Lord" = "Moon", "Co-lord" = "—" }
+
+[[rasi]]
+number = 5
+id = "SIMHA"
+english = "Leo"
+sanskrit = "Simha"
+tamil_translit = "Simmam"
+lord = "SURYA"
+src = { "No." = "5", "Sign (English)" = "Leo", "Sanskrit" = "Simha", "Tamil" = "Simmam", "Symbol" = "Lion", "Span (from 0° Aries)" = "120°–150°", "Lord" = "Sun", "Co-lord" = "—" }
+
+[[rasi]]
+number = 6
+id = "KANYA"
+english = "Virgo"
+sanskrit = "Kanni (Kanya)"
+tamil_translit = "Kanni"
+lord = "BUDHA"
+src = { "No." = "6", "Sign (English)" = "Virgo", "Sanskrit" = "Kanni (Kanya)", "Tamil" = "Kanni", "Symbol" = "Virgin", "Span (from 0° Aries)" = "150°–180°", "Lord" = "Mercury", "Co-lord" = "—" }
+
+[[rasi]]
+number = 7
+id = "TULA"
+english = "Libra"
+sanskrit = "Tula"
+tamil_translit = "Thulam"
+lord = "SHUKRA"
+src = { "No." = "7", "Sign (English)" = "Libra", "Sanskrit" = "Tula", "Tamil" = "Thulam", "Symbol" = "Scales", "Span (from 0° Aries)" = "180°–210°", "Lord" = "Venus", "Co-lord" = "—" }
+
+[[rasi]]
+number = 8
+id = "VRISCHIKA"
+english = "Scorpio"
+sanskrit = "Vrischika"
+tamil_translit = "Vrischikam"
+lord = "MANGALA"
+co_lord = "KETU"
+src = { "No." = "8", "Sign (English)" = "Scorpio", "Sanskrit" = "Vrischika", "Tamil" = "Vrischikam", "Symbol" = "Scorpion", "Span (from 0° Aries)" = "210°–240°", "Lord" = "Mars", "Co-lord" = "Ketu" }
+
+[[rasi]]
+number = 9
+id = "DHANUS"
+english = "Sagittarius"
+sanskrit = "Dhanus"
+tamil_translit = "Dhanus"
+lord = "GURU"
+src = { "No." = "9", "Sign (English)" = "Sagittarius", "Sanskrit" = "Dhanus", "Tamil" = "Dhanus", "Symbol" = "Archer", "Span (from 0° Aries)" = "240°–270°", "Lord" = "Jupiter", "Co-lord" = "—" }
+
+[[rasi]]
+number = 10
+id = "MAKARA"
+english = "Capricorn"
+sanskrit = "Makara"
+tamil_translit = "Makaram"
+lord = "SHANI"
+src = { "No." = "10", "Sign (English)" = "Capricorn", "Sanskrit" = "Makara", "Tamil" = "Makaram", "Symbol" = "Sea-Goat", "Span (from 0° Aries)" = "270°–300°", "Lord" = "Saturn", "Co-lord" = "—" }
+
+[[rasi]]
+number = 11
+id = "KUMBHA"
+english = "Aquarius"
+sanskrit = "Kumbha"
+tamil_translit = "Kumbham"
+lord = "SHANI"
+co_lord = "RAHU"
+src = { "No." = "11", "Sign (English)" = "Aquarius", "Sanskrit" = "Kumbha", "Tamil" = "Kumbham", "Symbol" = "Water Bearer", "Span (from 0° Aries)" = "300°–330°", "Lord" = "Saturn", "Co-lord" = "Rahu" }
+
+[[rasi]]
+number = 12
+id = "MEENA"
+english = "Pisces"
+sanskrit = "Meena"
+tamil_translit = "Meenam"
+lord = "GURU"
+src = { "No." = "12", "Sign (English)" = "Pisces", "Sanskrit" = "Meena", "Tamil" = "Meenam", "Symbol" = "Fishes", "Span (from 0° Aries)" = "330°–360°", "Lord" = "Jupiter", "Co-lord" = "—" }
