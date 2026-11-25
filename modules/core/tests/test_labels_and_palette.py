@@ -6,11 +6,12 @@ import pytest
 
 from kundli_core import LANGUAGES, Graha, Nakshatra, Rasi, contrast_ratio, graha_info, label, labels, load_table, palette
 
-# Letters of each script plus the punctuation the labels use.
+# Letters of each script plus the punctuation and digits the labels use.
+_PUNCT = r" ()'’.,:;?!\-–0-9"
 SCRIPT = {
-    "ta": re.compile(r"[஀-௿ ()'’.,-]+"),
-    "sa": re.compile(r"[ऀ-ॿ ()'’.,-]+"),
-    "en": re.compile(r"[A-Za-z ()'’.,-]+"),
+    "ta": re.compile(rf"[\u0B80-\u0BFF{_PUNCT}]+"),
+    "sa": re.compile(rf"[\u0900-\u097F{_PUNCT}]+"),  # includes the danda (।) and Devanagari digits
+    "en": re.compile(rf"[A-Za-z{_PUNCT}]+"),
 }
 
 

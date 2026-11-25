@@ -117,6 +117,25 @@ TIME             = { en = "Time",                ta = "நேரம்",        
 PLACE            = { en = "Place",               ta = "இடம்",                 sa = "स्थान" }
 YES              = { en = "Yes",                 ta = "ஆம்",                  sa = "आम्" }
 NO               = { en = "No",                  ta = "இல்லை",                sa = "न" }
+APP_TITLE        = { en = "Kundli",              ta = "ஜாதகம்",               sa = "जन्मपत्रिका" }
+BIRTH_DETAILS    = { en = "Birth details",       ta = "பிறப்பு விவரங்கள்",    sa = "जन्मविवरणम्" }
+CAST_CHART       = { en = "Cast chart",          ta = "ஜாதகம் கணி",           sa = "चक्रं रचय" }
+LANGUAGE         = { en = "Language",            ta = "மொழி",                 sa = "भाषा" }
+PLACEMENT_TABLE  = { en = "Graha placements",    ta = "கிரக நிலைகள்",         sa = "ग्रहस्थितयः" }
+SEARCH_PLACE     = { en = "Type a city, state or country", ta = "நகரம், மாநிலம் அல்லது நாடு", sa = "नगरं राज्यं देशं वा" }
+NO_PLACES        = { en = "No matching places",  ta = "பொருந்தும் இடம் இல்லை", sa = "स्थानं न लब्धम्" }
+PRINT            = { en = "Print",               ta = "அச்சிடு",              sa = "मुद्रय" }
+TIMEZONE         = { en = "Time zone",           ta = "நேர மண்டலம்",          sa = "समयमण्डलम्" }
+LAGNA_LORD       = { en = "Lagna lord",          ta = "லக்னாதிபதி",           sa = "लग्नेशः" }
+SUN_DISTANCE     = { en = "from the Sun",        ta = "சூரியனிடமிருந்து",      sa = "सूर्यात्" }
+NOTE             = { en = "Note",                ta = "குறிப்பு",             sa = "टिप्पणी" }
+CHOOSE_OCCURRENCE = { en = "This time occurred twice at that place. Which one?", ta = "இந்த நேரம் அங்கு இருமுறை வந்தது. எது?", sa = "अयं समयः तत्र द्विवारम् आगतः। कः?" }
+FIRST_OCCURRENCE  = { en = "First (before the clocks went back)", ta = "முதல் முறை (கடிகாரம் பின்னோக்கும் முன்)", sa = "प्रथमः" }
+SECOND_OCCURRENCE = { en = "Second (after the clocks went back)", ta = "இரண்டாம் முறை (பின்னோக்கிய பின்)", sa = "द्वितीयः" }
+ERR_NONEXISTENT_TIME = { en = "This local time did not exist at that place: the clocks moved forward. Please check the birth time.", ta = "அந்த இடத்தில் இந்த நேரம் இருக்கவில்லை: கடிகாரம் முன்னோக்கி நகர்த்தப்பட்டது. பிறந்த நேரத்தைச் சரிபார்க்கவும்.", sa = "तस्मिन् स्थाने अयं समयः नासीत्। जन्मसमयं परीक्षताम्।" }
+ERR_PLACE_NOT_USABLE = { en = "This place cannot be used because its time zone is uncertain. Choose a city or state.", ta = "நேர மண்டலம் உறுதியில்லாததால் இந்த இடத்தைப் பயன்படுத்த இயலாது. நகரம் அல்லது மாநிலத்தைத் தேர்ந்தெடுக்கவும்.", sa = "समयमण्डलम् अनिश्चितम्, अतः इदं स्थानं न उपयोज्यम्। नगरं राज्यं वा चिनोतु।" }
+ERR_DATE_OUT_OF_RANGE = { en = "Dates from 1800 to 2399 are supported.", ta = "1800 முதல் 2399 வரையிலான தேதிகள் மட்டும்.", sa = "१८०० तः २३९९ पर्यन्तं वर्षाणि एव।" }
+ERR_GENERIC      = { en = "Something went wrong. Please check the details.", ta = "பிழை ஏற்பட்டது. விவரங்களைச் சரிபார்க்கவும்.", sa = "दोषः अभवत्। विवरणं परीक्षताम्।" }
 
 [language]
 en = { en = "English", ta = "ஆங்கிலம்",   sa = "आङ्ग्ल" }
