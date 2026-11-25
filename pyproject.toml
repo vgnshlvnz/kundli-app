@@ -1,0 +1,13 @@
+# Workspace root. It has no code of its own: each module under modules/ is a workspace member with its own
+# pyproject.toml. The web module is static files, not a Python package, so it is excluded.
+[tool.uv.workspace]
+members = ["modules/*"]
+exclude = ["modules/web"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tools/tests", "modules"]
+# importlib mode lets test files in different modules share names (e.g. two test_models.py).
+addopts = ["--import-mode=importlib", "-ra"]
