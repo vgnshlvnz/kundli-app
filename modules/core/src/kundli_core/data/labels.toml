@@ -1,0 +1,124 @@
+# Display labels in English (en), Tamil script (ta) and Sanskrit in Devanagari (sa).
+#
+# STATUS: DRAFT for the owner's review (CONVENTIONS C12). The reference files give Tamil and Sanskrit names only in
+# Latin transliteration, so the Tamil-script and Devanagari forms below are the standard names, written for review.
+# Correct any label here; no code change is needed.
+#
+# Keys are "<group>.<CODE>", e.g. "rasi.MESHA". Codes match the enums in kundli_core and the codes the placement
+# engine emits. Every key must have all three languages (checked by the core tests).
+
+[rasi]
+MESHA     = { en = "Aries",       ta = "மேஷம்",       sa = "मेष" }
+VRISHABHA = { en = "Taurus",      ta = "ரிஷபம்",      sa = "वृषभ" }
+MITHUNA   = { en = "Gemini",      ta = "மிதுனம்",     sa = "मिथुन" }
+KARKA     = { en = "Cancer",      ta = "கடகம்",       sa = "कर्क" }
+SIMHA     = { en = "Leo",         ta = "சிம்மம்",      sa = "सिंह" }
+KANYA     = { en = "Virgo",       ta = "கன்னி",        sa = "कन्या" }
+TULA      = { en = "Libra",       ta = "துலாம்",       sa = "तुला" }
+VRISCHIKA = { en = "Scorpio",     ta = "விருச்சிகம்",   sa = "वृश्चिक" }
+DHANUS    = { en = "Sagittarius", ta = "தனுசு",        sa = "धनु" }
+MAKARA    = { en = "Capricorn",   ta = "மகரம்",        sa = "मकर" }
+KUMBHA    = { en = "Aquarius",    ta = "கும்பம்",       sa = "कुम्भ" }
+MEENA     = { en = "Pisces",      ta = "மீனம்",        sa = "मीन" }
+
+[graha]
+SURYA   = { en = "Sun",     ta = "சூரியன்",   sa = "सूर्य" }
+CHANDRA = { en = "Moon",    ta = "சந்திரன்",  sa = "चन्द्र" }
+MANGALA = { en = "Mars",    ta = "செவ்வாய்",  sa = "मङ्गल" }
+BUDHA   = { en = "Mercury", ta = "புதன்",     sa = "बुध" }
+GURU    = { en = "Jupiter", ta = "குரு",      sa = "गुरु" }
+SHUKRA  = { en = "Venus",   ta = "சுக்கிரன்", sa = "शुक्र" }
+SHANI   = { en = "Saturn",  ta = "சனி",       sa = "शनि" }
+RAHU    = { en = "Rahu",    ta = "ராகு",      sa = "राहु" }
+KETU    = { en = "Ketu",    ta = "கேது",      sa = "केतु" }
+
+# Short forms written inside the chart boxes. English uses the file's abbreviations (graha_abbreviations.toml).
+[graha_short]
+SURYA   = { en = "SU", ta = "சூ",    sa = "सू" }
+CHANDRA = { en = "MO", ta = "சந்",   sa = "चं" }
+MANGALA = { en = "MA", ta = "செவ்",  sa = "मं" }
+BUDHA   = { en = "ME", ta = "பு",    sa = "बु" }
+GURU    = { en = "JU", ta = "குரு",  sa = "गु" }
+SHUKRA  = { en = "VE", ta = "சுக்",  sa = "शु" }
+SHANI   = { en = "SA", ta = "சனி",   sa = "श" }
+RAHU    = { en = "RA", ta = "ரா",    sa = "रा" }
+KETU    = { en = "KE", ta = "கே",    sa = "के" }
+
+[nakshatra]
+ASHWINI           = { en = "Ashwini",           ta = "அஸ்வினி",      sa = "अश्विनी" }
+BHARANI           = { en = "Bharani",           ta = "பரணி",         sa = "भरणी" }
+KRITTIKA          = { en = "Krittika",          ta = "கார்த்திகை",    sa = "कृत्तिका" }
+ROHINI            = { en = "Rohini",            ta = "ரோகிணி",       sa = "रोहिणी" }
+MRIGASHIRA        = { en = "Mrigashira",        ta = "மிருகசீரிடம்",  sa = "मृगशिरा" }
+ARDRA             = { en = "Ardra",             ta = "திருவாதிரை",    sa = "आर्द्रा" }
+PUNARVASU         = { en = "Punarvasu",         ta = "புனர்பூசம்",    sa = "पुनर्वसु" }
+PUSHYA            = { en = "Pushya",            ta = "பூசம்",         sa = "पुष्य" }
+ASHLESHA          = { en = "Ashlesha",          ta = "ஆயில்யம்",      sa = "आश्लेषा" }
+MAGHA             = { en = "Magha",             ta = "மகம்",          sa = "मघा" }
+PURVA_PHALGUNI    = { en = "Purva Phalguni",    ta = "பூரம்",         sa = "पूर्वफल्गुनी" }
+UTTARA_PHALGUNI   = { en = "Uttara Phalguni",   ta = "உத்திரம்",      sa = "उत्तरफल्गुनी" }
+HASTA             = { en = "Hasta",             ta = "அஸ்தம்",        sa = "हस्त" }
+CHITRA            = { en = "Chitra",            ta = "சித்திரை",      sa = "चित्रा" }
+SWATI             = { en = "Swati",             ta = "சுவாதி",        sa = "स्वाती" }
+VISHAKHA          = { en = "Vishakha",          ta = "விசாகம்",       sa = "विशाखा" }
+ANURADHA          = { en = "Anuradha",          ta = "அனுஷம்",        sa = "अनुराधा" }
+JYESHTHA          = { en = "Jyeshtha",          ta = "கேட்டை",        sa = "ज्येष्ठा" }
+MOOLA             = { en = "Moola",             ta = "மூலம்",         sa = "मूल" }
+PURVA_ASHADHA     = { en = "Purva Ashadha",     ta = "பூராடம்",       sa = "पूर्वाषाढा" }
+UTTARA_ASHADHA    = { en = "Uttara Ashadha",    ta = "உத்திராடம்",    sa = "उत्तराषाढा" }
+SHRAVANA          = { en = "Shravana",          ta = "திருவோணம்",     sa = "श्रवण" }
+DHANISHTHA        = { en = "Dhanishtha",        ta = "அவிட்டம்",      sa = "धनिष्ठा" }
+SHATABHISHA       = { en = "Shatabhisha",       ta = "சதயம்",         sa = "शतभिषा" }
+PURVA_BHADRAPADA  = { en = "Purva Bhadrapada",  ta = "பூரட்டாதி",     sa = "पूर्वभाद्रपदा" }
+UTTARA_BHADRAPADA = { en = "Uttara Bhadrapada", ta = "உத்திரட்டாதி",  sa = "उत्तरभाद्रपदा" }
+REVATI            = { en = "Revati",            ta = "ரேவதி",         sa = "रेवती" }
+
+[dignity]
+UCCHA          = { en = "Uccha (exalted)",               ta = "உச்சம்",          sa = "उच्च" }
+NEECHA         = { en = "Neecha (debilitated)",          ta = "நீசம்",           sa = "नीच" }
+MOOLATRIKONA   = { en = "Moolatrikona",                  ta = "மூலத்திரிகோணம்",  sa = "मूलत्रिकोण" }
+SWAKSHETRA     = { en = "Swakshetra (own sign)",         ta = "ஆட்சி",           sa = "स्वक्षेत्र" }
+MITRA_KSHETRA  = { en = "Mitra kshetra (friend's sign)", ta = "நட்பு வீடு",      sa = "मित्रक्षेत्र" }
+SAMA_KSHETRA   = { en = "Sama kshetra (neutral sign)",   ta = "சம வீடு",         sa = "समक्षेत्र" }
+SHATRU_KSHETRA = { en = "Shatru kshetra (enemy's sign)", ta = "பகை வீடு",        sa = "शत्रुक्षेत्र" }
+
+[category]
+KENDRA   = { en = "Kendra",   ta = "கேந்திரம்",  sa = "केन्द्र" }
+PANAPARA = { en = "Panapara", ta = "பணபரம்",     sa = "पणफर" }
+APOKLIMA = { en = "Apoklima", ta = "ஆபோக்லிமம்", sa = "आपोक्लिम" }
+TRIKONA  = { en = "Trikona",  ta = "திரிகோணம்",  sa = "त्रिकोण" }
+UPACHAYA = { en = "Upachaya", ta = "உபஜெயம்",    sa = "उपचय" }
+DUSTHANA = { en = "Dusthana", ta = "துஸ்தானம்",  sa = "दुःस्थान" }
+MARAKA   = { en = "Maraka",   ta = "மாரகம்",     sa = "मारक" }
+
+[ui]
+LAGNA            = { en = "Lagna",               ta = "லக்னம்",               sa = "लग्न" }
+LAGNA_SHORT      = { en = "La",                  ta = "ல",                    sa = "ल" }
+RETROGRADE       = { en = "Retrograde",          ta = "வக்கிரம்",             sa = "वक्री" }
+RETROGRADE_MARK  = { en = "R",                   ta = "வ",                    sa = "व" }
+COMBUST          = { en = "Combust",             ta = "அஸ்தங்கம்",            sa = "अस्त" }
+GRAHA            = { en = "Graha",               ta = "கிரகம்",               sa = "ग्रह" }
+RASI             = { en = "Rasi",                ta = "ராசி",                 sa = "राशि" }
+DEGREE           = { en = "Degree",              ta = "பாகை",                 sa = "अंश" }
+NAKSHATRA        = { en = "Nakshatra",           ta = "நட்சத்திரம்",          sa = "नक्षत्र" }
+PADA             = { en = "Pada",                ta = "பாதம்",                sa = "पाद" }
+BHAVA_WHOLE_SIGN = { en = "Bhava (whole sign)",  ta = "பாவம் (முழு ராசி)",    sa = "भाव (राशि)" }
+BHAVA_CHALIT     = { en = "Bhava chalit",        ta = "பாவ சலிதம்",           sa = "भाव चलित" }
+CHALIT_DIFFERS   = { en = "Chalit bhava differs", ta = "சலித பாவம் வேறு",     sa = "चलित भाव भिन्न" }
+CATEGORIES       = { en = "Bhava categories",    ta = "பாவ வகைகள்",           sa = "भाववर्ग" }
+DIGNITY          = { en = "Dignity",             ta = "கிரக நிலை",            sa = "स्थिति" }
+LORD_OF          = { en = "Lord of bhavas",      ta = "அதிபதி (பாவங்கள்)",    sa = "भावाधिपति" }
+DISPOSITOR       = { en = "Dispositor",          ta = "ராசி அதிபதி",          sa = "राशीश" }
+DISPOSITOR_BHAVA = { en = "Dispositor's bhava",  ta = "ராசி அதிபதியின் பாவம்", sa = "राशीश का भाव" }
+AYANAMSA         = { en = "Ayanamsa",            ta = "அயனாம்சம்",            sa = "अयनांश" }
+NAME             = { en = "Name",                ta = "பெயர்",                sa = "नाम" }
+DATE             = { en = "Date",                ta = "தேதி",                 sa = "दिनाङ्क" }
+TIME             = { en = "Time",                ta = "நேரம்",                sa = "समय" }
+PLACE            = { en = "Place",               ta = "இடம்",                 sa = "स्थान" }
+YES              = { en = "Yes",                 ta = "ஆம்",                  sa = "आम्" }
+NO               = { en = "No",                  ta = "இல்லை",                sa = "न" }
+
+[language]
+en = { en = "English", ta = "ஆங்கிலம்",   sa = "आङ्ग्ल" }
+ta = { en = "Tamil",   ta = "தமிழ்",      sa = "तमिऴ्" }
+sa = { en = "Sanskrit", ta = "சமஸ்கிருதம்", sa = "संस्कृतम्" }

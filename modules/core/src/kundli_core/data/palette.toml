@@ -1,0 +1,102 @@
+# Mangalakara palette: sandal-cream ground, kumkum red, turmeric, saffron, deep maroon text, gold accents.
+#
+# [colour] names every colour the chart and the web page may use.
+# [[text_pair]] lists every foreground/background combination allowed for text, with the minimum WCAG 2.x contrast
+# ratio it must meet: 4.5 for normal text, 3.0 for large text (≥ 24 px, or ≥ 18.66 px bold). The core tests check
+# each pair; the chart tests check that the SVG puts text only on declared pairs.
+# Colours listed in `decorative` are for borders, kolam lines and motifs only; they never carry text.
+
+[colour]
+sandal        = "#FDF3DF"   # page background (sandal cream)
+sandal_deep   = "#F6E4BE"   # table header, panels
+ivory         = "#FFFBF2"   # chart sign boxes
+maroon        = "#5A1414"   # body text
+kumkum        = "#A3122A"   # headings, Lagna mark, emphasis
+kumkum_bright = "#C8102E"   # kolam dots, large titles
+turmeric      = "#F2B705"   # bands and motifs
+turmeric_soft = "#FBE29A"   # Lagna box fill
+saffron       = "#F08A24"   # borders and motifs
+saffron_soft  = "#FBD3A6"   # rows where whole-sign and chalit bhava differ
+gold          = "#B8860B"   # grid lines, kolam lines
+gold_light    = "#D4AF37"   # kolam fill accents
+
+[decorative]
+colours = ["gold", "gold_light", "saffron"]
+
+[[text_pair]]
+fg = "maroon"
+bg = "sandal"
+use = "body text"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "maroon"
+bg = "sandal_deep"
+use = "table header and panel text"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "maroon"
+bg = "ivory"
+use = "graha text in chart boxes"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum"
+bg = "sandal"
+use = "headings and emphasis"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum"
+bg = "sandal_deep"
+use = "emphasis in table header"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum"
+bg = "ivory"
+use = "retrograde mark and sign names in chart boxes"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "maroon"
+bg = "turmeric_soft"
+use = "graha text in the Lagna box"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum"
+bg = "turmeric_soft"
+use = "Lagna mark in the Lagna box"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "maroon"
+bg = "saffron_soft"
+use = "table rows where the chalit bhava differs"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum"
+bg = "saffron_soft"
+use = "emphasis in highlighted rows"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "maroon"
+bg = "turmeric"
+use = "text on turmeric bands"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "ivory"
+bg = "kumkum"
+use = "button text"
+min_ratio = 4.5
+
+[[text_pair]]
+fg = "kumkum_bright"
+bg = "sandal"
+use = "large titles only"
+min_ratio = 3.0
