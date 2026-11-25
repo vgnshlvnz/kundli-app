@@ -1,7 +1,9 @@
 """Sidereal positions, Lagna and ayanamsa from the Swiss Ephemeris (CONVENTIONS B, C9, C10).
 
-pyswisseph keeps the sidereal mode and the data path as global state, so every call that sets them runs under
-one lock. ``ayanamsa`` is the single place where an ayanamsa option is applied; ``compute_positions`` uses it.
+Swiss Ephemeris keeps its settings (data path, sidereal mode) per thread, and a web server calls from worker
+threads, so each thread applies the data path before its first calculation and the sidereal mode before every
+calculation; calls run under one lock. ``ayanamsa`` is the single place where an ayanamsa option is applied;
+``compute_positions`` uses it.
 """
 
 from __future__ import annotations
@@ -62,6 +64,7 @@ BUNDLED_EPHE = Path(str(files("kundli_ephemeris") / "ephe"))
 
 _LOCK = threading.RLock()
 _ephe_path: Path | None = None
+_thread = threading.local()  # the data path this thread has applied
 
 # Apparent geocentric positions from the data files, with speed (CONVENTIONS C9).
 POSITION_FLAGS = swe.FLG_SWIEPH | swe.FLG_SPEED | swe.FLG_SIDEREAL
@@ -83,6 +86,7 @@ def configure(ephe_path: Path | str | None = None) -> None:
     with _LOCK:
         _ephe_path = Path(ephe_path) if ephe_path is not None else BUNDLED_EPHE
         swe.set_ephe_path(str(_ephe_path))
+        _thread.path = _ephe_path
 
 
 def list_ayanamsas() -> tuple[AyanamsaOption, ...]:
@@ -99,6 +103,9 @@ def get_option(option_id: str) -> AyanamsaOption:
 def _apply(option: AyanamsaOption) -> None:
     if _ephe_path is None:
         configure()
+    if getattr(_thread, "path", None) != _ephe_path:
+        swe.set_ephe_path(str(_ephe_path))
+        _thread.path = _ephe_path
     swe.set_sid_mode(option.swe_mode, option.t0 or 0.0, option.ayan_t0 or 0.0)
 
 
