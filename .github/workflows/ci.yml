@@ -26,3 +26,14 @@ jobs:
         run: uv run pytest
       - name: Web unit tests
         run: node --version && node --test "modules/web/tests/*.test.js"
+
+  container:
+    # The image deployed to Cloudflare Containers: its test stage runs the module
+    # check and the test suite inside the runtime image (see Dockerfile).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the image and run the tests in it
+        run: docker build --target test .
+      - name: Build the deployed stage
+        run: docker build -t kundli-api .

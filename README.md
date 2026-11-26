@@ -41,6 +41,30 @@ uv run pytest                             # all tests
 uv run uvicorn kundli_api.app:app      # then open http://127.0.0.1:8000/  (API docs at /api/docs)
 ```
 
+## Deployment (Cloudflare)
+
+The public site is <https://jathagam.tamizh-jathagam.app/>. It runs on Cloudflare Workers with
+[Containers](https://developers.cloudflare.com/containers/), because Swiss Ephemeris is a C library and cannot run
+inside a plain Worker:
+
+- `Dockerfile` (repository root) builds the FastAPI backend as a linux/amd64 image. Its `test` stage runs the module
+  check and the whole test suite inside the runtime image; CI builds it on every PR.
+- `deploy/cloudflare/` holds the Worker. It serves `modules/web/static` plus a generated `theme.css` as static
+  assets and forwards only `/api/*` to one `basic` container instance (1/4 vCPU, 1 GiB), which sleeps after
+  10 idle minutes. The container has no outbound network access.
+- Containers need the Workers Paid plan. They are billed only while running; the first request after a sleep
+  waits a few seconds for the container to start.
+
+Deploying is manual, from an up-to-date `master` with Docker running and `wrangler login` done:
+
+```sh
+uv sync --all-packages --locked
+cd deploy/cloudflare && npm ci && npx wrangler deploy
+```
+
+`wrangler deploy` runs `build-assets.sh`, builds and pushes the image, uploads the Worker and attaches the custom
+domain.
+
 ## Location data
 
 `data/locations.db` (SQLite, 114 KB) holds the places: table `locations(id, country, state, latitude,
