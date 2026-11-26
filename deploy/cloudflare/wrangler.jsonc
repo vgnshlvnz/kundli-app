@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "jathagam",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-26",
+  "observability": { "enabled": true },
+
+  // One public hostname; no *.workers.dev or preview URLs.
+  "routes": [{ "pattern": "jathagam.tamizh-jathagam.app", "custom_domain": true }],
+  "workers_dev": false,
+  "preview_urls": false,
+
+  // build-assets.sh copies modules/web/static and writes theme.css from the palette.
+  "build": { "command": "sh build-assets.sh" },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api", "/api/*"]
+  },
+
+  // The Dockerfile at the repository root; its last stage is the runtime image.
+  "containers": [
+    {
+      "class_name": "KundliApi",
+      "image": "../../Dockerfile",
+      "image_build_context": "../..",
+      "instance_type": "basic",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "KUNDLI_API", "class_name": "KundliApi" }]
+  },
+  "exports": {
+    "KundliApi": { "type": "durable-object", "storage": "sqlite" }
+  }
+}

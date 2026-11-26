@@ -1,0 +1,11 @@
+.git
+.github
+**/.venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.ruff_cache
+**/node_modules
+deploy/cloudflare/dist
+deploy/cloudflare/.wrangler
+.playwright-mcp
